@@ -1,0 +1,211 @@
+Organizations:
+    - &ocA
+        Name: ocAMSP
+        ID: ocAMSP
+        MSPDir: ../organizations/peerOrganizations/ocA.glode.com/msp                
+        Policies: &ocAMSPPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('ocAMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('ocAMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('ocAMSP.admin')"
+        AnchorPeers:
+            - Host: peer0.ocA.glode.com
+              Port: 7051
+    
+    - &ocB
+        Name: ocBMSP
+        ID: ocBMSP
+        MSPDir: ../organizations/peerOrganizations/ocB.glode.com/msp
+        Policies: &ocBMSPPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('ocBMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('ocBMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('ocBMSP.admin')"
+        AnchorPeers:
+            - Host: peer0.ocB.glode.com
+              Port: 7051
+    - &itA
+        Name: itAMSP
+        ID: itAMSP
+        MSPDir: ../organizations/peerOrganizations/itA.glode.com/msp
+        Policies: &itAMSPPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('itAMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('itAMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('itAMSP.admin')"
+        AnchorPeers:
+            - Host: peer0.itA.glode.com
+              Port: 7051
+    - &itB
+        Name: itBMSP
+        ID: itBMSP
+        MSPDir: ../organizations/peerOrganizations/itB.glode.com/msp
+        Policies: &itBMSPPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('itBMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('itBMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('itBMSP.admin')"
+        AnchorPeers:
+            - Host: peer0.itB.glode.com
+              Port: 7051
+    - &ffA
+        Name: ffAMSP
+        ID: ffAMSP
+        MSPDir: ../organizations/peerOrganizations/ffA.glode.com/msp
+        Policies: &ffAMSPPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('ffAMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('ffAMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('ffAMSP.admin')"
+        AnchorPeers:
+            - Host: peer0.ffA.glode.com
+              Port: 7051
+
+Capabilities:
+    Channel: &ChannelCapabilities
+        V2_0: true
+    Orderer: &OrdererCapabilities
+        V2_0: true
+    Application: &ApplicationCapabilities
+        V2_0: true
+
+Application: &ApplicationDefaults
+    Organizations:
+    Policies: &ApplicationDefaultPolicies
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        LifecycleEndorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+    OrdererType: etcdraft
+    Addresses:
+        - orderer.ocA.glode.com:7050
+        - orderer.ocB.glode.com:7050
+        - orderer.itA.glode.com:7050
+        - orderer.itB.glode.com:7050
+        - orderer.ffA.glode.com:7050
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 500
+        AbsoluteMaxBytes: 10 MB
+        PreferredMaxBytes: 2 MB
+    EtcdRaft:
+        Consenters:
+        - Host: orderer.ocA.glode.com
+          Port: 7050
+          ClientTLSCert: ../organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/server.crt
+          ServerTLSCert: ../organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/server.crt
+        - Host: orderer.ocB.glode.com
+          Port: 7050
+          ClientTLSCert: ../organizations/peerOrganizations/ocB.glode.com/peers/orderer.ocB.glode.com/tls/server.crt
+          ServerTLSCert: ../organizations/peerOrganizations/ocB.glode.com/peers/orderer.ocB.glode.com/tls/server.crt
+        - Host: orderer.itA.glode.com
+          Port: 7050
+          ClientTLSCert: ../organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/tls/server.crt
+          ServerTLSCert: ../organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/tls/server.crt
+        - Host: orderer.itB.glode.com
+          Port: 7050
+          ClientTLSCert: ../organizations/peerOrganizations/itB.glode.com/peers/orderer.itB.glode.com/tls/server.crt
+          ServerTLSCert: ../organizations/peerOrganizations/itB.glode.com/peers/orderer.itB.glode.com/tls/server.crt
+        - Host: orderer.ffA.glode.com
+          Port: 7050
+          ClientTLSCert: ../organizations/peerOrganizations/ffA.glode.com/peers/orderer.ffA.glode.com/tls/server.crt
+          ServerTLSCert: ../organizations/peerOrganizations/ffA.glode.com/peers/orderer.ffA.glode.com/tls/server.crt
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+    Capabilities:
+        <<: *OrdererCapabilities
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+Profiles:
+    OrdererGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *ocA
+                - *ocB
+                - *itA
+                - *itB
+                - *ffA
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                  - *ocA
+                  - *ocB
+                  - *itA
+                  - *itB
+                  - *ffA
+    Channel:
+        <<: *ChannelDefaults
+        Consortium: SampleConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *ocA
+                - *ocB
+                - *itA
+                - *itB
+                - *ffA
