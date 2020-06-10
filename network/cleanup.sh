@@ -17,4 +17,12 @@ rm -rf organizations/fabric-ca/itA/msp organizations/fabric-ca/itA/tls-cert.pem 
 rm -rf organizations/fabric-ca/itB/msp organizations/fabric-ca/itB/tls-cert.pem organizations/fabric-ca/itB/ca-cert.pem organizations/fabric-ca/itB/IssuerPublicKey organizations/fabric-ca/itB/IssuerRevocationPublicKey organizations/fabric-ca/itB/fabric-ca-server.db
 rm -rf organizations/fabric-ca/ffA/msp organizations/fabric-ca/ffA/tls-cert.pem organizations/fabric-ca/ffA/ca-cert.pem organizations/fabric-ca/ffA/IssuerPublicKey organizations/fabric-ca/ffA/IssuerRevocationPublicKey organizations/fabric-ca/ffA/fabric-ca-server.db
 rm -rf organizations/peerOrganizations/
+
+rm -rf channel-artifacts
 set +x
+
+echo
+echo "Brisanje docker volume-a:"
+set -x
+docker volume prune -f
+set -x

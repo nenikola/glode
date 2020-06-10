@@ -1,0 +1,360 @@
+version: '2'
+
+volumes:
+  orderer.ocA.glode.com:
+  orderer.ocB.glode.com:
+  orderer.itA.glode.com:
+  orderer.itB.glode.com:
+  orderer.ffA.glode.com:
+  peer0.ocA.glode.com:
+  peer0.ocB.glode.com:
+  peer0.itA.glode.com:
+  peer0.itB.glode.com:
+  peer0.ffA.glode.com:
+  
+networks:
+  glode:
+
+services:
+  orderer.ocA.glode.com:
+    container_name: orderer.ocA.glode.com
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ocAMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_KAFKA_TOPIC_REPLICATIONFACTOR=1
+      - ORDERER_KAFKA_VERBOSE=true
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    ports:
+      - 7050:7050
+    volumes:
+        - ../channel-artifacts:/var/hyperledger/orderer
+        - ../organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/msp:/var/hyperledger/orderer/msp
+        - ../organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/:/var/hyperledger/orderer/tls
+        - orderer.ocA.glode.com:/var/hyperledger/production/orderer
+    networks:
+      - glode
+
+  orderer.ocB.glode.com:
+    container_name: orderer.ocB.glode.com
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ocBMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_KAFKA_TOPIC_REPLICATIONFACTOR=1
+      - ORDERER_KAFKA_VERBOSE=true
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    ports:
+      - 8050:7050
+    volumes:
+        - ../channel-artifacts:/var/hyperledger/orderer
+        - ../organizations/peerOrganizations/ocB.glode.com/peers/orderer.ocB.glode.com/msp:/var/hyperledger/orderer/msp
+        - ../organizations/peerOrganizations/ocB.glode.com/peers/orderer.ocB.glode.com/tls/:/var/hyperledger/orderer/tls
+        - orderer.ocB.glode.com:/var/hyperledger/production/orderer
+    networks:
+      - glode
+  orderer.itA.glode.com:
+    container_name: orderer.itA.glode.com
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=itAMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_KAFKA_TOPIC_REPLICATIONFACTOR=1
+      - ORDERER_KAFKA_VERBOSE=true
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    ports:
+      - 9050:7050
+    volumes:
+        - ../channel-artifacts:/var/hyperledger/orderer
+        - ../organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/msp:/var/hyperledger/orderer/msp
+        - ../organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/tls/:/var/hyperledger/orderer/tls
+        - orderer.itA.glode.com:/var/hyperledger/production/orderer
+    networks:
+      - glode
+  orderer.itB.glode.com:
+    container_name: orderer.itB.glode.com
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=itBMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_KAFKA_TOPIC_REPLICATIONFACTOR=1
+      - ORDERER_KAFKA_VERBOSE=true
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    ports:
+      - 10050:7050
+    volumes:
+        - ../channel-artifacts:/var/hyperledger/orderer
+        - ../organizations/peerOrganizations/itB.glode.com/peers/orderer.itB.glode.com/msp:/var/hyperledger/orderer/msp
+        - ../organizations/peerOrganizations/itB.glode.com/peers/orderer.itB.glode.com/tls/:/var/hyperledger/orderer/tls
+        - orderer.itB.glode.com:/var/hyperledger/production/orderer
+    networks:
+      - glode
+  orderer.ffA.glode.com:
+    container_name: orderer.ffA.glode.com
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=ffAMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_KAFKA_TOPIC_REPLICATIONFACTOR=1
+      - ORDERER_KAFKA_VERBOSE=true
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    ports:
+      - 11050:7050
+    volumes:
+        - ../channel-artifacts:/var/hyperledger/orderer
+        - ../organizations/peerOrganizations/ffA.glode.com/peers/orderer.ffA.glode.com/msp:/var/hyperledger/orderer/msp
+        - ../organizations/peerOrganizations/ffA.glode.com/peers/orderer.ffA.glode.com/tls/:/var/hyperledger/orderer/tls
+        - orderer.ffA.glode.com:/var/hyperledger/production/orderer
+    networks:
+      - glode
+  peer0.ocA.glode.com:
+    container_name: peer0.ocA.glode.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    environment:
+      - CORE_PEER_ID=peer0.ocA.glode.com
+      - CORE_PEER_ADDRESS=peer0.ocA.glode.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.ocA.glode.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ocA.glode.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ocA.glode.com:7051
+      - CORE_PEER_LOCALMSPID=ocAMSP
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=glode
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt      
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 7051:7051
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../organizations/peerOrganizations/ocA.glode.com/peers/peer0.ocA.glode.com/msp:/etc/hyperledger/fabric/msp
+        - ../organizations/peerOrganizations/ocA.glode.com/peers/peer0.ocA.glode.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.ocA.glode.com:/var/hyperledger/production
+    networks:
+      - glode
+
+  peer0.ocB.glode.com:
+    container_name: peer0.ocB.glode.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    environment:
+      - CORE_PEER_ID=peer0.ocB.glode.com
+      - CORE_PEER_ADDRESS=peer0.ocB.glode.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.ocB.glode.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ocB.glode.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ocB.glode.com:7051
+      - CORE_PEER_LOCALMSPID=ocBMSP
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=glode
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt      
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 8051:7051
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../organizations/peerOrganizations/ocB.glode.com/peers/peer0.ocB.glode.com/msp:/etc/hyperledger/fabric/msp
+        - ../organizations/peerOrganizations/ocB.glode.com/peers/peer0.ocB.glode.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.ocB.glode.com:/var/hyperledger/production
+    networks:
+      - glode
+  peer0.itA.glode.com:
+    container_name: peer0.itA.glode.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    environment:
+      - CORE_PEER_ID=peer0.itA.glode.com
+      - CORE_PEER_ADDRESS=peer0.itA.glode.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.itA.glode.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.itA.glode.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.itA.glode.com:7051
+      - CORE_PEER_LOCALMSPID=itAMSP
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=glode
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt      
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 9051:7051
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../organizations/peerOrganizations/itA.glode.com/peers/peer0.itA.glode.com/msp:/etc/hyperledger/fabric/msp
+        - ../organizations/peerOrganizations/itA.glode.com/peers/peer0.itA.glode.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.itA.glode.com:/var/hyperledger/production
+    networks:
+      - glode
+  peer0.itB.glode.com:
+    container_name: peer0.itB.glode.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    environment:
+      - CORE_PEER_ID=peer0.itB.glode.com
+      - CORE_PEER_ADDRESS=peer0.itB.glode.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.itB.glode.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.itB.glode.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.itB.glode.com:7051
+      - CORE_PEER_LOCALMSPID=itBMSP
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=glode
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt      
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 10051:7051
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../organizations/peerOrganizations/itB.glode.com/peers/peer0.itB.glode.com/msp:/etc/hyperledger/fabric/msp
+        - ../organizations/peerOrganizations/itB.glode.com/peers/peer0.itB.glode.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.itB.glode.com:/var/hyperledger/production
+    networks:
+      - glode
+  peer0.ffA.glode.com:
+    container_name: peer0.ffA.glode.com
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    environment:
+      - CORE_PEER_ID=peer0.ffA.glode.com
+      - CORE_PEER_ADDRESS=peer0.ffA.glode.com:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.ffA.glode.com:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ffA.glode.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ffA.glode.com:7051
+      - CORE_PEER_LOCALMSPID=ffAMSP
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=glode
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt      
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 11051:7051
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../organizations/peerOrganizations/ffA.glode.com/peers/peer0.ffA.glode.com/msp:/etc/hyperledger/fabric/msp
+        - ../organizations/peerOrganizations/ffA.glode.com/peers/peer0.ffA.glode.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.ffA.glode.com:/var/hyperledger/production
+    networks:
+      - glode
