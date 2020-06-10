@@ -3,7 +3,7 @@ echo "###################### Zaustavljanje mreze ######################"
 echo "#################################################################"
 
 echo "Zaustavljanje docker kontejnera:"
-docker kill $(docker ps -aq)
+docker stop $(docker ps -aq)
 echo
 echo "Brisanje docker kontejnera:"
 docker rm $(docker ps -aq)

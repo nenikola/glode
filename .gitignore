@@ -2,4 +2,5 @@ network/organizations/peerOrganizations/
 network/organizations/fabric-ca/
 !network/organizations/fabric-ca/*/fabric-ca-server-config.yaml
 network/channel-artifacts/
-
+vars.txt
+glode-channel.block

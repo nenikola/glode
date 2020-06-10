@@ -1,4 +1,4 @@
-CA_IMAGETAG="1.4.6"
+CA_IMAGETAG="latest"
 IMAGETAG="latest"
 COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
 
