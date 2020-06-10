@@ -1,9 +1,9 @@
 function certificates() {
-if [ -z "$1" ]; then
-   echo "Shortname of party must be specified."
+if [ -z "$1" ] || [ -z "$2" ] ; then
+   echo "Shortname of party and CA's port number must be specified."
    echo "example: For organisation OceanCarrierA call function as"
    echo
-   echo "         $ certificates \"ocA\""
+   echo "         $ certificates \"ocA\" 7054" 
    echo
   return 1 # or return 0, or even you can omit the argument.
 fi
@@ -15,8 +15,24 @@ echo
 echo "---------- Generisanje sertifikata Fabric CA admin ------------------"
 echo
 set -x
-fabric-ca-client enroll -u https://admin:adminpw@localhost:7054 --caname ca-$1 --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
+fabric-ca-client enroll -u https://admin:adminpw@localhost:$2 --caname ca-$1 --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
 set +x
+
+echo "NodeOUs:
+  Enable: true
+  ClientOUIdentifier:
+    Certificate: cacerts/localhost-$2-ca-$1.pem
+    OrganizationalUnitIdentifier: client
+  PeerOUIdentifier:
+    Certificate: cacerts/localhost-$2-ca-$1.pem
+    OrganizationalUnitIdentifier: peer
+  AdminOUIdentifier:
+    Certificate: cacerts/localhost-$2-ca-$1.pem
+    OrganizationalUnitIdentifier: admin
+  OrdererOUIdentifier:
+    Certificate: cacerts/localhost-$2-ca-$1.pem
+    OrganizationalUnitIdentifier: orderer" > ${PWD}/organizations/peerOrganizations/$1.glode.com/msp/config.yaml
+
 
 echo
 echo "---------- Registracija peer0.$1.glode.com ---------------"
@@ -53,7 +69,7 @@ mkdir -p organizations/peerOrganizations/$1.glode.com/peers
 mkdir -p organizations/peerOrganizations/$1.glode.com/peers/peer0.$1.glode.com
 
 set -x	
-fabric-ca-client enroll -u https://peer0:peer0pw@localhost:7054 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/peer0.$1.glode.com/msp --csr.hosts peer0.$1.glode.com --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
+fabric-ca-client enroll -u https://peer0:peer0pw@localhost:$2 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/peer0.$1.glode.com/msp --csr.hosts peer0.$1.glode.com --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
 set +x
 cp ${PWD}/organizations/peerOrganizations/$1.glode.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/peer0.$1.glode.com/msp/config.yaml
 
@@ -61,7 +77,7 @@ echo
 echo "---------- Generisanje TLS-a za peer0.$1.glode.com --------------------------------------"
 echo
 set -x
-fabric-ca-client enroll -u https://peer0:peer0pw@localhost:7054 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/peer0.$1.glode.com/tls --enrollment.profile tls --csr.hosts peer0.$1.glode.com --csr.hosts localhost --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
+fabric-ca-client enroll -u https://peer0:peer0pw@localhost:$2 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/peer0.$1.glode.com/tls --enrollment.profile tls --csr.hosts peer0.$1.glode.com --csr.hosts localhost --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
 set +x
 
 cp ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/peer0.$1.glode.com/tls/tlscacerts/* ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/peer0.$1.glode.com/tls/ca.crt
@@ -81,7 +97,7 @@ mkdir -p organizations/peerOrganizations/$1.glode.com/peers
 mkdir -p organizations/peerOrganizations/$1.glode.com/peers/orderer.$1.glode.com
 
 set -x	
-fabric-ca-client enroll -u https://orderer:ordererpw@localhost:7054 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/orderer.$1.glode.com/msp --csr.hosts orderer.$1.glode.com --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
+fabric-ca-client enroll -u https://orderer:ordererpw@localhost:$2 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/orderer.$1.glode.com/msp --csr.hosts orderer.$1.glode.com --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
 set +x
 cp ${PWD}/organizations/peerOrganizations/$1.glode.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/orderer.$1.glode.com/msp/config.yaml
 
@@ -89,7 +105,7 @@ echo
 echo "---------- Generisanje TLS-a za orderer.$1.glode.com --------------------------------------"
 echo
 set -x
-fabric-ca-client enroll -u https://orderer:ordererpw@localhost:7054 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/orderer.$1.glode.com/tls --enrollment.profile tls --csr.hosts orderer.$1.glode.com --csr.hosts localhost --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
+fabric-ca-client enroll -u https://orderer:ordererpw@localhost:$2 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/orderer.$1.glode.com/tls --enrollment.profile tls --csr.hosts orderer.$1.glode.com --csr.hosts localhost --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
 set +x
 
 cp ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/orderer.$1.glode.com/tls/tlscacerts/* ${PWD}/organizations/peerOrganizations/$1.glode.com/peers/orderer.$1.glode.com/tls/ca.crt
@@ -109,7 +125,7 @@ mkdir -p organizations/peerOrganizations/$1.glode.com/users
 mkdir -p organizations/peerOrganizations/$1.glode.com/users/User1@$1.glode.com
 
 set -x
-fabric-ca-client enroll -u https://user1:user1pw@localhost:7054 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/users/User1@$1.glode.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
+fabric-ca-client enroll -u https://user1:user1pw@localhost:$2 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/users/User1@$1.glode.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
 set +x
 
 
@@ -119,7 +135,7 @@ echo
 mkdir -p organizations/peerOrganizations/$1.glode.com/users/Admin@$1.glode.com
 
 set -x
-fabric-ca-client enroll -u https://$1admin:$1adminpw@localhost:7054 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/users/Admin@$1.glode.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
+fabric-ca-client enroll -u https://$1admin:$1adminpw@localhost:$2 --caname ca-$1 -M ${PWD}/organizations/peerOrganizations/$1.glode.com/users/Admin@$1.glode.com/msp --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
 set +x
 cp ${PWD}/organizations/peerOrganizations/$1.glode.com/msp/config.yaml ${PWD}/organizations/peerOrganizations/$1.glode.com/users/Admin@$1.glode.com/msp/config.yaml
 

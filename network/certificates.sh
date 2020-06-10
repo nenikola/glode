@@ -10,7 +10,7 @@ PATH=${PWD}/../bin:${PATH}
 echo "================================== OceanCarrierA ========================================"
 echo
 
-certificates "ocA"
+certificates "ocA" 7054
 
 echo
 echo
@@ -18,7 +18,7 @@ echo
 echo "================================== OceanCarrierB ========================================"
 echo
 
-certificates "ocB"
+certificates "ocB" 8054
 
 echo
 echo
@@ -26,7 +26,7 @@ echo
 echo "================================== InlandTransporterA ========================================"
 echo
 
-certificates "itA"
+certificates "itA" 9054
 
 echo
 echo
@@ -34,7 +34,7 @@ echo
 echo "================================== InlandTransporterB ========================================"
 echo
 
-certificates "itB"
+certificates "itB" 10054
 
 echo
 echo
@@ -42,4 +42,4 @@ echo
 echo "================================== FrightForwarderA ========================================"
 echo
 
-certificates "ffA"
+certificates "ffA" 11054
