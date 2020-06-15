@@ -52,7 +52,7 @@ echo
 echo "---------- Registracija admin-a $1 --------------------------------------"
 echo
 set -x
-fabric-ca-client register --caname ca-$1 --id.name $1admin --id.secret $1adminpw --id.type admin --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
+fabric-ca-client register --caname ca-$1 --id.name $1admin --id.secret $1adminpw --id.type admin --csr.names O=$1.glode.com --tls.certfiles ${PWD}/organizations/fabric-ca/$1/tls-cert.pem
 set +x
 
 echo

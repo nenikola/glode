@@ -13,6 +13,9 @@ Organizations:
             Admins:
                 Type: Signature
                 Rule: "OR('ocAMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('ocAMSP.peer')"
         AnchorPeers:
             - Host: peer0.ocA.glode.com
               Port: 7051
@@ -31,6 +34,9 @@ Organizations:
             Admins:
                 Type: Signature
                 Rule: "OR('ocBMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('ocBMSP.peer')"
         AnchorPeers:
             - Host: peer0.ocB.glode.com
               Port: 7051
@@ -48,6 +54,9 @@ Organizations:
             Admins:
                 Type: Signature
                 Rule: "OR('itAMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('itAMSP.peer')"
         AnchorPeers:
             - Host: peer0.itA.glode.com
               Port: 7051
@@ -65,6 +74,9 @@ Organizations:
             Admins:
                 Type: Signature
                 Rule: "OR('itBMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('itBMSP.peer')"
         AnchorPeers:
             - Host: peer0.itB.glode.com
               Port: 7051
@@ -82,6 +94,9 @@ Organizations:
             Admins:
                 Type: Signature
                 Rule: "OR('ffAMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('ffAMSP.peer')"
         AnchorPeers:
             - Host: peer0.ffA.glode.com
               Port: 7051
@@ -109,6 +124,8 @@ Application: &ApplicationDefaults
         LifecycleEndorsement:
             Type: ImplicitMeta
             Rule: "MAJORITY Endorsement"
+            # Type: Signature
+            # Rule: "OR('ocAMSP.admin','ocBMSP.admin')"
         Endorsement:
             Type: ImplicitMeta
             Rule: "MAJORITY Endorsement"
@@ -205,7 +222,7 @@ Profiles:
             <<: *ApplicationDefaults
             Organizations:
                 - *ocA
-                - *ocB
                 - *itA
                 - *itB
                 - *ffA
+                # - *ocB
