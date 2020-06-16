@@ -123,7 +123,7 @@ Application: &ApplicationDefaults
             Rule: "MAJORITY Admins"
         LifecycleEndorsement:
             Type: ImplicitMeta
-            Rule: "MAJORITY Endorsement"
+            Rule: "ANY Endorsement"
             # Type: Signature
             # Rule: "OR('ocAMSP.admin','ocBMSP.admin')"
         Endorsement:

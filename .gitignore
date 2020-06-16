@@ -5,3 +5,5 @@ network/channel-artifacts/
 vars.txt
 glode-channel.block
 fabcar.tar.gz
+chaincode/*/node_modules
+dist
