@@ -7,3 +7,5 @@ glode-channel.block
 fabcar.tar.gz
 chaincode/*/node_modules
 dist
+node_modules
+wallet
