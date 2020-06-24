@@ -10,6 +10,55 @@ export class TransferContract extends Contract {
         const compositeKey: string = ctx.stub.createCompositeKey('transfer', [tspIDString, updatedTransfer.bookingNumber]);
         await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(tspIDString), compositeKey, Buffer.from(JSON.stringify(updatedTransfer)));
     }
+    async readTransfer(ctx: Context, tspID: string, bookingNumber: string) {
+        // const cliID = ctx.clientIdentity.getID();
+        // const funAndParams = ctx.stub.getFunctionAndParameters();
+        // console.info(JSON.stringify(cliID, null, 2), JSON.stringify(funAndParams, null, 2));
+        const mspString: string = ctx.clientIdentity.getMSPID();
+        const cliOrg = mspString.slice(0, mspString.length - 3);
+
+        const compositeKey = ctx.stub.createCompositeKey('transfer', [tspID, bookingNumber]);
+
+        const transferStr: string = Buffer.from(await ctx.stub.getPrivateData(TransferContract._getPrivateCollectionString(tspID), compositeKey)).toString('utf8');
+        if (transferStr && transferStr.length > 0) {
+            const transfer: Transfer = JSON.parse(transferStr);
+            if (cliOrg === transfer.transportServiceProviderID || (transfer.participants && transfer.participants.find(participant => participant.participantID === cliOrg))) {
+                return JSON.stringify(transfer, null, 2);
+            } else {
+                return JSON.stringify({ status: 403, message: "You are not authorized to read this transfer!" }, null, 2);
+            }
+        }
+        return JSON.stringify({ status: 404, message: "Transfer not found" });
+    }
+    async readAllOrgTransfers(ctx: Context, tspIDstring: string) {
+        const mspString: string = ctx.clientIdentity.getMSPID();
+        const cliOrg = mspString.slice(0, mspString.length - 3);
+
+        let allResults = [];
+        try {
+            // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
+            for await (const { key, value } of ctx.stub.getPrivateDataQueryResult(TransferContract._getPrivateCollectionString(tspIDstring),
+                `{
+             "selector": {
+                "participants": {
+                   "$elemMatch": {
+                      "participantID": "${cliOrg}"
+                   }
+                }
+             }
+          }`)) {
+                const strValue = Buffer.from(value).toString('utf8');
+                console.info('Found <-->', key, ' : ', strValue);
+                let record: Transfer = JSON.parse(strValue);
+                allResults.push({ Key: key, Record: record })
+            }
+            return JSON.stringify(allResults, null, 2);
+
+        } catch (error) {
+            return JSON.stringify({ message: error }, null, 2);
+
+        }
+    }
     async createTransfer(ctx: Context, transferString) {
         const mspString: string = ctx.clientIdentity.getMSPID();
         const newTransfer: Transfer = JSON.parse(transferString);
@@ -21,19 +70,27 @@ export class TransferContract extends Contract {
 
         const compositeKey: string = ctx.stub.createCompositeKey('transfer', [newTransfer.transportServiceProviderID, newTransfer.bookingNumber]);
 
+        const hash = Buffer.from(await ctx.stub.getPrivateDataHash(TransferContract._getPrivateCollectionString(newTransfer.transportServiceProviderID), compositeKey)).toString('utf8');
+        console.info(`PRIVATE DATA HASH: ${hash}`);
+        if (hash && hash.length > 0) {
+            throw new Error(JSON.stringify({ status: 406, message: `${newTransfer.transportServiceProviderID} transfer with booking number [${newTransfer.bookingNumber}] already exists!` }));
+        }
+
         try {
+
             await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(mspString), compositeKey, Buffer.from(JSON.stringify(newTransfer)));
 
-            // if (newTransfer.participants && newTransfer.participants.length > 0) {
-            //     const pTransfer = ParticipantTransfer.getFromTransfer(newTransfer);
-            //     await Promise.all(newTransfer.participants.map(async participant => {
-            //         await ctx.stub.putPrivateData(`_implicit_org_${participant.participantID}MSP`, compositeKey, Buffer.from(JSON.stringify(pTransfer)));
-            //         console.info(`Participant ${participant.participantID}MSP added`);
+            if (newTransfer.participants && newTransfer.participants.length > 0) {
+                const pTransfer = ParticipantTransfer.getFromTransfer(newTransfer);
+                await Promise.all(newTransfer.participants.map(async participant => {
+                    await ctx.stub.putPrivateData(`_implicit_org_${participant.participantID}MSP`, compositeKey, Buffer.from(JSON.stringify(pTransfer)));
+                    console.info(`Participant ${participant.participantID}MSP added`);
 
-            //     }));
-            // }
+                }));
+            }
         } catch (error) {
             console.info(`ERROR: ${error}`);
+            throw error;
         }
     }
     // async addTransferParticipant(ctx: Context, transferKey: string, participantID: string, participantName: string, role: string,) {
@@ -88,6 +145,7 @@ export class TransferContract extends Contract {
     }
 
     static _getPrivateCollectionString(mspID: string) {
-        return mspID.endsWith("MSP") ? `_implicit_org_${mspID}` : `_implicit_org_${mspID} MSP`;
+        return mspID.endsWith("MSP") ? `_implicit_org_${mspID}` : `_implicit_org_${mspID}MSP`;
     }
 
+}
