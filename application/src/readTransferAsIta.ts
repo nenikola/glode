@@ -8,7 +8,7 @@ import { getConnectionProfile } from './utils/getConnectionProfile';
 
 async function main() {
     try {
-        const ccp = getConnectionProfile('ocA');
+        const ccp = getConnectionProfile('itA');
 
         console.log(JSON.stringify(ccp['certificateAuthorities']));
 
@@ -18,7 +18,7 @@ async function main() {
         console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the user.
-        const identity = await wallet.get('user1');
+        const identity = await wallet.get('user1itA');
         if (!identity) {
             console.log('An identity for the user "appUser" does not exist in the wallet');
             console.log('Run the enrolUser.ts application before retrying');
@@ -32,14 +32,14 @@ async function main() {
         await gateway.connect(ccp, {
             wallet, eventHandlerOptions: {
                 strategy: DefaultEventHandlerStrategies.NONE
-            }, identity: 'user1', discovery: { enabled: true, asLocalhost: true }
+            }, identity: 'user1itA', discovery: { enabled: false, asLocalhost: true }
         });
 
         // Get the network (channel) our contract is deployed to.
         const network = await (await gateway.getNetwork('glode-channel'));
 
 
-        const endorsers = network.getChannel().getEndorsers("ocAMSP");
+        const endorsers = network.getChannel().getEndorsers("itAMSP");
         // Get the contract from the network.
         // console.log(JSON.stringify(endorsers.map(end => end.name)));
 
@@ -50,7 +50,7 @@ async function main() {
         // Evaluate the specified transaction.
         // queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
         // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
-        const result = await contract.createTransaction('readTransfer').setEndorsingPeers(endorsers).submit("ocA", "1234");
+        const result = await contract.createTransaction('readTransfer').setEndorsingPeers(endorsers).submit("itA", "1234");
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
         console.log(`Transaction has been submitted`);
 

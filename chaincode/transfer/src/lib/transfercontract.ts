@@ -1,7 +1,8 @@
 'use-strict'
 
 import { Contract, Context, Info } from 'fabric-contract-api';
-import { Transfer, TransferStatus, TransferParticipant, ParticipantTransfer } from './transfer.model';
+import { Transfer, TransferStatus, TransferParticipant, ParticipantTransfer, TransferEquipmentData } from './transfer.model';
+import { createHash } from "crypto";
 
 export class TransferContract extends Contract {
 
@@ -10,6 +11,50 @@ export class TransferContract extends Contract {
         const compositeKey: string = ctx.stub.createCompositeKey('transfer', [tspIDString, updatedTransfer.bookingNumber]);
         await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(tspIDString), compositeKey, Buffer.from(JSON.stringify(updatedTransfer)));
     }
+    async validateExistingTransfer(ctx: Context, transferString: string) {
+        const transferObj: Transfer = JSON.parse(transferString);
+
+        const hashStr = createHash('sha256').update(transferString).digest('base64');
+        console.info(`MY HASH STR: ${hashStr}`);
+
+        const compositeKey: string = ctx.stub.createCompositeKey('transfer', [transferObj.transportServiceProviderID, transferObj.bookingNumber]);
+
+        const collectionId = TransferContract._getPrivateCollectionString(transferObj.transportServiceProviderID);
+
+        const pvtHash = await ctx.stub.getPrivateDataHash(collectionId, compositeKey);
+
+        const pvtHashStr = Buffer.from(pvtHash).toString('base64');
+        console.info(`COLL DATA  HASH STR: ${pvtHashStr}`);
+
+        return JSON.stringify({
+            hashStr,
+            pvtHashStr,
+            validated: hashStr === pvtHashStr
+
+        })
+
+
+
+
+        // collectionSeller := "_implicit_org_" + clientOrgID
+        // immutablePropertiesOnChainHash, err := ctx.GetStub().GetPrivateDataHash(collectionSeller, marble.ID)
+        // if err != nil {
+        //     return fmt.Errorf("failed to read marble private properties hash from seller's collection: %s", err.Error())
+        // }
+        // if immutablePropertiesOnChainHash == nil {
+        //     return fmt.Errorf("marble private properties hash does not exist: %s", marble.ID)
+        // }
+
+        // // get sha256 hash of passed immutable properties
+        // hash := sha256.New()
+        // hash.Write(immutablePropertiesJSON)
+        // calculatedPropertiesHash := hash.Sum(nil)
+
+        // // verify that the hash of the passed immutable properties matches the on-chain hash
+        // if !bytes.Equal(immutablePropertiesOnChainHash, calculatedPropertiesHash) {
+        //     re
+    }
+
     async readTransfer(ctx: Context, tspID: string, bookingNumber: string) {
         // const cliID = ctx.clientIdentity.getID();
         // const funAndParams = ctx.stub.getFunctionAndParameters();
