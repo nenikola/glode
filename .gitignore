@@ -3,6 +3,7 @@ network/organizations/fabric-ca/
 !network/organizations/fabric-ca/*/fabric-ca-server-config.yaml
 network/channel-artifacts/
 vars.*
+log.*
 glode-channel.block
 *.tar.gz
 chaincode/*/node_modules
