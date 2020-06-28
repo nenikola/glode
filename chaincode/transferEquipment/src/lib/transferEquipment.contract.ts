@@ -2,7 +2,7 @@
 
 import { Contract, Context, } from 'fabric-contract-api';
 import { ClientIdentity, ChaincodeResponse, Shim } from "fabric-shim";
-import { TransferEquipment, Location } from './transferEquipment.model';
+import { TransferEquipment, Location, TransferEquipmentEventDTO, TransferEquipmentEvent } from './transferEquipment.model';
 
 export class TransferEquipmentContract extends Contract {
     async updateCurrentLocation(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string, locationString: string) {
@@ -78,7 +78,37 @@ export class TransferEquipmentContract extends Contract {
         console.info(message);
         return message;
     }
+    async submitTransferEquipmentEvent(ctx: Context, eventString: string) {
+        let eventDTO: TransferEquipmentEventDTO;
+        try {
+            eventDTO = JSON.parse(eventString);
+        } catch (error) {
+            return { status: 400, message: `Submitted event data wrong format` };
+        }
+        let te: TransferEquipment;
+        let teCompositeKey = ctx.stub.createCompositeKey('te', [eventDTO.registrationNumber]);
+        try {
 
+            te = JSON.parse(Buffer.from(await ctx.stub.getState(teCompositeKey)).toString('utf8'));
+        } catch (error) {
+            return { status: 404, message: `Could not find specified TE!` };
+        }
+        if (!te.associatedTransferIDs || !te.associatedTransferIDs.find(transferID => transferID === ctx.stub.createCompositeKey('transfer', [eventDTO.associatedTransferData.tspID, eventDTO.associatedTransferData.bookingNumber]))) {
+            return { status: 400, message: `Specified associated transfer not associated with specified TE!` };
+        }
+        if (!(await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, eventDTO.associatedTransferData.tspID, eventDTO.associatedTransferData.bookingNumber))) {
+            return { status: 401, message: `You are not authorized to submit events for specified TE!` };
+        }
+        const event: TransferEquipmentEvent = TransferEquipmentEvent.getFromDTO(eventDTO);
+        if (!te.events) {
+            te.events = new Array<TransferEquipmentEvent>();
+        }
+        te.events.push(event);
+        te.currentLocation = event.eventLocation;
+        await ctx.stub.putState(teCompositeKey, Buffer.from(JSON.stringify(te)));
+        return { status: 200, message: `Succesfully submited TE Event!` }
+
+    }
     async createTransferEquipment(ctx: Context, transferEqString: string) {
         const cliOrg = TransferEquipmentContract._getClientOrgId(ctx.clientIdentity);
         const newTransferEquipment: TransferEquipment = JSON.parse(transferEqString);
