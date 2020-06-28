@@ -10,18 +10,15 @@ export class Transfer {
 
 export class ParticipantTransfer {
     bookingNumber: string;
+    transferSecret: string;
     transportServiceProviderID: string
-    equipmentData?: TransferEquipmentData;
 
-    constructor(bookingNumber: string, transportServiceProviderID: string, equipmentData?: TransferEquipmentData) {
+    constructor(bookingNumber: string, transportServiceProviderID: string, transferSecret: string) {
         this.bookingNumber = bookingNumber;
-        this; transportServiceProviderID = transportServiceProviderID;
-        this.equipmentData = equipmentData;
+        this.transferSecret = transferSecret;
+        this.transportServiceProviderID = transportServiceProviderID;
     }
-    static getFromTransfer(original: Transfer): ParticipantTransfer {
-        const pTransfer = new ParticipantTransfer(original.bookingNumber, original.transportServiceProviderID, original.equipmentData);
-        return pTransfer;
-    }
+
 }
 
 export class TransferEquipmentData {
@@ -48,6 +45,7 @@ export class TransferData {
     originLocation: Location;
     destinationLocation: Location;
     transferVehicleID?: string;
+    transferVehicleType?: string;
     plannedDeparture?: Date;
     plannedArrival?: Date;
 

@@ -2,15 +2,34 @@
 
 import { Contract, Context, Info } from 'fabric-contract-api';
 import { Transfer, TransferStatus, TransferParticipant, ParticipantTransfer, TransferEquipmentData } from './transfer.model';
-import { createHash } from "crypto";
+import { createHash, randomBytes } from "crypto";
 
 export class TransferContract extends Contract {
 
-    async _updateTransfer(ctx: Context, updatedTransfer: Transfer) {
-        const tspIDString = updatedTransfer.transportServiceProviderID;
-        const compositeKey: string = ctx.stub.createCompositeKey('transfer', [tspIDString, updatedTransfer.bookingNumber]);
-        await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(tspIDString), compositeKey, Buffer.from(JSON.stringify(updatedTransfer)));
+    // async _updateTransfer(ctx: Context, updatedTransfer: Transfer) {
+    //     const tspIDString = updatedTransfer.transportServiceProviderID;
+    //     const compositeKey: string = ctx.stub.createCompositeKey('transfer', [tspIDString, updatedTransfer.bookingNumber]);
+    //     await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(tspIDString), compositeKey, Buffer.from(JSON.stringify(updatedTransfer)));
+    // }
+
+    async validateTransferParticipant(ctx: Context, tspID: string, bookingNumber) {
+        const cliOrgCollectionID = TransferContract._getPrivateCollectionString(ctx.clientIdentity.getMSPID());
+        const tspOrgCollectionID = TransferContract._getPrivateCollectionString(tspID);
+
+        const compositeKey = ctx.stub.createCompositeKey('transferSecret', [tspID, bookingNumber]);
+
+        const cliPvt: ParticipantTransfer = JSON.parse(Buffer.from(await ctx.stub.getPrivateData(cliOrgCollectionID, compositeKey)).toString('utf8'));
+        const cliPvtData: ParticipantTransfer = new ParticipantTransfer(cliPvt.bookingNumber, cliPvt.transportServiceProviderID, cliPvt.transferSecret);
+        const cliPvtHashStr = createHash('sha256').update(JSON.stringify(cliPvtData)).digest('base64');
+        const tspPvtHashStr = Buffer.from(await ctx.stub.getPrivateDataHash(tspOrgCollectionID, compositeKey)).toString('base64');
+
+        return JSON.stringify({
+            cliHash: cliPvtHashStr,
+            tspHash: tspPvtHashStr,
+            validated: cliPvtHashStr === tspPvtHashStr
+        })
     }
+
     async validateExistingTransfer(ctx: Context, transferString: string) {
         const transferObj: Transfer = JSON.parse(transferString);
 
@@ -104,7 +123,7 @@ export class TransferContract extends Contract {
 
         }
     }
-    async createTransfer(ctx: Context, transferString) {
+    async createTransfer(ctx: Context, transferString: string, transferSecret: string) {
         const mspString: string = ctx.clientIdentity.getMSPID();
         const newTransfer: Transfer = JSON.parse(transferString);
 
@@ -115,20 +134,29 @@ export class TransferContract extends Contract {
 
         const compositeKey: string = ctx.stub.createCompositeKey('transfer', [newTransfer.transportServiceProviderID, newTransfer.bookingNumber]);
 
+
+
         const hash = Buffer.from(await ctx.stub.getPrivateDataHash(TransferContract._getPrivateCollectionString(newTransfer.transportServiceProviderID), compositeKey)).toString('utf8');
         console.info(`PRIVATE DATA HASH: ${hash}`);
         if (hash && hash.length > 0) {
             throw new Error(JSON.stringify({ status: 406, message: `${newTransfer.transportServiceProviderID} transfer with booking number [${newTransfer.bookingNumber}] already exists!` }));
         }
+        const pTransfer = new ParticipantTransfer(newTransfer.bookingNumber, newTransfer.transportServiceProviderID, transferSecret);
+
+        console.info(`P-TRANSFER: ${JSON.stringify(pTransfer)}`);
+
+        const secretsCompositeKey: string = ctx.stub.createCompositeKey('transferSecret', [newTransfer.transportServiceProviderID, newTransfer.bookingNumber]);
 
         try {
 
             await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(mspString), compositeKey, Buffer.from(JSON.stringify(newTransfer)));
+            await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(mspString), secretsCompositeKey, Buffer.from(JSON.stringify(pTransfer)));
 
             if (newTransfer.participants && newTransfer.participants.length > 0) {
-                const pTransfer = ParticipantTransfer.getFromTransfer(newTransfer);
+
+
                 await Promise.all(newTransfer.participants.map(async participant => {
-                    await ctx.stub.putPrivateData(`_implicit_org_${participant.participantID}MSP`, compositeKey, Buffer.from(JSON.stringify(pTransfer)));
+                    await ctx.stub.putPrivateData(`_implicit_org_${participant.participantID}MSP`, secretsCompositeKey, Buffer.from(JSON.stringify(pTransfer)));
                     console.info(`Participant ${participant.participantID}MSP added`);
 
                 }));

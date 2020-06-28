@@ -1,59 +1,80 @@
 'use-strict'
 
 import { Contract, Context, } from 'fabric-contract-api';
-import { KeyEndorsementPolicy, ClientIdentity, ChaincodeResponse } from "fabric-shim";
-import { TransferEquipment } from './transferEquipment.model';
-import { Transfer } from './transfer.model';
+import { ClientIdentity, ChaincodeResponse, Shim } from "fabric-shim";
+import { TransferEquipment, Location } from './transferEquipment.model';
 
 export class TransferEquipmentContract extends Contract {
-    async updateCurrentLocation(ctx: Context,) {
+    async updateCurrentLocation(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string, locationString: string) {
+        let location: Location;
+        try {
+            location = JSON.parse(locationString);
+            if (!location || !location.unlocode) {
+                throw new Error("Location UNLOCODE must be specified!")
+            }
+        } catch (error) {
+            return { status: 400, message: `Bad location format :: ${error}` };
+        }
+
+        const compositeKey = ctx.stub.createCompositeKey('te', [registrationNumber]);
+        let transferEquipment: TransferEquipment;
+        try {
+            transferEquipment = JSON.parse(Buffer.from(await ctx.stub.getState(compositeKey)).toString('utf8'));
+        } catch (error) {
+            return { status: 400, message: `Could not find and read TE[${registrationNumber}]` }
+        }
+
+        if (!transferEquipment.associatedTransferIDs.find((id) => id === ctx.stub.createCompositeKey('transfer', [tspID, bookingNumber]))) {
+            return { status: 400, message: `Specified transfer is not assigned to TE[${registrationNumber}]!` }
+        }
+
+        if (!(await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, tspID, bookingNumber))) {
+            return { status: 400, message: "You are not participant of specified transfer!" }
+        }
+
+        transferEquipment.currentLocation = location;
+
+        await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(transferEquipment)));
+        return { status: 200, message: `Successfully updated TE[${transferEquipment.registrationNumber}] location to Location[${JSON.stringify(location, null, 2)}]` };
+
+    }
+    static async _isAuthorizedTransferParticipant(ctx: Context, transferTspID: string, transferBookingNumber: string): Promise<boolean> {
+        const response: ChaincodeResponse = await ctx.stub.invokeChaincode("transfer", ["validateTransferParticipant", transferTspID, transferBookingNumber], "glode-channel");
+        const validationResults = JSON.parse(Buffer.from(response.payload).toString('utf8'));
+
+        console.info(validationResults);
+
+        return validationResults.validated;
 
     }
 
-    async addAssociatedTransfer(ctx: Context, registrationNumber: string, transferStr: string) {
+    async addAssociatedTransfer(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string) {
+        console.info(`TSPID: ${tspID} | BOOKING_NUMBER: ${bookingNumber}`);
 
-        console.info(transferStr);
         const cliOrg = TransferEquipmentContract._getClientOrgId(ctx.clientIdentity);
 
-        const transfer: Transfer = JSON.parse(transferStr);
+        TransferEquipmentContract._isAuthorized(cliOrg, tspID, "transfer asignment");
 
-        const compositeKey: string = ctx.stub.createCompositeKey('te', [registrationNumber]);
-
-
-        const transferCompositeKey = ctx.stub.createCompositeKey('transfer', [transfer.transportServiceProviderID, transfer.bookingNumber]);
-        console.info(`TSPID: ${transfer.transportServiceProviderID} | BOOKINGNUM: ${transfer.bookingNumber}`);
-
-        try {
-            const response: ChaincodeResponse = await ctx.stub.invokeChaincode("transfer", ["validateExistingTransfer", transferStr], "glode-channel");
-            const validationResults = JSON.parse(Buffer.from(response.payload).toString('utf8'));
-            console.info(validationResults);
-            if (!validationResults.validated) {
-                return { message: `Sent transfer not validated | h1: ${validationResults.hashStr} ::: h2: ${validationResults.pvtHashStr} ||| transferSTR: ${transferStr}` }
-            }
-
-        } catch (error) {
-            console.info(error);
+        if (!(await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, tspID, bookingNumber))) {
+            return { status: 400, message: "You are not participant of transfer this TE should be assigned!" }
         }
 
+        const compositeKey: string = ctx.stub.createCompositeKey('te', [registrationNumber]);
         let te: TransferEquipment;
         try {
             te = JSON.parse(Buffer.from(await ctx.stub.getState(compositeKey)).toString('utf8'));
         } catch (error) {
-            return { status: 400, message: `Could not find ${cliOrg}'s transferEquipment with reg. number [${registrationNumber}]` };
+            return { status: 400, message: `Could not find transferEquipment with reg. number [${registrationNumber}]` };
         }
-
-        TransferEquipmentContract._isAuthorized(cliOrg, transfer.transportServiceProviderID, "transfer asignment");
-
-
 
         if (!te.associatedTransferIDs) {
             te.associatedTransferIDs = new Array<string>();
         }
-        te.associatedTransferIDs.push(transferCompositeKey);
+        te.associatedTransferIDs.push(ctx.stub.createCompositeKey('transfer', [tspID, bookingNumber]));
 
         await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(te)));
 
-        const message = `Successfully associated transfer [${ctx.stub.splitCompositeKey(transferCompositeKey).attributes.reduce((all, part) => all + part)}] to TE [${cliOrg + registrationNumber}]`;
+        const message = `Successfully associated transfer [${tspID}${bookingNumber}] to TE [${registrationNumber}]`;
         console.info(message);
         return message;
     }
@@ -74,9 +95,9 @@ export class TransferEquipmentContract extends Contract {
         try {
             await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(newTransferEquipment)));
 
-            const ep = new KeyEndorsementPolicy();
-            ep.addOrgs("PEER", ctx.clientIdentity.getMSPID());
-            await ctx.stub.setStateValidationParameter(compositeKey, ep.getPolicy());
+            // const ep = new KeyEndorsementPolicy();
+            // ep.addOrgs("PEER", ctx.clientIdentity.getMSPID());
+            // await ctx.stub.setStateValidationParameter(compositeKey, ep.getPolicy());
 
             return { status: 201, message: `Successfully created` }
         } catch (error) {
