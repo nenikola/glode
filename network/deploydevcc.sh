@@ -120,10 +120,10 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FINISHED <<<<<<<<<<<<<<<<<<<<<
 #     echo "########## START DOCKER LOGS #########"
 #     docker logs -f --tail=30 $(docker ps -a  --format "{{.ID}}: {{.Names}}" | grep ${PACKAGE_NAME}_ | grep ocA | sed s/:.*$//) | sed -e 's/^/[-- ocA.peer --]/' &  docker logs -f --tail=30 $(docker ps -a  --format "{{.ID}}: {{.Names}}" | grep ${PACKAGE_NAME}_ | grep itA | sed s/:.*$//) | sed -e 's/^/[-- itA.peer --]/' &  docker logs -f --tail=30 $(docker ps -a  --format "{{.ID}}: {{.Names}}" | grep ${PACKAGE_NAME}_ | grep itB | sed s/:.*$//) | sed -e 's/^/[-- itB.peer --]/' &  docker logs -f --tail=30 $(docker ps -a  --format "{{.ID}}: {{.Names}}" | grep ${PACKAGE_NAME}_ | grep ffA | sed s/:.*$//) | sed -e 's/^/[-- ffA.peer --]/' & 
 # fi
+sleep 5
 
 echo "########## START DOCKER LOGS #########"
 docker logs -f --tail=30 $(docker ps -a  --format "{{.ID}}: {{.Names}}" | grep ${PACKAGE_NAME}_ | grep ocA | sed s/:.*$//) | sed -e 's/^/[-- ocA.peer --]/' &  docker logs -f --tail=30 $(docker ps -a  --format "{{.ID}}: {{.Names}}" | grep ${PACKAGE_NAME}_ | grep itA | sed s/:.*$//) | sed -e 's/^/[-- itA.peer --]/' &  docker logs -f --tail=30 $(docker ps -a  --format "{{.ID}}: {{.Names}}" | grep ${PACKAGE_NAME}_ | grep itB | sed s/:.*$//) | sed -e 's/^/[-- itB.peer --]/' &  docker logs -f --tail=30 $(docker ps -a  --format "{{.ID}}: {{.Names}}" | grep ${PACKAGE_NAME}_ | grep ffA | sed s/:.*$//) | sed -e 's/^/[-- ffA.peer --]/' & 
 
 
 
-peer chaincode invoke --peerAddresses localhost:7051 --tlsRootCertFiles ./organizations/peerOrganizations/ocA.glode.com/peers/peer0.ocA.glode.com/tls/ca.crt -o localhost:9050 --tls true --cafile ./organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/tls/tlscacerts/tls-localhost-9054-ca-itA.pem -C glode-channel -n ${PACKAGE_NAME} -c '{"Args":["submitTransferEquipmentEvent","{\"associatedTransferData\":{\"tspID\":\"ocA\",\"bookingNumber\":\"1112\"},\"eventLocation\":{\"unlocode\":\"VIEAT\"},\"eventOccuranceTime\":\"2020-06-28T13:24:13.048Z\",\"transferEquipmentEventType\":\"COMMODITY_LOADED\",\"registrationNumber\":\"CONT0001\"}"]}'
