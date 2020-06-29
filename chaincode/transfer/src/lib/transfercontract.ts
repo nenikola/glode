@@ -1,7 +1,7 @@
 'use-strict'
 
 import { Contract, Context, Info } from 'fabric-contract-api';
-import { Transfer, TransferStatus, TransferParticipant, ParticipantTransfer, TransferEquipmentData } from './transfer.model';
+import { Transfer, TransferStatus, TransferParticipant, ParticipantTransfer, TransferEquipmentData, TransferRole } from './transfer.model';
 import { createHash, randomBytes } from "crypto";
 
 export class TransferContract extends Contract {
@@ -12,7 +12,7 @@ export class TransferContract extends Contract {
     //     await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(tspIDString), compositeKey, Buffer.from(JSON.stringify(updatedTransfer)));
     // }
 
-    async validateTransferParticipant(ctx: Context, tspID: string, bookingNumber) {
+    async validateTransferParticipant(ctx: Context, tspID: string, bookingNumber: string, digestToMatch: string) {
         const cliOrgCollectionID = TransferContract._getPrivateCollectionString(ctx.clientIdentity.getMSPID());
         const tspOrgCollectionID = TransferContract._getPrivateCollectionString(tspID);
 
@@ -23,11 +23,14 @@ export class TransferContract extends Contract {
         const cliPvtHashStr = createHash('sha256').update(JSON.stringify(cliPvtData)).digest('base64');
         const tspPvtHashStr = Buffer.from(await ctx.stub.getPrivateDataHash(tspOrgCollectionID, compositeKey)).toString('base64');
 
-        return JSON.stringify({
-            cliHash: cliPvtHashStr,
-            tspHash: tspPvtHashStr,
-            validated: cliPvtHashStr === tspPvtHashStr
-        })
+        const secretHash = createHash('sha256').update(cliPvtData.transferSecret).digest('base64');
+        console.info(`${cliPvtHashStr} :::: ${tspPvtHashStr}`);
+        console.info(`DIGEST: ${digestToMatch} :: SECRETDIGEST: ${createHash('sha256').update(cliPvtData.transferSecret).digest('base64')} :: SECRET: ${cliPvtData.transferSecret} `);
+        return {
+            digestToMatch: digestToMatch || secretHash,
+            transferIDHash: createHash('sha256').update(tspID + bookingNumber + cliPvtData.transferSecret).digest('base64'),
+            validated: (cliPvtHashStr === tspPvtHashStr) && ((digestToMatch) ? digestToMatch === secretHash : true),
+        }
     }
 
     async validateExistingTransfer(ctx: Context, transferString: string) {
@@ -52,26 +55,6 @@ export class TransferContract extends Contract {
 
         })
 
-
-
-
-        // collectionSeller := "_implicit_org_" + clientOrgID
-        // immutablePropertiesOnChainHash, err := ctx.GetStub().GetPrivateDataHash(collectionSeller, marble.ID)
-        // if err != nil {
-        //     return fmt.Errorf("failed to read marble private properties hash from seller's collection: %s", err.Error())
-        // }
-        // if immutablePropertiesOnChainHash == nil {
-        //     return fmt.Errorf("marble private properties hash does not exist: %s", marble.ID)
-        // }
-
-        // // get sha256 hash of passed immutable properties
-        // hash := sha256.New()
-        // hash.Write(immutablePropertiesJSON)
-        // calculatedPropertiesHash := hash.Sum(nil)
-
-        // // verify that the hash of the passed immutable properties matches the on-chain hash
-        // if !bytes.Equal(immutablePropertiesOnChainHash, calculatedPropertiesHash) {
-        //     re
     }
 
     async readTransfer(ctx: Context, tspID: string, bookingNumber: string) {
@@ -134,8 +117,6 @@ export class TransferContract extends Contract {
 
         const compositeKey: string = ctx.stub.createCompositeKey('transfer', [newTransfer.transportServiceProviderID, newTransfer.bookingNumber]);
 
-
-
         const hash = Buffer.from(await ctx.stub.getPrivateDataHash(TransferContract._getPrivateCollectionString(newTransfer.transportServiceProviderID), compositeKey)).toString('utf8');
         console.info(`PRIVATE DATA HASH: ${hash}`);
         if (hash && hash.length > 0) {
@@ -153,8 +134,6 @@ export class TransferContract extends Contract {
             await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(mspString), secretsCompositeKey, Buffer.from(JSON.stringify(pTransfer)));
 
             if (newTransfer.participants && newTransfer.participants.length > 0) {
-
-
                 await Promise.all(newTransfer.participants.map(async participant => {
                     await ctx.stub.putPrivateData(`_implicit_org_${participant.participantID}MSP`, secretsCompositeKey, Buffer.from(JSON.stringify(pTransfer)));
                     console.info(`Participant ${participant.participantID}MSP added`);

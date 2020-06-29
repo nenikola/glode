@@ -1,11 +1,11 @@
 export class Transfer {
     bookingNumber: string;
+    equipmentData?: TransferEquipmentData;
+    participants?: TransferParticipant[];
     transportServiceProviderID: string
     transportServiceProviderName: string;
     transferData: TransferData;
     transferStatus: TransferStatus;
-    participants?: TransferParticipant[];
-    equipmentData?: TransferEquipmentData;
 }
 
 export class ParticipantTransfer {

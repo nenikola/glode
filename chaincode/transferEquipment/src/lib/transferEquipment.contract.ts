@@ -3,50 +3,43 @@
 import { Contract, Context, } from 'fabric-contract-api';
 import { ClientIdentity, ChaincodeResponse, Shim } from "fabric-shim";
 import { TransferEquipment, Location, TransferEquipmentEventDTO, TransferEquipmentEvent } from './transferEquipment.model';
+import { createHash } from "crypto";
 
 export class TransferEquipmentContract extends Contract {
-    async updateCurrentLocation(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string, locationString: string) {
-        let location: Location;
-        try {
-            location = JSON.parse(locationString);
-            if (!location || !location.unlocode) {
-                throw new Error("Location UNLOCODE must be specified!")
-            }
-        } catch (error) {
-            return { status: 400, message: `Bad location format :: ${error}` };
-        }
+    // async updateCurrentLocation(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string, locationString: string) {
+    //     let location: Location;
+    //     try {
+    //         location = JSON.parse(locationString);
+    //         if (!location || !location.unlocode) {
+    //             throw new Error("Location UNLOCODE must be specified!")
+    //         }
+    //     } catch (error) {
+    //         return { status: 400, message: `Bad location format :: ${error}` };
+    //     }
 
-        const compositeKey = ctx.stub.createCompositeKey('te', [registrationNumber]);
-        let transferEquipment: TransferEquipment;
-        try {
-            transferEquipment = JSON.parse(Buffer.from(await ctx.stub.getState(compositeKey)).toString('utf8'));
-        } catch (error) {
-            return { status: 400, message: `Could not find and read TE[${registrationNumber}]` }
-        }
+    //     const compositeKey = ctx.stub.createCompositeKey('te', [registrationNumber]);
+    //     let transferEquipment: TransferEquipment;
+    //     try {
+    //         transferEquipment = JSON.parse(Buffer.from(await ctx.stub.getState(compositeKey)).toString('utf8'));
+    //     } catch (error) {
+    //         return { status: 400, message: `Could not find and read TE[${registrationNumber}]` }
+    //     }
 
-        if (!transferEquipment.associatedTransferIDs.find((id) => id === ctx.stub.createCompositeKey('transfer', [tspID, bookingNumber]))) {
-            return { status: 400, message: `Specified transfer is not assigned to TE[${registrationNumber}]!` }
-        }
+    //     if (!transferEquipment.associatedTransferIDs.find((id) => id === ctx.stub.createCompositeKey('transfer', [tspID, bookingNumber]))) {
+    //         return { status: 400, message: `Specified transfer is not assigned to TE[${registrationNumber}]!` }
+    //     }
 
-        if (!(await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, tspID, bookingNumber))) {
-            return { status: 400, message: "You are not participant of specified transfer!" }
-        }
+    //     if (!(await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, tspID, bookingNumber))) {
+    //         return { status: 400, message: "You are not participant of specified transfer!" }
+    //     }
 
-        transferEquipment.currentLocation = location;
+    //     transferEquipment.currentLocation = location;
 
-        await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(transferEquipment)));
-        return { status: 200, message: `Successfully updated TE[${transferEquipment.registrationNumber}] location to Location[${JSON.stringify(location, null, 2)}]` };
+    //     await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(transferEquipment)));
+    //     return { status: 200, message: `Successfully updated TE[${transferEquipment.registrationNumber}] location to Location[${JSON.stringify(location, null, 2)}]` };
 
-    }
-    static async _isAuthorizedTransferParticipant(ctx: Context, transferTspID: string, transferBookingNumber: string): Promise<boolean> {
-        const response: ChaincodeResponse = await ctx.stub.invokeChaincode("transfer", ["validateTransferParticipant", transferTspID, transferBookingNumber], "glode-channel");
-        const validationResults = JSON.parse(Buffer.from(response.payload).toString('utf8'));
+    // }
 
-        console.info(validationResults);
-
-        return validationResults.validated;
-
-    }
 
     async addAssociatedTransfer(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string) {
         console.info(`TSPID: ${tspID} | BOOKING_NUMBER: ${bookingNumber}`);
@@ -55,9 +48,6 @@ export class TransferEquipmentContract extends Contract {
 
         TransferEquipmentContract._isAuthorized(cliOrg, tspID, "transfer asignment");
 
-        if (!(await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, tspID, bookingNumber))) {
-            return { status: 400, message: "You are not participant of transfer this TE should be assigned!" }
-        }
 
         const compositeKey: string = ctx.stub.createCompositeKey('te', [registrationNumber]);
         let te: TransferEquipment;
@@ -67,10 +57,27 @@ export class TransferEquipmentContract extends Contract {
             return { status: 400, message: `Could not find transferEquipment with reg. number [${registrationNumber}]` };
         }
 
-        if (!te.associatedTransferIDs) {
-            te.associatedTransferIDs = new Array<string>();
+        const participantAuthResult: {
+            digestToMatch: string,
+            transferIDHash: string,
+            validated: boolean
+        } = await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, tspID, bookingNumber, te.uniqueTransfersEquipmentIDHash ? te.uniqueTransfersEquipmentIDHash : "");
+
+        if (!te.associatedTransferIdHashs) {
+            te.associatedTransferIdHashs = new Array<string>();
         }
-        te.associatedTransferIDs.push(ctx.stub.createCompositeKey('transfer', [tspID, bookingNumber]));
+
+        if (!participantAuthResult.validated) {
+            return { status: 400, message: "You are not participant of transfer this TE should be assigned!" }
+        }
+        if (te.associatedTransferIdHashs.find(idHash => idHash === participantAuthResult.transferIDHash)) {
+            return { status: 400, message: "Specified transfer already assigned to specified TE!" };
+        }
+        te.associatedTransferIdHashs.push(participantAuthResult.transferIDHash);
+
+        if (!te.uniqueTransfersEquipmentIDHash || te.uniqueTransfersEquipmentIDHash.length === 0) {
+            te.uniqueTransfersEquipmentIDHash = participantAuthResult.digestToMatch;
+        }
 
         await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(te)));
 
@@ -93,10 +100,12 @@ export class TransferEquipmentContract extends Contract {
         } catch (error) {
             return { status: 404, message: `Could not find specified TE!` };
         }
-        if (!te.associatedTransferIDs || !te.associatedTransferIDs.find(transferID => transferID === ctx.stub.createCompositeKey('transfer', [eventDTO.associatedTransferData.tspID, eventDTO.associatedTransferData.bookingNumber]))) {
+        const dtoTransferIdHash = createHash('sha256').update(eventDTO.associatedTransferData.tspID + eventDTO.associatedTransferData.bookingNumber).digest('base64');
+        if (!te.associatedTransferIdHashs || !te.associatedTransferIdHashs.find(transferIDHash => transferIDHash === dtoTransferIdHash)) {
             return { status: 400, message: `Specified associated transfer not associated with specified TE!` };
         }
-        if (!(await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, eventDTO.associatedTransferData.tspID, eventDTO.associatedTransferData.bookingNumber))) {
+        const participantAuthResult = (await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, eventDTO.associatedTransferData.tspID, eventDTO.associatedTransferData.bookingNumber, te.uniqueTransfersEquipmentIDHash ? te.uniqueTransfersEquipmentIDHash : te.uniqueTransfersEquipmentIDHash));
+        if (!participantAuthResult.validated || !te.associatedTransferIdHashs.find(idHash => idHash === participantAuthResult.transferIDHash)) {
             return { status: 401, message: `You are not authorized to submit events for specified TE!` };
         }
         const event: TransferEquipmentEvent = TransferEquipmentEvent.getFromDTO(eventDTO);
@@ -135,6 +144,17 @@ export class TransferEquipmentContract extends Contract {
             throw error;
         }
 
+    }
+    static async _isAuthorizedTransferParticipant(ctx: Context, transferTspID: string, transferBookingNumber: string, digestToMatch: string): Promise<{
+        digestToMatch: string,
+        transferIDHash: string,
+        validated: boolean
+    }> {
+        const response: ChaincodeResponse = await ctx.stub.invokeChaincode("transfer", ["validateTransferParticipant", transferTspID, transferBookingNumber, digestToMatch], "glode-channel");
+        console.info(Buffer.from(response.payload).toString('utf8'));
+        let validationResults = JSON.parse(Buffer.from(response.payload).toString('utf8'));
+        console.info(validationResults);
+        return validationResults;
     }
 
     static _isAuthorized(orgId: string, authorizedOrgId: string, operation?: string): boolean {

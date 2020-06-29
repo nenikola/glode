@@ -3,8 +3,9 @@ export class TransferEquipment {
     ownerID: string
     transferEquipmentType: TransferEquipmentType;
     transferStatus: TransferEquipmentStatus;
-    currentLocation: Location
-    associatedTransferIDs?: string[];
+    currentLocation: Location;
+    associatedTransferIdHashs?: string[];
+    uniqueTransfersEquipmentIDHash?: string;
     events: TransferEquipmentEvent[];
 }
 
