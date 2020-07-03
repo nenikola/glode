@@ -43,7 +43,6 @@ peer channel join -b ./glode-channel.block
 peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.ocA.glode.com -c glode-channel -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile ./organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem
 
 #>>> PACKAGING AND INSTALLING CHAICODE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-export PACKAGE_NAME=fabcar
 
 export PACKAGE_NAME=transfer
 
@@ -62,8 +61,6 @@ export SEQUENCE=$(($SEQUENCE + 1))
 peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.ocA.glode.com --channelID glode-channel --name ${PACKAGE_NAME} --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem --signature-policy "${SIGNATURE_POLICY}"
 
 #------ocA
-#>>fabcar
-#  peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.ocA.glode.com --channelID glode-channel --name fabcar --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem --init-required --signature-policy "OR ('ocAMSP.peer','itAMSP.peer')"
 
 #>>transfer
 # peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.ocA.glode.com --channelID glode-channel --name transfer --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem --signature-policy "AND ('ocAMSP.peer','itAMSP.peer')"
@@ -71,20 +68,16 @@ peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameO
 #>>transferEquipment
 # peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.ocA.glode.com --channelID glode-channel --name ${PACKAGE_NAME} --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem --signature-policy "OR ('ocAMSP.peer','itAMSP.peer','itBMSP.peer','ffAMSP.peer')"
 
-
 #------ocB
-# peer lifecycle chaincode approveformyorg -o localhost:8050 --ordererTLSHostnameOverride orderer.ocB.glode.com --channelID glode-channel --name fabcar --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/ocB.glode.com/peers/orderer.ocB.glode.com/tls/tlscacerts/tls-localhost-8054-ca-ocB.pem --init-required --signature-policy "OR ('ocAMSP.peer','itAMSP.peer')"
 
 #------itA
-# peer lifecycle chaincode approveformyorg -o localhost:9050 --ordererTLSHostnameOverride orderer.itA.glode.com --channelID glode-channel --name fabcar --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/tls/tlscacerts/tls-localhost-9054-ca-itA.pem --init-required --signature-policy "OR ('ocAMSP.peer','itAMSP.peer')"
 
+#>>transfer
 # peer lifecycle chaincode approveformyorg -o localhost:9050 --ordererTLSHostnameOverride orderer.itA.glode.com --channelID glode-channel --name transfer --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/tls/tlscacerts/tls-localhost-9054-ca-itA.pem --signature-policy "AND ('ocAMSP.peer','itAMSP.peer')"
 
 #------itB
-# peer lifecycle chaincode approveformyorg -o localhost:10050 --ordererTLSHostnameOverride orderer.itB.glode.com --channelID glode-channel --name fabcar --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/itB.glode.com/peers/orderer.itB.glode.com/tls/tlscacerts/tls-localhost-10054-ca-itB.pem --init-required --signature-policy "OR ('ocAMSP.peer','itAMSP.peer')"
 
 #------ffA
-# peer lifecycle chaincode approveformyorg -o localhost:11050 --ordererTLSHostnameOverride orderer.ffA.glode.com --channelID glode-channel --name fabcar --version 1 --package-id $CC_PACKAGE_ID --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/ffA.glode.com/peers/orderer.ffA.glode.com/tls/tlscacerts/tls-localhost-11054-ca-ffA.pem --init-required --signature-policy "OR ('ocAMSP.peer','itAMSP.peer')"
 
 
 
@@ -92,8 +85,6 @@ peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameO
 peer lifecycle chaincode checkcommitreadiness --channelID glode-channel --name ${PACKAGE_NAME} --version 1 --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/ffA.glode.com/peers/orderer.ffA.glode.com/tls/tlscacerts/tls-localhost-11054-ca-ffA.pem --output json --signature-policy "${SIGNATURE_POLICY}"
 
 
-#------fabcar
-#  peer lifecycle chaincode checkcommitreadiness --channelID glode-channel --name fabcar --version 1 --sequence $SEQUENCE --tls --cafile ./organizations/peerOrganizations/ffA.glode.com/peers/orderer.ffA.glode.com/tls/tlscacerts/tls-localhost-11054-ca-ffA.pem --output json  --init-required --signature-policy "OR ('ocAMSP.peer','itAMSP.peer')"
 
 
 #------transfer
@@ -103,8 +94,6 @@ peer lifecycle chaincode checkcommitreadiness --channelID glode-channel --name $
 #>>> COMMIT CHAINCODE TO CHANNEL
 peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.ocA.glode.com --channelID glode-channel --name ${PACKAGE_NAME} --version 1 --sequence $SEQUENCE --signature-policy "${SIGNATURE_POLICY}" --tls --cafile ./organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem --peerAddresses localhost:7051 --tlsRootCertFiles ./organizations/peerOrganizations/ocA.glode.com/peers/peer0.ocA.glode.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ./organizations/peerOrganizations/itA.glode.com/peers/peer0.itA.glode.com/tls/ca.crt
 
-#------fabcar
-#  peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.ocA.glode.com --channelID glode-channel --name fabcar --version 1 --sequence $SEQUENCE --init-required --signature-policy "OR ('ocAMSP.peer','itAMSP.peer')" --tls --cafile ./organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem --peerAddresses localhost:7051 --tlsRootCertFiles ./organizations/peerOrganizations/ocA.glode.com/peers/peer0.ocA.glode.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ./organizations/peerOrganizations/itA.glode.com/peers/peer0.itA.glode.com/tls/ca.crt
 #  --peerAddresses localhost:8051 --tlsRootCertFiles ./organizations/peerOrganizations/ocB.glode.com/peers/peer0.ocB.glode.com/tls/ca.crt 
 #  --peerAddresses localhost:10051 --tlsRootCertFiles ./organizations/peerOrganizations/itB.glode.com/peers/peer0.itB.glode.com/tls/ca.crt 
 #  --peerAddresses localhost:11051 --tlsRootCertFiles ./organizations/peerOrganizations/ffA.glode.com/peers/peer0.ffA.glode.com/tls/ca.crt
@@ -308,7 +297,6 @@ export CORE_PEER_ADDRESS=localhost:11051
 #=====================================================================================================================================================================================================================================================================================================================================================================================================================
 #=====================================================================================================================================================================================================================================================================================================================================================================================================================
 ########################################################################
-#------fabcar
 # peer chaincode invoke -o orderer.itA.glode.com:9050 --tls true --cafile ./organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/tls/tlscacerts/tls-localhost-9054-ca-itA.pem -C glode-channel -n qscc -c '{"function":"GetTransactionByID","Args":["glode-channel", "5c06d071"]}'
 
 
