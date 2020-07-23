@@ -1,0 +1,27 @@
+.navbar-container {
+  width: 25%;
+  height: 100%;
+  background-color: #47b6b1;
+  padding-bottom: 0;
+}
+.navbar-list {
+  width: 90%;
+  margin-left: 10%;
+  display: flex;
+  flex-direction: column;
+}
+li.navbar-listItem a {
+  color: #333;
+}
+li.navbar-listItem {
+  font-weight: bold;
+  list-style: none;
+  width: 100%;
+  padding: 20px 20px 20px 0;
+  text-align: end;
+  border-bottom: 2px solid white;
+  text-decoration: none;
+}
+li.navbar-listItem a:hover {
+  color: rgba(51, 51, 51, 0.555);
+}

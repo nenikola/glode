@@ -1,0 +1,11 @@
+.bookings-container {
+  width: 100%;
+  height: 100%;
+  padding: 10px 20px;
+}
+
+.bookings-toolbar {
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+}
