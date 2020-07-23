@@ -1,0 +1,273 @@
+#
+# [Required]. A connection profile contains information about a set of network
+# components. It is typically used to configure gateway, allowing applications
+# interact with a network channel without worrying about the underlying
+# topology. A connection profile is normally created by an administrator who
+# understands this topology.
+#
+name: 'glode.ocA.profile.sample'
+#
+# [Optional]. Analogous to HTTP, properties with an "x-" prefix are deemed
+# "application-specific", and ignored by the gateway. For glode, property
+# "x-type" with value "hlfv1" was originally used to identify a connection
+# profile for Fabric 1.x rather than 0.x.
+#
+x-type: 'hlfv1'
+#
+# [Required]. A short description of the connection profile
+#
+description: 'Sample connection profile for documentation topic'
+#
+# [Required]. Connection profile schema version. Used by the gateway to
+# interpret these data.
+#
+version: '1.0'
+#
+# [Optional]. A logical description of each network channel; its peer and
+# orderer names and their roles within the channel. The physical details of
+# these components (e.g. peer IP addresses) will be specified later in the
+# profile; we focus first on the logical, and then the physical.
+#
+channels:
+  #
+  # [Optional]. glode is the only channel in this connection profile
+  #
+  glode-channel:
+    #
+    # [Optional]. Channel orderers for PaperNet. Details of how to connect to
+    # them is specified later, under the physical "orderers:" section
+    #
+    orderers:
+      #
+      # [Required]. Orderer logical name
+      #
+      - orderer.ocA.glode.com
+    #
+    # [Optional]. Peers and their roles
+    #
+    peers:
+      - peer0.itA.glode.com
+      - peer0.ocA.glode.com
+      - peer0.ffA.glode.com
+
+#
+# [Required]. List of organizations for all channels. At least one organization
+# is required.
+#
+organizations:
+  #
+  # [Required]. Organizational information for ocA
+  #
+  ocA:
+    #
+    # [Required]. The MSPID used to identify ocA
+    #
+    mspid: ocAMSP
+    #
+    # [Required]. The ocA peers
+    #
+    peers:
+      - peer0.ocA.glode.com
+    #
+    # [Optional]. Fabric-CA Certificate Authorities.
+    #
+    certificateAuthorities:
+      - ca-ocA
+  #
+  # [Optional]. Organizational information for itA
+  #
+  itA:
+    #
+    # [Required]. The MSPID used to identify itA
+    #
+    mspid: itAMSP
+    #
+    # [Required]. The itA peers
+    #
+    peers:
+      - peer0.itA.glode.com
+  #
+  # [Optional]. Organizational information for ffA
+  #
+  ffA:
+    #
+    # [Required]. The MSPID used to identify ffA
+    #
+    mspid: ffAMSP
+    #
+    # [Required]. The ffA peers
+    #
+    peers:
+      - peer0.ffA.glode.com
+#
+# [Optional]. Orderer physical information, by orderer name
+#
+orderers:
+  #
+  # [Required]. Name of ocA orderer
+  #
+  orderer.ocA.glode.com:
+    #
+    # [Required]. This orderer's IP address
+    #
+    url: grpcs://localhost:7050
+    tlsCACerts:
+      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/ocA.glode.com/peers/orderer.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem
+      # pem: |
+      #   -----BEGIN CERTIFICATE-----
+      #   MIICGjCCAcGgAwIBAgIUTQ6KrYCD+tzk1yeefLJUIwrHVrAwCgYIKoZIzj0EAwIw
+      #   ajELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMQ8wDQYDVQQH
+      #   EwZEdXJoYW0xFjAUBgNVBAoTDW9jQS5nbG9kZS5jb20xGTAXBgNVBAMTEGNhLm9j
+      #   QS5nbG9kZS5jb20wHhcNMjAwNjIyMTUzMjAwWhcNMzUwNjE5MTUzMjAwWjBqMQsw
+      #   CQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xpbmExDzANBgNVBAcTBkR1
+      #   cmhhbTEWMBQGA1UEChMNb2NBLmdsb2RlLmNvbTEZMBcGA1UEAxMQY2Eub2NBLmds
+      #   b2RlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABPejoVBOWWvzGY/6rNuP
+      #   vrCGurqE148sIgbTAuE1uP1DBPpnKokIp5Xcvmt4XAhuingbmnoNqF57GdixXPeI
+      #   lMKjRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEBMB0GA1Ud
+      #   DgQWBBR6UOSJ2G1pXgAAMBrTtnz3XnowqTAKBggqhkjOPQQDAgNHADBEAiAxJyV3
+      #   pYIuSlm3sYjjtFAR5vxWBKN76vR3vhQVnjFfWAIgaL5piz2LSU4WKo23gLlmPIKx
+      #   IoOFxN4kAQh7LDnQt4A=
+      #   -----END CERTIFICATE-----
+
+    #
+    # [Optional]. gRPC connection properties used for communication
+    #
+    grpcOptions:
+    ssl-target-name-override: orderer.ocA.glode.com
+#
+# [Required]. Peer physical information, by peer name. At least one peer is
+# required.
+#
+peers:
+  #
+  # [Required]. First ocA peer physical properties
+  #
+  peer0.ocA.glode.com:
+    #
+    # [Required]. Peer's IP address
+    #
+    url: grpcs://localhost:7051
+    tlsCACerts:
+      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/ocA.glode.com/peers/peer0.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem
+      # pem: |
+      #   -----BEGIN CERTIFICATE-----
+      #   MIICGjCCAcGgAwIBAgIUTQ6KrYCD+tzk1yeefLJUIwrHVrAwCgYIKoZIzj0EAwIw
+      #   ajELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMQ8wDQYDVQQH
+      #   EwZEdXJoYW0xFjAUBgNVBAoTDW9jQS5nbG9kZS5jb20xGTAXBgNVBAMTEGNhLm9j
+      #   QS5nbG9kZS5jb20wHhcNMjAwNjIyMTUzMjAwWhcNMzUwNjE5MTUzMjAwWjBqMQsw
+      #   CQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xpbmExDzANBgNVBAcTBkR1
+      #   cmhhbTEWMBQGA1UEChMNb2NBLmdsb2RlLmNvbTEZMBcGA1UEAxMQY2Eub2NBLmds
+      #   b2RlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABPejoVBOWWvzGY/6rNuP
+      #   vrCGurqE148sIgbTAuE1uP1DBPpnKokIp5Xcvmt4XAhuingbmnoNqF57GdixXPeI
+      #   lMKjRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/AgEBMB0GA1Ud
+      #   DgQWBBR6UOSJ2G1pXgAAMBrTtnz3XnowqTAKBggqhkjOPQQDAgNHADBEAiAxJyV3
+      #   pYIuSlm3sYjjtFAR5vxWBKN76vR3vhQVnjFfWAIgaL5piz2LSU4WKo23gLlmPIKx
+      #   IoOFxN4kAQh7LDnQt4A=
+      #   -----END CERTIFICATE-----
+
+    # [Optional]. gRPC connection properties used for communication
+    #
+    grpcOptions:
+      ssl-target-name-override: peer0.ocA.glode.com
+      request-timeout: 120001
+  #
+  # [Required]. itA peer physical properties
+  #
+  peer0.itA.glode.com:
+    url: grpcs://localhost:9051
+    tlsCACerts:
+      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/itA.glode.com/peers/peer0.itA.glode.com/tls/tlscacerts/tls-localhost-9054-ca-itA.pem
+    # pem: |
+    #   -----BEGIN CERTIFICATE-----
+    #   MIICEzCCAbmgAwIBAgIUYiNZ0rpcRLoAaHX/cWcHAp8HZKYwCgYIKoZIzj0EAwIw
+    #   ZjELMAkGA1UEBhMCVUsxEjAQBgNVBAgTCUhhbXBzaGlyZTEQMA4GA1UEBxMHSHVy
+    #   c2xleTEWMBQGA1UEChMNaXRBLmdsb2RlLmNvbTEZMBcGA1UEAxMQY2EuaXRBLmds
+    #   b2RlLmNvbTAeFw0yMDA2MjIxNTMyMDBaFw0zNTA2MTkxNTMyMDBaMGYxCzAJBgNV
+    #   BAYTAlVLMRIwEAYDVQQIEwlIYW1wc2hpcmUxEDAOBgNVBAcTB0h1cnNsZXkxFjAU
+    #   BgNVBAoTDWl0QS5nbG9kZS5jb20xGTAXBgNVBAMTEGNhLml0QS5nbG9kZS5jb20w
+    #   WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARwWvZ232gnCXAUnylPoErO56pyYUFp
+    #   nPtUahGt7LDwXL4fADVxxl/C+05XWL07dkGuJkthe7enLCnS38vN9MPoo0UwQzAO
+    #   BgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAdBgNVHQ4EFgQUJlM3
+    #   M50bF2BPKPMqozaSC4A9C5cwCgYIKoZIzj0EAwIDSAAwRQIhAJlTwduMZ6q7eH4S
+    #   a0qQyJRr0HBNOdCpw/mqz8Yl8WEwAiA7gFJQUb1jHeUwmhW3Gnxu2HnwVY/+PVKN
+    #   6Xq4uSWEXQ==
+    #   -----END CERTIFICATE-----
+
+    grpcOptions:
+      ssl-target-name-override: peer0.itA.glode.com
+      request-timeout: 120001
+  #
+  # [Required]. ffA peer physical properties
+  #
+  peer0.ffA.glode.com:
+    url: grpcs://localhost:11051
+    tlsCACerts:
+      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/ffA.glode.com/peers/peer0.ffA.glode.com/tls/tlscacerts/tls-localhost-11054-ca-ffA.pem
+    # pem: |
+    #   -----BEGIN CERTIFICATE-----
+    #   MIICEzCCAbmgAwIBAgIUYiNZ0rpcRLoAaHX/cWcHAp8HZKYwCgYIKoZIzj0EAwIw
+    #   ZjELMAkGA1UEBhMCVUsxEjAQBgNVBAgTCUhhbXBzaGlyZTEQMA4GA1UEBxMHSHVy
+    #   c2xleTEWMBQGA1UEChMNaXRBLmdsb2RlLmNvbTEZMBcGA1UEAxMQY2EuaXRBLmds
+    #   b2RlLmNvbTAeFw0yMDA2MjIxNTMyMDBaFw0zNTA2MTkxNTMyMDBaMGYxCzAJBgNV
+    #   BAYTAlVLMRIwEAYDVQQIEwlIYW1wc2hpcmUxEDAOBgNVBAcTB0h1cnNsZXkxFjAU
+    #   BgNVBAoTDWl0QS5nbG9kZS5jb20xGTAXBgNVBAMTEGNhLml0QS5nbG9kZS5jb20w
+    #   WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARwWvZ232gnCXAUnylPoErO56pyYUFp
+    #   nPtUahGt7LDwXL4fADVxxl/C+05XWL07dkGuJkthe7enLCnS38vN9MPoo0UwQzAO
+    #   BgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAdBgNVHQ4EFgQUJlM3
+    #   M50bF2BPKPMqozaSC4A9C5cwCgYIKoZIzj0EAwIDSAAwRQIhAJlTwduMZ6q7eH4S
+    #   a0qQyJRr0HBNOdCpw/mqz8Yl8WEwAiA7gFJQUb1jHeUwmhW3Gnxu2HnwVY/+PVKN
+    #   6Xq4uSWEXQ==
+    #   -----END CERTIFICATE-----
+
+    grpcOptions:
+      ssl-target-name-override: peer0.ffA.glode.com
+      request-timeout: 120001
+#
+# [Optional]. Fabric-CA Certificate Authority physical information, by name.
+# This information can be used to (e.g.) enroll new users. Communication is via
+# REST, hence options relate to HTTP rather than gRPC.
+#
+certificateAuthorities:
+  #
+  # [Required]. ocA CA
+  #
+  ca-ocA:
+    #
+    # [Required]. CA IP address
+    #
+    url: https://localhost:7054
+    #
+    # [Optioanl]. HTTP connection properties used for communication
+    #
+    httpOptions:
+      verify: false
+    #
+    # [Optional]. Fabric-CA supports Certificate Signing Requests (CSRs). A
+    # registrar is needed to enroll new users.
+    #
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    #
+    # [Optional]. The name of the CA.
+    #
+    caName: ca-ocA
+    tlsCACerts:
+      path: /home/nenikola/Documents/projects/glode/network/organizations/fabric-ca/ocA/tls-cert.pem
+      # pem: |
+      #   -----BEGIN CERTIFICATE-----
+      #   MIICdzCCAh6gAwIBAgIUBoUT+D2O9jGZWZapnZueLPsouBwwCgYIKoZIzj0EAwIw
+      #   ajELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMQ8wDQYDVQQH
+      #   EwZEdXJoYW0xFjAUBgNVBAoTDW9jQS5nbG9kZS5jb20xGTAXBgNVBAMTEGNhLm9j
+      #   QS5nbG9kZS5jb20wHhcNMjAwNjIyMTMxNTAwWhcNMjEwNjIyMTMxNTAwWjBmMQsw
+      #   CQYDVQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xpbmExDzANBgNVBAcTBkR1
+      #   cmhhbTEWMBQGA1UEChMNb2NBLmdsb2RlLmNvbTEVMBMGA1UEAxMMZWMyNjc3NWVl
+      #   ODZkMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdkkTeH9rkJL3hgz81J9+vBuk
+      #   JKwMxpI2lxm4CysWIqAraRZy0YcMA4tctaJ992H6F5Lm7BpM2TXfrYdb33DG/qOB
+      #   pTCBojAOBgNVHQ8BAf8EBAMCA6gwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUF
+      #   BwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFJtQugDG8TIjiQr6JPvV+WsCgNMe
+      #   MB8GA1UdIwQYMBaAFFD9IpcnC/qvt3beNbL916S73r3EMCMGA1UdEQQcMBqCCWxv
+      #   Y2FsaG9zdIINb2NBLmdsb2RlLmNvbTAKBggqhkjOPQQDAgNHADBEAiA9/5btl0UF
+      #   BUchkXKFOmpgK0heZZ2xULvNDzLg1eVS9AIgbcPq47zl1hcl1xXz2mtaUHJ+rlX6
+      #   QXPUJrpV+HJsA2s=
+      #   -----END CERTIFICATE-----
