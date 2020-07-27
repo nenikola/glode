@@ -12,6 +12,7 @@
   "author": "Nikola Nedeljkovic",
   "license": "ISC",
   "dependencies": {
+    "app-shared-library": "^1.0.1",
     "fabric-contract-api": "^2.1.2",
     "fabric-shim": "^2.1.2"
   },

@@ -4,8 +4,46 @@ import { Contract, Context } from "fabric-contract-api";
 import { ClientIdentity } from "fabric-shim";
 import { createHash, randomBytes } from "crypto";
 import { Booking, BookingStatus } from "./booking.model";
+import { Transfer, TransferStatus, TransferRole } from "./transfer.model";
 
 export class BookingContract extends Contract {
+  async queryOrganizationBookings(ctx: Context) {
+    const cliOrgID = BookingContract._getClientOrgId(ctx.clientIdentity);
+    let allResults = [];
+    try {
+      const query = `{
+        "selector": {
+           "_id": {
+              "$gt": null
+           },
+           "$or": [
+              {
+                 "bookingOrgID": "${cliOrgID}"
+              },
+              {
+                 "transportServiceProviderID": "${cliOrgID}"
+              }
+           ]
+        }
+     }`;
+      console.info(query);
+      // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
+      for await (const { key, value } of ctx.stub.getPrivateDataQueryResult(
+        `_implicit_org_${ctx.clientIdentity.getMSPID()}`,
+        query
+      )) {
+        const strValue = Buffer.from(value).toString("utf8");
+        console.info("Found <-->", key, " : ", strValue);
+        let record: Booking = JSON.parse(strValue);
+        allResults.push(record);
+      }
+      return JSON.stringify(allResults, null, 2);
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
+
   async createBooking(ctx: Context, bookingString: string) {
     const cliOrgID = BookingContract._getClientOrgId(ctx.clientIdentity);
     let newBooking: Booking;
@@ -21,7 +59,6 @@ export class BookingContract extends Contract {
       return { status: 401, message: "Not authorized to create booking!" };
     }
     const compositeKey: string = ctx.stub.createCompositeKey("booking", [
-      newBooking.bookingOrgID,
       newBooking.transportServiceProviderID,
       newBooking.uniqueAssociatedTransfersSecret,
     ]);
@@ -49,9 +86,12 @@ export class BookingContract extends Contract {
     const cliOrgID = BookingContract._getClientOrgId(ctx.clientIdentity);
     const bookingStatus =
       BookingStatus[bookingStatusString] || BookingStatus.SUBMITTED;
-    // if (bookingStatus !== BookingStatus.APPROVED && bookingStatus !== BookingStatus.REJECTED) {
-    //     return { status: 400, message: "Invalid status submitted!" };
-    // }
+    if (
+      bookingStatus !== BookingStatus.APPROVED &&
+      bookingStatus !== BookingStatus.REJECTED
+    ) {
+      return { status: 400, message: "Invalid status submitted!" };
+    }
     let currentBooking: Booking;
     try {
       currentBooking = new Booking(JSON.parse(currentBookingString));
@@ -71,7 +111,6 @@ export class BookingContract extends Contract {
       };
     }
     const compositeKey: string = ctx.stub.createCompositeKey("booking", [
-      currentBooking.bookingOrgID,
       currentBooking.transportServiceProviderID,
       currentBooking.uniqueAssociatedTransfersSecret,
     ]);
@@ -111,6 +150,43 @@ export class BookingContract extends Contract {
         compositeKey,
         Buffer.from(JSON.stringify(currentBooking))
       );
+      if (bookingStatus === BookingStatus.APPROVED) {
+        const transfer: Transfer = {
+          bookingNumber: currentBooking.bookingID,
+          participants: [
+            {
+              role: TransferRole.TRANSPORT_SERVICE_BUYER,
+              participantID: currentBooking.bookingOrgID,
+              participantName: currentBooking.bookingOrgID,
+            },
+          ],
+          transportServiceProviderID: currentBooking.transportServiceProviderID,
+          transportServiceProviderName:
+            currentBooking.transportServiceProviderName,
+          transferData: {
+            destinationLocation:
+              currentBooking.transferData.destinationLocation,
+            originLocation: currentBooking.transferData.originLocation,
+            plannedArrival: currentBooking.transferData.requestedArrival
+              ? currentBooking.transferData.requestedArrival
+              : undefined,
+            plannedDeparture: currentBooking.transferData.requestedDeparture
+              ? currentBooking.transferData.requestedArrival
+              : undefined,
+          },
+          transferStatus: TransferStatus.WAITING,
+        };
+        const transferCreationResults = await ctx.stub.invokeChaincode(
+          "transfer",
+          [
+            "createTransfer",
+            JSON.stringify(transfer),
+            currentBooking.uniqueAssociatedTransfersSecret,
+          ],
+          "glode-channel"
+        );
+        console.info(JSON.stringify(transferCreationResults));
+      }
       return { status: 200, message: "Booking status updated!" };
     } else {
       return {

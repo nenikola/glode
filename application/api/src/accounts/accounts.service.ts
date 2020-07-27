@@ -1,13 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { AppService } from './../app.service';
 import * as FabricCAServices from 'fabric-ca-client';
-import { X509Identity } from 'fabric-network';
+import { X509Identity, Wallet, Identity } from 'fabric-network';
 import * as path from 'path';
 
 @Injectable()
 export class AccountsService {
   constructor(private readonly appService: AppService) {}
-
+  public async getIdentity(
+    username: string,
+    wallet: Wallet,
+  ): Promise<Identity> {
+    if (!username || !(username.length > 0)) {
+      throw new Error('Username not provided!');
+    }
+    // Check to see if we've already enrolled the user.
+    const identity = await wallet.get(username);
+    if (!identity) {
+      console.log(
+        `An identity for the user "${username}" does not exist in the wallet`,
+      );
+      throw new Error(
+        `An identity for the user "${username}" does not exist in the wallet`,
+      );
+    }
+    return identity;
+  }
   async login(username: string, password: string, orgID: string) {
     const ccp = this.appService.getConnectionProfile(orgID);
 
@@ -19,7 +37,7 @@ export class AccountsService {
     const wallet = await this.appService.getWallet();
     // Check to see if we've already enrolled the user.
     try {
-      const userIdentity = await this.appService.getIdentity(
+      const userIdentity = await this.getIdentity(
         `${username}@${orgID}`,
         wallet,
       );

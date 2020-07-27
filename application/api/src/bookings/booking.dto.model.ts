@@ -1,10 +1,10 @@
-export class Booking {
-  bookingID: string; // bookingOrgID + tspID + uniqueAssociatedTransfersSecret
+export class BookingDTO {
+  bookingID?: string; // bookingOrgID + tspID + uniqueAssociatedTransfersSecret
   bookingNotes: string;
   bookingOrgID: string;
   bookingStatus: BookingStatus;
-  equipmentData?: BookingTransferEquipmentData;
-  transferData: BookingTransferData;
+  equipmentData?: BookingTransferEquipmentDataDTO;
+  transferData: BookingTransferDataDTO;
   transportServiceProviderID: string;
   transportServiceProviderName: string;
   uniqueAssociatedTransfersSecret: string;
@@ -12,7 +12,7 @@ export class Booking {
     bookingNotes: string;
     bookingOrgID: string;
     bookingStatus: BookingStatus;
-    equipmentData?: BookingTransferEquipmentData;
+    equipmentData?: BookingTransferEquipmentDataDTO;
     transferData: BookingTransferDataDTO;
     transportServiceProviderID: string;
     transportServiceProviderName: string;
@@ -20,43 +20,40 @@ export class Booking {
   }) {
     console.info(JSON.stringify(params));
     params.transferData.requestedDeparture = new Date(
-      params.transferData.requestedDeparture
+      params.transferData.requestedDeparture,
     );
     params.transferData.requestedArrival
       ? (params.transferData.requestedArrival = new Date(
-          params.transferData.requestedArrival
+          params.transferData.requestedArrival,
         ))
-      : "";
+      : '';
     Object.assign(this, params);
-    this.bookingID = this.uniqueAssociatedTransfersSecret;
+    this.bookingID =
+      this.bookingOrgID +
+      this.transportServiceProviderID +
+      this.uniqueAssociatedTransfersSecret;
   }
 }
 
-export class BookingTransferEquipmentData {
+export class BookingTransferEquipmentDataDTO {
   transferEquipmentQuantity: number;
   transferEquipmentType: TransferEquipmentType;
 }
 
 export enum TransferEquipmentType {
-  TWNYFTCONTAINER = "20_FEET_CONTAINER",
-  FRTYFTCONTAINER = "40_FEET_CONTAINER",
+  TWNYFTCONTAINER = '20_FEET_CONTAINER',
+  FRTYFTCONTAINER = '40_FEET_CONTAINER',
 }
 export enum BookingStatus {
-  SUBMITTED = "SUBMITTED",
-  REJECTED = "REJECTED",
-  APPROVED = "APPROVED",
+  SUBMITTED = 'SUBMITTED',
+  REJECTED = 'REJECTED',
+  APPROVED = 'APPROVED',
 }
 export class BookingTransferDataDTO {
   originLocation: Location;
   destinationLocation: Location;
   requestedDeparture: string | Date;
   requestedArrival?: string | Date;
-}
-export class BookingTransferData {
-  originLocation: Location;
-  destinationLocation: Location;
-  requestedDeparture: Date;
-  requestedArrival?: Date;
 }
 
 export class Location {

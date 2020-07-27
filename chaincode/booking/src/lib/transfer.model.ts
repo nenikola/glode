@@ -2,11 +2,11 @@ export class Transfer {
   bookingNumber: string;
   equipmentData?: TransferEquipmentData;
   participants?: TransferParticipant[];
+  transportServiceProviderID: string;
+  transportServiceProviderName: string;
   transferData: TransferData;
   transferSecret?: string;
   transferStatus: TransferStatus;
-  transportServiceProviderID: string;
-  transportServiceProviderName: string;
 }
 
 export class ParticipantTransfer {
@@ -54,7 +54,7 @@ export class TransferData {
 }
 
 export class Location {
-  address: Address;
+  address?: Address;
   unlocode: string;
   geoCoordinates?: {
     lat: number;

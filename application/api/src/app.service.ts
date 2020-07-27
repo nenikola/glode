@@ -22,24 +22,4 @@ export class AppService {
     console.log(`Wallet path: ${walletPath}`);
     return wallet;
   }
-
-  public async getIdentity(
-    username: string,
-    wallet: Wallet,
-  ): Promise<Identity> {
-    if (!username || !(username.length > 0)) {
-      throw new Error('Username not provided!');
-    }
-    // Check to see if we've already enrolled the user.
-    const identity = await wallet.get(username);
-    if (!identity) {
-      console.log(
-        `An identity for the user "${username}" does not exist in the wallet`,
-      );
-      throw new Error(
-        `An identity for the user "${username}" does not exist in the wallet`,
-      );
-    }
-    return identity;
-  }
 }

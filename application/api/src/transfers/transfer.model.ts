@@ -2,11 +2,11 @@ export class Transfer {
   bookingNumber: string;
   equipmentData?: TransferEquipmentData;
   participants?: TransferParticipant[];
-  transferData: TransferData;
-  transferSecret?: string;
-  transferStatus: TransferStatus;
   transportServiceProviderID: string;
   transportServiceProviderName: string;
+  transferData: TransferData;
+  transferSecret: string;
+  transferStatus: TransferStatus;
 }
 
 export class ParticipantTransfer {
@@ -17,7 +17,7 @@ export class ParticipantTransfer {
   constructor(
     bookingNumber: string,
     transportServiceProviderID: string,
-    transferSecret: string
+    transferSecret: string,
   ) {
     this.bookingNumber = bookingNumber;
     this.transferSecret = transferSecret;
@@ -54,7 +54,7 @@ export class TransferData {
 }
 
 export class Location {
-  address: Address;
+  address?: Address;
   unlocode: string;
   geoCoordinates?: {
     lat: number;

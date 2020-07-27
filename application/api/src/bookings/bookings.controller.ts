@@ -11,7 +11,7 @@ import { BookingsService } from './bookings.service';
 import {
   BookingDTO,
   BookingStatus,
-} from '../../../shared/dist/booking.dto.model';
+} from 'app-shared-library/dist/booking.dto.model';
 
 @Controller('bookings')
 export class BookingsController {
@@ -22,17 +22,22 @@ export class BookingsController {
     @Body('status') newStatus: BookingStatus,
     @Body('booking') originalBookingDTO: BookingDTO,
   ) {
-    return `Booking created. Payload: ${await this.bookingService.updateStatus(
+    const res = await this.bookingService.updateStatus(
       newStatus,
       originalBookingDTO,
-    )}`;
+    );
+    return {
+      message: `Booking status updated.`,
+      res,
+    };
   }
   @Post()
   @HttpCode(201)
   async createBooking(@Body() bookingDTO: BookingDTO) {
-    return `Booking created. Payload: ${await this.bookingService.save(
-      bookingDTO,
-    )}`;
+    await this.bookingService.save(bookingDTO);
+    return {
+      message: `Booking created.`,
+    };
   }
   @Get('/:id')
   async getBooking(@Param('id') bookingID: number) {
@@ -50,8 +55,8 @@ export class BookingsController {
     console.log(`Requested tsp ID: ${tspID}`);
 
     return {
-      status: 200,
-      message: `Bookings queried. Payload: ${await this.bookingService.getAll()}`,
+      message: `Bookings queried.`,
+      data: await this.bookingService.getAll(tspID),
     };
   }
 }

@@ -20,18 +20,15 @@ export class BookingDTO {
   }) {
     console.info(JSON.stringify(params));
     params.transferData.requestedDeparture = new Date(
-      params.transferData.requestedDeparture,
+      params.transferData.requestedDeparture
     );
     params.transferData.requestedArrival
       ? (params.transferData.requestedArrival = new Date(
-          params.transferData.requestedArrival,
+          params.transferData.requestedArrival
         ))
-      : '';
+      : "";
     Object.assign(this, params);
-    this.bookingID =
-      this.bookingOrgID +
-      this.transportServiceProviderID +
-      this.uniqueAssociatedTransfersSecret;
+    this.bookingID = this.uniqueAssociatedTransfersSecret;
   }
 }
 
@@ -41,13 +38,13 @@ export class BookingTransferEquipmentDataDTO {
 }
 
 export enum TransferEquipmentType {
-  TWNYFTCONTAINER = '20_FEET_CONTAINER',
-  FRTYFTCONTAINER = '40_FEET_CONTAINER',
+  TWNYFTCONTAINER = "20_FEET_CONTAINER",
+  FRTYFTCONTAINER = "40_FEET_CONTAINER",
 }
 export enum BookingStatus {
-  SUBMITTED = 'SUBMITTED',
-  REJECTED = 'REJECTED',
-  APPROVED = 'APPROVED',
+  SUBMITTED = "SUBMITTED",
+  REJECTED = "REJECTED",
+  APPROVED = "APPROVED",
 }
 export class BookingTransferDataDTO {
   originLocation: Location;
