@@ -18,7 +18,7 @@ export class TransfersService {
     tspOrgID: string,
     userOrgID: string,
   ): Promise<any> {
-    const ccp = this.appService.getConnectionProfile(tspOrgID);
+    const ccp = this.appService.getConnectionProfile(userOrgID);
     const wallet = await this.appService.getWallet();
     const identity = await this.accountsService.getIdentity(
       `user1@${userOrgID}`,
@@ -32,19 +32,11 @@ export class TransfersService {
     });
 
     const network = await gateway.getNetwork('glode-channel');
-    const endorsers = network
-      .getChannel()
-      .getEndorsers()
-      .filter(endorser => endorser.mspid === `${tspOrgID}MSP`);
-    console.log(JSON.stringify(endorsers));
 
     const result = await network
       .getContract('transfer')
-      .createTransaction('readTransfer')
-      .setEndorsingPeers(endorsers)
-      .submit(tspOrgID, bookingNumber);
+      .evaluateTransaction('readTransfer', tspOrgID, bookingNumber);
     return JSON.parse(Buffer.from(result).toString());
-    // throw new Error('Method not implemented.');
   }
 
   async getAllOrgTransfers(orgID: string): Promise<ParticipantTransfer[]> {
@@ -64,7 +56,7 @@ export class TransfersService {
     const network = await gateway.getNetwork('glode-channel');
     const result = await network
       .getContract('transfer')
-      .evaluateTransaction('queryAllTransfersByTSP', orgID);
+      .evaluateTransaction('readAllOrgTransfers', orgID);
     return JSON.parse(Buffer.from(result).toString());
   }
 }

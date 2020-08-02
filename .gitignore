@@ -8,3 +8,4 @@ glode-channel.block
 dist
 node_modules
 wallet
+/application/api/resources/*

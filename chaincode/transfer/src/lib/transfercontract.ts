@@ -143,7 +143,7 @@ export class TransferContract extends Contract {
     }
     return JSON.stringify({ status: 404, message: "Transfer not found" });
   }
-  async readAllOrgTransfers(ctx: Context, tspIDstring: string) {
+  async readAllOrgTransfers(ctx: Context) {
     const mspString: string = ctx.clientIdentity.getMSPID();
     const cliOrg = mspString.slice(0, mspString.length - 3);
 
@@ -151,7 +151,7 @@ export class TransferContract extends Contract {
     try {
       // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
       for await (const { key, value } of ctx.stub.getPrivateDataQueryResult(
-        TransferContract._getPrivateCollectionString(tspIDstring),
+        TransferContract._getPrivateCollectionString(cliOrg),
         `{
              "selector": {
                 "participants": {
