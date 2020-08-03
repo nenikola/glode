@@ -27,8 +27,8 @@ export class ParticipantTransfer {
 }
 
 export class TransferEquipmentData {
-  transferEquipmentID: string;
   transferEquipmentDescription: string;
+  transferEquipmentID: string;
 }
 export class TransferParticipant {
   participantID: string;
@@ -46,21 +46,21 @@ export enum TransferStatus {
   IN_TRANSPORTATION,
 }
 export class TransferData {
-  originLocation: Location;
   destinationLocation: Location;
+  originLocation: Location;
+  plannedArrival?: Date;
+  plannedDeparture?: Date;
   transferVehicleID?: string;
   transferVehicleType?: string;
-  plannedDeparture?: Date;
-  plannedArrival?: Date;
 }
 
 export class Location {
   address: Address;
-  unlocode: string;
   geoCoordinates?: {
     lat: number;
     lon: number;
   };
+  unlocode: string;
 }
 
 export class Address {

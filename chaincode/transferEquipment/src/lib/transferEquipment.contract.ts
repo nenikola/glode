@@ -121,8 +121,10 @@ export class TransferEquipmentContract extends Contract {
     await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(te)));
 
     const message = `Successfully associated transfer [${tspID}${bookingNumber}] to TE [${registrationNumber}]`;
-    console.info(message);
-    return message;
+    return {
+      status: 200,
+      message,
+    };
   }
   async submitTransferEquipmentEvent(ctx: Context, eventString: string) {
     let eventDTO: TransferEquipmentEventDTO;
@@ -142,30 +144,30 @@ export class TransferEquipmentContract extends Contract {
     } catch (error) {
       return { status: 404, message: `Could not find specified TE!` };
     }
-    const dtoTransferIdHash = createHash("sha256")
-      .update(
-        eventDTO.associatedTransferData.tspID +
-          eventDTO.associatedTransferData.bookingNumber
-      )
-      .digest("base64");
-    if (
-      !te.associatedTransferIdHashs ||
-      !te.associatedTransferIdHashs.find(
-        (transferIDHash) => transferIDHash === dtoTransferIdHash
-      )
-    ) {
-      return {
-        status: 400,
-        message: `Specified associated transfer not associated with specified TE!`,
-      };
-    }
+    // const dtoTransferIdHash = createHash("sha256")
+    //   .update(
+    //     eventDTO.associatedTransferData.tspID +
+    //       eventDTO.associatedTransferData.bookingNumber
+    //   )
+    //   .digest("base64");
+    // if (
+    //   !te.associatedTransferIdHashs ||
+    //   !te.associatedTransferIdHashs.find(
+    //     (transferIDHash) => transferIDHash === dtoTransferIdHash
+    //   )
+    // ) {
+    //   return {
+    //     status: 400,
+    //     message: `Specified associated transfer not associated with specified TE!`,
+    //   };
+    // }
     const participantAuthResult = await TransferEquipmentContract._isAuthorizedTransferParticipant(
       ctx,
       eventDTO.associatedTransferData.tspID,
       eventDTO.associatedTransferData.bookingNumber,
       te.uniqueTransfersEquipmentIDHash
-        ? te.uniqueTransfersEquipmentIDHash
-        : te.uniqueTransfersEquipmentIDHash
+      // ? te.uniqueTransfersEquipmentIDHash
+      // : te.uniqueTransfersEquipmentIDHash
     );
     if (
       !participantAuthResult.validated ||
