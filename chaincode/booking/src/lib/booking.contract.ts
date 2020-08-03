@@ -160,9 +160,6 @@ export class BookingContract extends Contract {
               participantName: currentBooking.bookingOrgID,
             },
           ],
-          transportServiceProviderID: currentBooking.transportServiceProviderID,
-          transportServiceProviderName:
-            currentBooking.transportServiceProviderName,
           transferData: {
             destinationLocation:
               currentBooking.transferData.destinationLocation,
@@ -174,8 +171,15 @@ export class BookingContract extends Contract {
               ? currentBooking.transferData.requestedArrival
               : undefined,
           },
+          transferSecret: "",
           transferStatus: TransferStatus.WAITING,
+          transportServiceProviderID: currentBooking.transportServiceProviderID,
+          transportServiceProviderName:
+            currentBooking.transportServiceProviderName,
         };
+
+        console.log(`PASSED: ${JSON.stringify(transfer)}`);
+
         const transferCreationResults = await ctx.stub.invokeChaincode(
           "transfer",
           [

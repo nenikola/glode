@@ -1,16 +1,10 @@
 "use-strict";
 
-import { Contract, Context, Info } from "fabric-contract-api";
-import { Transfer, ParticipantTransfer } from "./transfer.model";
-import { createHash, randomBytes } from "crypto";
+import { Contract, Context } from "fabric-contract-api";
+import { Transfer } from "./transfer.model";
+import { createHash } from "crypto";
 
 export class TransferContract extends Contract {
-  // async _updateTransfer(ctx: Context, updatedTransfer: Transfer) {
-  //     const tspIDString = updatedTransfer.transportServiceProviderID;
-  //     const compositeKey: string = ctx.stub.createCompositeKey('transfer', [tspIDString, updatedTransfer.bookingNumber]);
-  //     await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(tspIDString), compositeKey, Buffer.from(JSON.stringify(updatedTransfer)));
-  // }
-
   async validateTransferParticipant(
     ctx: Context,
     tspID: string,
@@ -34,6 +28,7 @@ export class TransferContract extends Contract {
         await ctx.stub.getPrivateData(cliOrgCollectionID, compositeKey)
       ).toString("utf8")
     );
+
     console.info(JSON.stringify(cliPvtData));
     const cliPvtDataHashOrg = Buffer.from(
       await ctx.stub.getPrivateDataHash(cliOrgCollectionID, compositeKey)
@@ -149,7 +144,6 @@ export class TransferContract extends Contract {
 
     let allResults = [];
     try {
-      // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
       for await (const { key, value } of ctx.stub.getPrivateDataQueryResult(
         TransferContract._getPrivateCollectionString(cliOrg),
         `{
@@ -165,13 +159,14 @@ export class TransferContract extends Contract {
         const strValue = Buffer.from(value).toString("utf8");
         console.info("Found <-->", key, " : ", strValue);
         let record: Transfer = JSON.parse(strValue);
-        allResults.push({ Key: key, Record: record });
+        allResults.push(record);
       }
       return JSON.stringify(allResults, null, 2);
     } catch (error) {
       return JSON.stringify({ message: error }, null, 2);
     }
   }
+
   async createTransfer(
     ctx: Context,
     transferString: string,
@@ -203,7 +198,7 @@ export class TransferContract extends Contract {
         compositeKey
       )
     ).toString("utf8");
-    console.info(`PRIVATE DATA HASH: ${hash}`);
+
     if (hash && hash.length > 0) {
       throw new Error(
         JSON.stringify({
@@ -212,29 +207,12 @@ export class TransferContract extends Contract {
         })
       );
     }
-    // const pTransfer = new ParticipantTransfer(
-    //   newTransfer.bookingNumber,
-    //   newTransfer.transportServiceProviderID,
-    //   transferSecret
-    // );
-    // console.info(`P-TRANSFER: ${JSON.stringify(pTransfer)}`);
-    // const secretsCompositeKey: string = ctx.stub.createCompositeKey(
-    //   "transferSecret",
-    //   [newTransfer.transportServiceProviderID, newTransfer.bookingNumber]
-    // );
-
     try {
       await ctx.stub.putPrivateData(
         TransferContract._getPrivateCollectionString(mspString),
         compositeKey,
         Buffer.from(JSON.stringify(newTransfer))
       );
-      // await ctx.stub.putPrivateData(
-      //   TransferContract._getPrivateCollectionString(mspString),
-      //   secretsCompositeKey,
-      //   Buffer.from(JSON.stringify(pTransfer))
-      // );
-
       if (newTransfer.participants && newTransfer.participants.length > 0) {
         await Promise.all(
           newTransfer.participants.map(async (participant) => {
@@ -252,65 +230,6 @@ export class TransferContract extends Contract {
     } catch (error) {
       console.info(`ERROR: ${error}`);
       throw error;
-    }
-  }
-  // async addTransferParticipant(ctx: Context, transferKey: string, participantID: string, participantName: string, role: string,) {
-  //     const mspString: string = ctx.clientIdentity.getMSPID();
-  //     const compositeKey = ctx.stub.createCompositeKey('transfer', [mspString.slice(0, mspString.length - 3), transferKey]);
-
-  //     const newParticipant: TransferParticipant = {
-  //         participantID,
-  //         participantName,
-  //         role: parseInt(role)
-  //     }
-  //     const transferStr = await ctx.stub.getPrivateData(TransferContract._getPrivateCollectionString(mspString), compositeKey);
-  //     const strValue = Buffer.from(transferStr).toString('utf8');
-  //     let transfer: Transfer = JSON.parse(strValue);
-
-  //     if (transfer.participants?.find(participant => participantID === newParticipant.participantID)) {
-  //         throw Error("Participant already added!");
-  //     }
-  //     else {
-  //         if (transfer.participants) {
-  //             transfer.participants.push(newParticipant);
-  //         } else {
-  //             transfer.participants = [newParticipant];
-  //         }
-  //     }
-  //     const newParticipantTransfer: ParticipantTransfer = {
-  //         bookingNumber: transfer.bookingNumber,
-  //         transportServiceProviderID: transfer.transportServiceProviderID,
-  //         equipmentData: transfer.equipmentData
-  //     }
-
-  //     // await ctx.stub.invokeChaincode("transfer", ["updateNewParticipant", newParticipant.participantID, JSON.stringify(newParticipantTransfer)], "glode-channel");
-  //     await ctx.stub.putPrivateData(TransferContract._getPrivateCollectionString(transfer.transportServiceProviderID), compositeKey, Buffer.from(JSON.stringify(transfer)));
-
-  // }
-
-  async queryAllTransfersByTSP(
-    ctx: Context,
-    transportServiceProviderID: string
-  ): Promise<string> {
-    let allResults = [];
-    try {
-      // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
-      for await (const {
-        key,
-        value,
-      } of ctx.stub.getPrivateDataByPartialCompositeKey(
-        `_implicit_org_${ctx.clientIdentity.getMSPID()}`,
-        "transferSecret",
-        []
-      )) {
-        const strValue = Buffer.from(value).toString("utf8");
-        console.info("Found <-->", key, " : ", strValue);
-        let record: Transfer = JSON.parse(strValue);
-        allResults.push({ Key: key, Record: record });
-      }
-      return JSON.stringify(allResults, null, 2);
-    } catch (error) {
-      return error;
     }
   }
 
