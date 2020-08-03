@@ -19,7 +19,6 @@ export class AppService {
   public async getWallet(): Promise<Wallet> {
     const walletPath = path.join(process.cwd(), 'wallet');
     const wallet = await Wallets.newFileSystemWallet(walletPath);
-    console.log(`Wallet path: ${walletPath}`);
     return wallet;
   }
 }

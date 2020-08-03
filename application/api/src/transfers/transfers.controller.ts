@@ -9,7 +9,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { TransfersService } from './transfers.service';
-import { Transfer } from 'app-shared-library/dist/transfer.dto.model';
+import { TransferDomain } from 'app-shared-library';
 import { MissingArgumentsException } from 'src/errors/validation.error';
 // import { GetTransferSO } from './getTransfer.so';
 
@@ -39,23 +39,19 @@ export class TransfersController {
       throw new MissingArgumentsException('tspOrg ID');
     }
 
-    const transfer: Transfer = await this.transfersService.getTransfer(
+    const transfer: TransferDomain.Transfer = await this.transfersService.getTransfer(
       bookingNumber,
       tspOrgID,
       'ffA',
     );
     return transfer;
-
-    // return new GetTransferSO(
-    //   bookingNumber,
-    //   tspOrgID,
-    //   this.transfersService,
-    // ).getResults();
   }
 
   @Put('/:id')
   async updateTransfer(
     @Param('id') id: string,
-    @Body() updatedTransfer: Transfer,
-  ) {}
+    @Body() updatedTransfer: TransferDomain.Transfer,
+  ) {
+    throw new Error('Method not implemented.');
+  }
 }

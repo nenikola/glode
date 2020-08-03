@@ -6,5 +6,6 @@ import { AppService } from 'src/app.service';
 @Module({
   controllers: [AccountsController],
   providers: [AccountsService, AppService],
+  exports:[AccountsService]
 })
 export class AccountsModule {}

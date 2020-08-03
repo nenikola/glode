@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
-  ParticipantTransfer,
-  Transfer,
-} from 'app-shared-library/dist/transfer.dto.model';
+  TransferDomain,
+} from 'app-shared-library';
 import { AppService } from '../app.service';
 import { AccountsService } from '../accounts/accounts.service';
 import { Gateway } from 'fabric-network';
@@ -18,6 +17,7 @@ export class TransfersService {
     tspOrgID: string,
     userOrgID: string,
   ): Promise<any> {
+    
     const ccp = this.appService.getConnectionProfile(userOrgID);
     const wallet = await this.appService.getWallet();
     const identity = await this.accountsService.getIdentity(
@@ -39,7 +39,7 @@ export class TransfersService {
     return JSON.parse(Buffer.from(result).toString());
   }
 
-  async getAllOrgTransfers(orgID: string): Promise<ParticipantTransfer[]> {
+  async getAllOrgTransfers(orgID: string): Promise<TransferDomain.Transfer[]> {
     const ccp = this.appService.getConnectionProfile(orgID);
     const wallet = await this.appService.getWallet();
     const identity = await this.accountsService.getIdentity(
