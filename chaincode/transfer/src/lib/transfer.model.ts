@@ -7,6 +7,7 @@ export class Transfer {
   transferStatus: TransferStatus;
   transportServiceProviderID: string;
   transportServiceProviderName: string;
+
 }
 
 export class ParticipantTransfer {
