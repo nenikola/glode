@@ -12,7 +12,7 @@ export class TransferContract extends Contract {
     bookingNumber: string,
     digestToMatch: string
   ) {
-    const cliOrgID = TransferContract._getClientOrgId(ctx.clientIdentity);
+    const { cliOrgID } = TransferContract._getClientOrgId(ctx.clientIdentity);
 
     const cliOrgCollectionID = TransferContract._getPrivateCollectionString(
       cliOrgID
@@ -59,41 +59,12 @@ export class TransferContract extends Contract {
     };
   }
 
-  // async validateExistingTransfer(ctx: Context, transferString: string) {
-  //   const transferObj: Transfer = JSON.parse(transferString);
-
-  //   const hashStr = createHash("sha256")
-  //     .update(transferString)
-  //     .digest("base64");
-  //   console.info(`MY HASH STR: ${hashStr}`);
-
-  //   const compositeKey: string = ctx.stub.createCompositeKey("transfer", [
-  //     transferObj.transportServiceProviderID,
-  //     transferObj.bookingNumber,
-  //   ]);
-
-  //   const collectionId = TransferContract._getPrivateCollectionString(
-  //     transferObj.transportServiceProviderID
-  //   );
-
-  //   const pvtHash = await ctx.stub.getPrivateDataHash(
-  //     collectionId,
-  //     compositeKey
-  //   );
-
-  //   const pvtHashStr = Buffer.from(pvtHash).toString("base64");
-  //   console.info(`COLL DATA  HASH STR: ${pvtHashStr}`);
-
-  //   return JSON.stringify({
-  //     hashStr,
-  //     pvtHashStr,
-  //     validated: hashStr === pvtHashStr,
-  //   });
-  // }
-
   async readTransfer(ctx: Context, tspID: string, bookingNumber: string) {
-    const mspString: string = ctx.clientIdentity.getMSPID();
-    const cliOrg = mspString.slice(0, mspString.length - 3);
+    const { cliOrgID } = TransferContract._getClientOrgId(ctx.clientIdentity);
+
+    const cliOrgPvtCollectionString = TransferContract._getPrivateCollectionString(
+      cliOrgID
+    );
 
     const compositeKey = ctx.stub.createCompositeKey("transfer", [
       tspID,
@@ -101,18 +72,16 @@ export class TransferContract extends Contract {
     ]);
 
     const transferStr: string = Buffer.from(
-      await ctx.stub.getPrivateData(
-        TransferContract._getPrivateCollectionString(mspString),
-        compositeKey
-      )
-    ).toString("utf8");
-    if (transferStr && transferStr.length > 0) {
+      await ctx.stub.getPrivateData(cliOrgPvtCollectionString, compositeKey)
+    ).toString();
+
+    try {
       const transfer: Transfer = JSON.parse(transferStr);
       if (
-        cliOrg === transfer.transportServiceProviderID ||
+        cliOrgID === transfer.transportServiceProviderID ||
         (transfer.participants &&
           transfer.participants.find(
-            (participant) => participant.participantID === cliOrg
+            (participant) => participant.participantID === cliOrgID
           ))
       ) {
         return JSON.stringify(transfer, null, 2);
@@ -126,8 +95,11 @@ export class TransferContract extends Contract {
           2
         );
       }
+    } catch (error) {
+      if (error.name === SyntaxError.name) {
+        return JSON.stringify({ status: 404, message: "Transfer not found" });
+      }
     }
-    return JSON.stringify({ status: 404, message: "Transfer not found" });
   }
   async readAllOrgTransfers(ctx: Context) {
     const mspString: string = ctx.clientIdentity.getMSPID();
@@ -229,8 +201,14 @@ export class TransferContract extends Contract {
       ? `_implicit_org_${mspID}`
       : `_implicit_org_${mspID}MSP`;
   }
-  static _getClientOrgId(clientIdentity: ClientIdentity): string {
-    const mspString: string = clientIdentity.getMSPID();
-    return mspString.slice(0, mspString.length - 3);
+  static _getClientOrgId(
+    clientIdentity: ClientIdentity
+  ): { cliOrgID: string; cliMspID: string } {
+    const cliMspID: string = clientIdentity.getMSPID();
+    const cliOrgID = cliMspID.slice(0, cliMspID.length - 3);
+    return {
+      cliOrgID,
+      cliMspID,
+    };
   }
 }
