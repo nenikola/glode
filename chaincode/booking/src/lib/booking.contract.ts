@@ -171,7 +171,7 @@ export class BookingContract extends Contract {
               ? currentBooking.transferData.requestedArrival
               : undefined,
           },
-          transferSecret: "",
+          transferSecret: currentBooking.uniqueAssociatedTransfersSecret,
           transferStatus: TransferStatus.WAITING,
           transportServiceProviderID: currentBooking.transportServiceProviderID,
           transportServiceProviderName:
@@ -182,11 +182,7 @@ export class BookingContract extends Contract {
 
         const transferCreationResults = await ctx.stub.invokeChaincode(
           "transfer",
-          [
-            "createTransfer",
-            JSON.stringify(transfer),
-            currentBooking.uniqueAssociatedTransfersSecret,
-          ],
+          ["createTransfer", JSON.stringify(transfer)],
           "glode-channel"
         );
         console.info(JSON.stringify(transferCreationResults));
