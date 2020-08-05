@@ -57,6 +57,11 @@ channels:
         chaincodeQuery: true
         ledgerQuery: true
         eventSource: true
+      peer0.ffA.glode.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
 
 #
 # [Required]. List of organizations for all channels. At least one organization
@@ -95,6 +100,16 @@ organizations:
       - peer0.itA.glode.com
     certificateAuthorities:
       - ca-itA
+  ffA:
+    #
+    # [Required]. The MSPID used to identify itA
+    #
+    mspid: ffAMSP
+    #
+    # [Required]. The itA peers
+    #
+    peers:
+      - peer0.ffA.glode.com
 #
 # [Optional]. Orderer physical information, by orderer name
 #
@@ -106,9 +121,9 @@ orderers:
     #
     # [Required]. This orderer's IP address
     #
-    url: grpcs://localhost:9050
+    url: grpcs://192.168.0.205:9050
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/itA.glode.com/peers/orderer.itA.glode.com/tls/tlscacerts/tls-localhost-9054-ca-itA.pem
+      path: C:/Users/nikola/certs/tls-localhost-9054-ca-itA.pem
       # pem: | 
       #   -----BEGIN CERTIFICATE-----
       #   MIICGjCCAcGgAwIBAgIUTQ6KrYCD+tzk1yeefLJUIwrHVrAwCgYIKoZIzj0EAwIw
@@ -129,7 +144,9 @@ orderers:
     # [Optional]. gRPC connection properties used for communication
     #
     grpcOptions:
-    ssl-target-name-override: orderer.ocA.glode.com
+      ssl-target-name-override: orderer.itA.glode.com
+      request-timeout: 120001
+
 #
 # [Required]. Peer physical information, by peer name. At least one peer is
 # required.
@@ -142,9 +159,9 @@ peers:
     #
     # [Required]. Peer's IP address
     #
-    url: grpcs://localhost:7051
+    url: grpcs://192.168.0.205:7051
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/ocA.glode.com/peers/peer0.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem
+      path: C:/Users/nikola/certs/tls-localhost-7054-ca-ocA.pem
       # pem: | 
       #   -----BEGIN CERTIFICATE-----
       #   MIICGjCCAcGgAwIBAgIUTQ6KrYCD+tzk1yeefLJUIwrHVrAwCgYIKoZIzj0EAwIw
@@ -170,9 +187,9 @@ peers:
   # [Required]. itA peer physical properties
   #
   peer0.itA.glode.com:
-    url: grpcs://localhost:9051
+    url: grpcs://192.168.0.205:9051
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/itA.glode.com/peers/peer0.itA.glode.com/tls/tlscacerts/tls-localhost-9054-ca-itA.pem
+      path: C:/Users/nikola/certs/tls-localhost-9054-ca-itA.pem
     # pem: |
     #   -----BEGIN CERTIFICATE-----
     #   MIICEzCCAbmgAwIBAgIUYiNZ0rpcRLoAaHX/cWcHAp8HZKYwCgYIKoZIzj0EAwIw
@@ -188,11 +205,30 @@ peers:
     #   a0qQyJRr0HBNOdCpw/mqz8Yl8WEwAiA7gFJQUb1jHeUwmhW3Gnxu2HnwVY/+PVKN
     #   6Xq4uSWEXQ==
     #   -----END CERTIFICATE-----
-
-
-
     grpcOptions:
       ssl-target-name-override: peer0.itA.glode.com
+      request-timeout: 120001
+  peer0.ffA.glode.com:
+    url: grpcs://192.168.0.205:11051
+    tlsCACerts:
+      path: C:/Users/nikola/certs/tls-localhost-11054-ca-ffA.pem
+    # pem: |
+    #   -----BEGIN CERTIFICATE-----
+    #   MIICEzCCAbmgAwIBAgIUYiNZ0rpcRLoAaHX/cWcHAp8HZKYwCgYIKoZIzj0EAwIw
+    #   ZjELMAkGA1UEBhMCVUsxEjAQBgNVBAgTCUhhbXBzaGlyZTEQMA4GA1UEBxMHSHVy
+    #   c2xleTEWMBQGA1UEChMNaXRBLmdsb2RlLmNvbTEZMBcGA1UEAxMQY2EuaXRBLmds
+    #   b2RlLmNvbTAeFw0yMDA2MjIxNTMyMDBaFw0zNTA2MTkxNTMyMDBaMGYxCzAJBgNV
+    #   BAYTAlVLMRIwEAYDVQQIEwlIYW1wc2hpcmUxEDAOBgNVBAcTB0h1cnNsZXkxFjAU
+    #   BgNVBAoTDWl0QS5nbG9kZS5jb20xGTAXBgNVBAMTEGNhLml0QS5nbG9kZS5jb20w
+    #   WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARwWvZ232gnCXAUnylPoErO56pyYUFp
+    #   nPtUahGt7LDwXL4fADVxxl/C+05XWL07dkGuJkthe7enLCnS38vN9MPoo0UwQzAO
+    #   BgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAdBgNVHQ4EFgQUJlM3
+    #   M50bF2BPKPMqozaSC4A9C5cwCgYIKoZIzj0EAwIDSAAwRQIhAJlTwduMZ6q7eH4S
+    #   a0qQyJRr0HBNOdCpw/mqz8Yl8WEwAiA7gFJQUb1jHeUwmhW3Gnxu2HnwVY/+PVKN
+    #   6Xq4uSWEXQ==
+    #   -----END CERTIFICATE-----
+    grpcOptions:
+      ssl-target-name-override: peer0.ffA.glode.com
       request-timeout: 120001
 #
 # [Optional]. Fabric-CA Certificate Authority physical information, by name.
@@ -207,7 +243,7 @@ certificateAuthorities:
     #
     # [Required]. CA IP address
     #
-    url: https://localhost:9054
+    url: https://192.168.0.205:9054
     #
     # [Optioanl]. HTTP connection properties used for communication
     #
@@ -247,7 +283,7 @@ certificateAuthorities:
     #
     # [Required]. CA IP address
     #
-    url: https://localhost:7054
+    url: https://192.168.0.205:7054
     #
     # [Optioanl]. HTTP connection properties used for communication
     #
@@ -265,6 +301,6 @@ certificateAuthorities:
     #
     caName: ca-ocA
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/fabric-ca/ocA/tls-cert.pem
+      path: C:\Users\nikola\certs\itA/tls-cert.pem
       # pem: |
       

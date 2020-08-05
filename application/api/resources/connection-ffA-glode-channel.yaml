@@ -109,9 +109,9 @@ orderers:
     #
     # [Required]. This orderer's IP address
     #
-    url: grpcs://localhost:11050
+    url: grpcs://192.168.0.205:11050
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/ffA.glode.com/peers/orderer.ffA.glode.com/tls/tlscacerts/tls-localhost-11054-ca-ffA.pem
+      path: C:/Users/nikola/certs/tls-localhost-11054-ca-ffA.pem
       # pem: |
       #   -----BEGIN CERTIFICATE-----
       #   MIICGjCCAcGgAwIBAgIUTQ6KrYCD+tzk1yeefLJUIwrHVrAwCgYIKoZIzj0EAwIw
@@ -132,7 +132,9 @@ orderers:
     # [Optional]. gRPC connection properties used for communication
     #
     grpcOptions:
-    ssl-target-name-override: orderer.ffA.glode.com
+      ssl-target-name-override: orderer.ffA.glode.com
+      request-timeout: 120001
+
 #
 # [Required]. Peer physical information, by peer name. At least one peer is
 # required.
@@ -145,9 +147,9 @@ peers:
     #
     # [Required]. Peer's IP address
     #
-    url: grpcs://localhost:7051
+    url: grpcs://192.168.0.205:7051
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/ocA.glode.com/peers/peer0.ocA.glode.com/tls/tlscacerts/tls-localhost-7054-ca-ocA.pem
+      path: C:/Users/nikola/certs/tls-localhost-7054-ca-ocA.pem
       # pem: |
       #   -----BEGIN CERTIFICATE-----
       #   MIICGjCCAcGgAwIBAgIUTQ6KrYCD+tzk1yeefLJUIwrHVrAwCgYIKoZIzj0EAwIw
@@ -173,9 +175,9 @@ peers:
   # [Required]. itA peer physical properties
   #
   peer0.itA.glode.com:
-    url: grpcs://localhost:9051
+    url: grpcs://192.168.0.205:9051
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/itA.glode.com/peers/peer0.itA.glode.com/tls/tlscacerts/tls-localhost-9054-ca-itA.pem
+      path: C:/Users/nikola/certs/tls-localhost-9054-ca-itA.pem
     # pem: |
     #   -----BEGIN CERTIFICATE-----
     #   MIICEzCCAbmgAwIBAgIUYiNZ0rpcRLoAaHX/cWcHAp8HZKYwCgYIKoZIzj0EAwIw
@@ -199,9 +201,9 @@ peers:
   # [Required]. ffA peer physical properties
   #
   peer0.ffA.glode.com:
-    url: grpcs://localhost:11051
+    url: grpcs://192.168.0.205:11051
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/peerOrganizations/ffA.glode.com/peers/peer0.ffA.glode.com/tls/tlscacerts/tls-localhost-11054-ca-ffA.pem
+      path: C:/Users/nikola/certs/tls-localhost-11054-ca-ffA.pem
     # pem: |
     #   -----BEGIN CERTIFICATE-----
     #   MIICEzCCAbmgAwIBAgIUYiNZ0rpcRLoAaHX/cWcHAp8HZKYwCgYIKoZIzj0EAwIw
@@ -234,7 +236,7 @@ certificateAuthorities:
     #
     # [Required]. CA IP address
     #
-    url: https://localhost:11054
+    url: https://192.168.0.205:11054
     #
     # [Optioanl]. HTTP connection properties used for communication
     #
@@ -252,7 +254,7 @@ certificateAuthorities:
     #
     caName: ca-ffA
     tlsCACerts:
-      path: /home/nenikola/Documents/projects/glode/network/organizations/fabric-ca/ffA/tls-cert.pem
+      path: C:/Users/nikola/certs/ffA/tls-cert.pem
       # pem: |
       #   -----BEGIN CERTIFICATE-----
       #   MIICdzCCAh6gAwIBAgIUBoUT+D2O9jGZWZapnZueLPsouBwwCgYIKoZIzj0EAwIw

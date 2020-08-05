@@ -1,8 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import {
-  BookingDTO,
-  BookingStatus,
-} from 'app-shared-library/dist/booking.dto.model';
+  BookingDomain,
+} from 'app-shared-library';
 import { AppService } from '../app.service';
 import { Gateway } from 'fabric-network';
 import { Buffer } from 'buffer';
@@ -15,7 +14,7 @@ export class BookingsService {
     private readonly appService: AppService,
   ) {}
 
-  async updateStatus(newStatus: BookingStatus, originalBookingDTO: BookingDTO) {
+  async updateStatus(newStatus: BookingDomain.BookingStatus, originalBookingDTO: BookingDomain.BookingDTO) {
     const ccp = this.appService.getConnectionProfile(
       originalBookingDTO.transportServiceProviderID,
     );
@@ -39,7 +38,6 @@ export class BookingsService {
       .getChannel()
       .getEndorsers(`${originalBookingDTO.transportServiceProviderID}MSP`);
     const endorsers = [...bookingOrgEndorsers, ...tspOrgEndorsers];
-    console.log(JSON.stringify(endorsers.map(end => end.name)));
 
     const contractResponseRaw = await network
       .getContract('booking')
@@ -55,6 +53,7 @@ export class BookingsService {
     return contractResponse.message;
   }
   async getAll(partyID: string) {
+    
     if (!partyID || partyID.length < 3) {
       throw new Error('Desired organization ID must be provided!');
     }
@@ -77,36 +76,36 @@ export class BookingsService {
       .evaluateTransaction('queryOrganizationBookings');
     return JSON.parse(Buffer.from(result).toString());
   }
-  async getByID(bookingID: number) {
-    throw new Error('Method not implemented.');
-  }
-  async save(booking: BookingDTO) {
+  async save(booking: BookingDomain.BookingDTO) {
     const ccp = this.appService.getConnectionProfile(booking.bookingOrgID);
     const wallet = await this.appService.getWallet();
     const identity = await this.accountsService.getIdentity(
       `user1@${booking.bookingOrgID}`,
       wallet,
-    );
-    const gateway = new Gateway();
-    await gateway.connect(ccp, {
-      wallet,
-      identity,
-      discovery: { enabled: false, asLocalhost: true },
-    });
-
+      );
+      const gateway = new Gateway();
+      await gateway.connect(ccp, {
+        wallet,
+        identity,
+        discovery: { enabled: false, asLocalhost: true },
+      });
+      
     const network = await gateway.getNetwork('glode-channel');
     const bookingOrgEndorsers = network
-      .getChannel()
+    .getChannel()
       .getEndorsers(`${booking.bookingOrgID}MSP`);
-    const tspOrgEndorsers = network
+      const tspOrgEndorsers = network
       .getChannel()
       .getEndorsers(`${booking.transportServiceProviderID}MSP`);
-
-    const contractResponse = await network
+      
+      const contractResponse = await network
       .getContract('booking')
       .createTransaction('createBooking')
       .setEndorsingPeers([...bookingOrgEndorsers, ...tspOrgEndorsers])
       .submit(JSON.stringify(booking));
-    return Buffer.from(contractResponse).toString('utf8');
-  }
+      return Buffer.from(contractResponse).toString('utf8');
+    }
+    async getByID(bookingID: number) {
+      throw new Error('Method not implemented.');
+    }
 }

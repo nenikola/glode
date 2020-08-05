@@ -2,11 +2,11 @@ export class Transfer {
   bookingNumber: string;
   equipmentData?: TransferEquipmentData;
   participants?: TransferParticipant[];
-  transportServiceProviderID: string;
-  transportServiceProviderName: string;
   transferData: TransferData;
   transferSecret?: string;
   transferStatus: TransferStatus;
+  transportServiceProviderID: string;
+  transportServiceProviderName: string;
 }
 
 export class ParticipantTransfer {
@@ -45,12 +45,12 @@ export enum TransferStatus {
   IN_TRANSPORTATION,
 }
 export class TransferData {
-  originLocation: Location;
   destinationLocation: Location;
+  originLocation: Location;
+  plannedArrival?: Date;
+  plannedDeparture?: Date;
   transferVehicleID?: string;
   transferVehicleType?: string;
-  plannedDeparture?: Date;
-  plannedArrival?: Date;
 }
 
 export class Location {

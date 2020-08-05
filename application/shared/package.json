@@ -1,6 +1,6 @@
 {
   "name": "app-shared-library",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "Library shared by api and frontend app",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
