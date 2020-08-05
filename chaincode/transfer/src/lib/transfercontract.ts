@@ -1,6 +1,7 @@
 "use-strict";
 
 import { Contract, Context } from "fabric-contract-api";
+import { ClientIdentity } from "fabric-shim";
 import { Transfer } from "./transfer.model";
 import { createHash } from "crypto";
 
@@ -11,8 +12,10 @@ export class TransferContract extends Contract {
     bookingNumber: string,
     digestToMatch: string
   ) {
+    const cliOrgID = TransferContract._getClientOrgId(ctx.clientIdentity);
+
     const cliOrgCollectionID = TransferContract._getPrivateCollectionString(
-      ctx.clientIdentity.getMSPID()
+      cliOrgID
     );
     const tspOrgCollectionID = TransferContract._getPrivateCollectionString(
       tspID
@@ -23,47 +26,35 @@ export class TransferContract extends Contract {
       bookingNumber,
     ]);
 
-    const cliPvtData: Transfer = JSON.parse(
+    const cliPvtDataObj: Transfer = JSON.parse(
       Buffer.from(
         await ctx.stub.getPrivateData(cliOrgCollectionID, compositeKey)
-      ).toString("utf8")
+      ).toString()
     );
 
-    console.info(JSON.stringify(cliPvtData));
-    const cliPvtDataHashOrg = Buffer.from(
+    const cliPvtDataHashStr = Buffer.from(
       await ctx.stub.getPrivateDataHash(cliOrgCollectionID, compositeKey)
     ).toString("base64");
-    // const cliPvtData: ParticipantTransfer = new ParticipantTransfer(
-    //   cliPvt.bookingNumber,
-    //   cliPvt.transportServiceProviderID,
-    //   cliPvt.transferSecret
-    // );
-    const cliPvtHashStr = createHash("sha256")
-      .update(JSON.stringify(cliPvtData))
-      .digest("base64");
-    const tspPvtHashStr = Buffer.from(
+
+    const tspPvtDataHashStr = Buffer.from(
       await ctx.stub.getPrivateDataHash(tspOrgCollectionID, compositeKey)
     ).toString("base64");
 
     const secretHash = createHash("sha256")
-      .update(cliPvtData.transferSecret)
+      .update(cliPvtDataObj.transferSecret)
       .digest("base64");
 
-    console.info(
-      `${cliPvtHashStr} :::: ${tspPvtHashStr} :::: ${cliPvtDataHashOrg}`
-    );
-    console.info(
-      `DIGEST: ${digestToMatch} :: SECRETDIGEST: ${secretHash} :: SECRET: ${cliPvtData.transferSecret} `
-    );
     return {
       digestToMatch: digestToMatch || secretHash,
       transferIDHash: createHash("sha256")
-        .update(tspID + bookingNumber + cliPvtData.transferSecret)
+        .update(tspID + bookingNumber + cliPvtDataObj.transferSecret)
         .digest("base64"),
       validated:
-        //NEEDS UPDATE......
-        (cliPvtHashStr === tspPvtHashStr ||
-          cliPvtDataHashOrg === tspPvtHashStr) &&
+        cliPvtDataHashStr === tspPvtDataHashStr &&
+        (cliPvtDataObj.transportServiceProviderID === cliOrgID ||
+          cliPvtDataObj.participants.find(
+            (participant) => participant.participantID === cliOrgID
+          )) &&
         (digestToMatch ? digestToMatch === secretHash : true),
     };
   }
@@ -237,5 +228,9 @@ export class TransferContract extends Contract {
     return mspID.endsWith("MSP")
       ? `_implicit_org_${mspID}`
       : `_implicit_org_${mspID}MSP`;
+  }
+  static _getClientOrgId(clientIdentity: ClientIdentity): string {
+    const mspString: string = clientIdentity.getMSPID();
+    return mspString.slice(0, mspString.length - 3);
   }
 }
