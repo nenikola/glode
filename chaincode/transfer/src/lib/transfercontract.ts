@@ -1,59 +1,59 @@
-"use-strict";
+'use-strict';
 
-import { Contract, Context } from "fabric-contract-api";
-import { ClientIdentity } from "fabric-shim";
-import { Transfer } from "./transfer.model";
-import { createHash } from "crypto";
+import { Contract, Context } from 'fabric-contract-api';
+import { ClientIdentity } from 'fabric-shim';
+import { Transfer } from './transfer.model';
+import { createHash } from 'crypto';
 
 export class TransferContract extends Contract {
   async validateTransferParticipant(
     ctx: Context,
     tspID: string,
     bookingNumber: string,
-    digestToMatch: string
+    digestToMatch: string,
   ) {
     const { cliOrgID } = TransferContract._getClientOrgId(ctx.clientIdentity);
 
     const cliOrgCollectionID = TransferContract._getPrivateCollectionString(
-      cliOrgID
+      cliOrgID,
     );
     const tspOrgCollectionID = TransferContract._getPrivateCollectionString(
-      tspID
+      tspID,
     );
 
-    const compositeKey = ctx.stub.createCompositeKey("transfer", [
+    const compositeKey = ctx.stub.createCompositeKey('transfer', [
       tspID,
       bookingNumber,
     ]);
 
     const cliPvtDataObj: Transfer = JSON.parse(
       Buffer.from(
-        await ctx.stub.getPrivateData(cliOrgCollectionID, compositeKey)
-      ).toString()
+        await ctx.stub.getPrivateData(cliOrgCollectionID, compositeKey),
+      ).toString(),
     );
 
     const cliPvtDataHashStr = Buffer.from(
-      await ctx.stub.getPrivateDataHash(cliOrgCollectionID, compositeKey)
-    ).toString("base64");
+      await ctx.stub.getPrivateDataHash(cliOrgCollectionID, compositeKey),
+    ).toString('base64');
 
     const tspPvtDataHashStr = Buffer.from(
-      await ctx.stub.getPrivateDataHash(tspOrgCollectionID, compositeKey)
-    ).toString("base64");
+      await ctx.stub.getPrivateDataHash(tspOrgCollectionID, compositeKey),
+    ).toString('base64');
 
-    const secretHash = createHash("sha256")
+    const secretHash = createHash('sha256')
       .update(cliPvtDataObj.transferSecret)
-      .digest("base64");
+      .digest('base64');
 
     return {
       digestToMatch: digestToMatch || secretHash,
-      transferIDHash: createHash("sha256")
+      transferIDHash: createHash('sha256')
         .update(tspID + bookingNumber + cliPvtDataObj.transferSecret)
-        .digest("base64"),
+        .digest('base64'),
       validated:
         cliPvtDataHashStr === tspPvtDataHashStr &&
         (cliPvtDataObj.transportServiceProviderID === cliOrgID ||
           cliPvtDataObj.participants.find(
-            (participant) => participant.participantID === cliOrgID
+            participant => participant.participantID === cliOrgID,
           )) &&
         (digestToMatch ? digestToMatch === secretHash : true),
     };
@@ -62,16 +62,16 @@ export class TransferContract extends Contract {
     const { cliOrgID } = TransferContract._getClientOrgId(ctx.clientIdentity);
 
     const cliOrgPvtCollectionString = TransferContract._getPrivateCollectionString(
-      cliOrgID
+      cliOrgID,
     );
 
-    const compositeKey = ctx.stub.createCompositeKey("transfer", [
+    const compositeKey = ctx.stub.createCompositeKey('transfer', [
       tspID,
       bookingNumber,
     ]);
 
     const transferStr: string = Buffer.from(
-      await ctx.stub.getPrivateData(cliOrgPvtCollectionString, compositeKey)
+      await ctx.stub.getPrivateData(cliOrgPvtCollectionString, compositeKey),
     ).toString();
     console.log(`READ_TRANSFER_CONTRACT: |${transferStr}|`);
 
@@ -81,7 +81,7 @@ export class TransferContract extends Contract {
         cliOrgID === transfer.transportServiceProviderID ||
         (transfer.participants &&
           transfer.participants.find(
-            (participant) => participant.participantID === cliOrgID
+            participant => participant.participantID === cliOrgID,
           ))
       ) {
         return JSON.stringify(transfer, null, 2);
@@ -90,18 +90,18 @@ export class TransferContract extends Contract {
         return JSON.stringify(
           {
             status: 403,
-            message: "You are not authorized to read this transfer!",
+            message: 'You are not authorized to read this transfer!',
           },
           null,
-          2
+          2,
         );
       }
     } catch (error) {
       if (error.name === SyntaxError.name) {
         console.error(
-          `READ_TRANSFER_CONTRACT: |${JSON.stringify(error, null, 2)}|`
+          `READ_TRANSFER_CONTRACT: |${JSON.stringify(error, null, 2)}|`,
         );
-        return JSON.stringify({ status: 404, message: "Transfer not found" });
+        return JSON.stringify({ status: 404, message: 'Transfer not found' });
       }
     }
   }
@@ -120,7 +120,7 @@ export class TransferContract extends Contract {
                    }
                 }
              }
-          }`
+          }`,
       )) {
         const strValue = Buffer.from(value).toString();
         let record: Transfer = JSON.parse(strValue);
@@ -135,7 +135,7 @@ export class TransferContract extends Contract {
   async createTransfer(ctx: Context, transferString: string) {
     const { cliOrgID } = TransferContract._getClientOrgId(ctx.clientIdentity);
     const cliOrgPvtCollectionString = TransferContract._getPrivateCollectionString(
-      cliOrgID
+      cliOrgID,
     );
 
     let newTransfer: Transfer;
@@ -144,23 +144,23 @@ export class TransferContract extends Contract {
     } catch (error) {
       return TransferContract.getReturnMessage(
         400,
-        "Bad supplied transfer format."
+        'Bad supplied transfer format.',
       );
     }
     if (!newTransfer) {
       return TransferContract.getReturnMessage(
         400,
-        "You must supply tranfer data."
+        'You must supply tranfer data.',
       );
     }
     if (cliOrgID !== newTransfer.transportServiceProviderID) {
       return TransferContract.getReturnMessage(
         403,
-        "You are not authorized to read this transfer!"
+        'You are not authorized to read this transfer!',
       );
     }
 
-    const compositeKey: string = ctx.stub.createCompositeKey("transfer", [
+    const compositeKey: string = ctx.stub.createCompositeKey('transfer', [
       newTransfer.transportServiceProviderID,
       newTransfer.bookingNumber,
     ]);
@@ -170,7 +170,7 @@ export class TransferContract extends Contract {
     ) {
       return TransferContract.getReturnMessage(
         406,
-        `${newTransfer.transportServiceProviderID} transfer with booking number [${newTransfer.bookingNumber}] already exists!`
+        `${newTransfer.transportServiceProviderID} transfer with booking number [${newTransfer.bookingNumber}] already exists!`,
       );
     }
 
@@ -178,24 +178,24 @@ export class TransferContract extends Contract {
       await ctx.stub.putPrivateData(
         cliOrgPvtCollectionString,
         compositeKey,
-        Buffer.from(JSON.stringify(newTransfer))
+        Buffer.from(JSON.stringify(newTransfer)),
       );
       if (newTransfer.participants && newTransfer.participants.length > 0) {
         await this._putTransferToCollections(
           ctx,
           compositeKey,
           newTransfer,
-          ...newTransfer.participants.map((participant) =>
+          ...newTransfer.participants.map(participant =>
             TransferContract._getPrivateCollectionString(
-              participant.participantID
-            )
-          )
+              participant.participantID,
+            ),
+          ),
         );
       }
     } catch (error) {
       return TransferContract.getReturnMessage(
         500,
-        "Internal server error" + JSON.stringify(error, null, 2)
+        'Internal server error' + JSON.stringify(error, null, 2),
       );
     }
   }
@@ -203,11 +203,11 @@ export class TransferContract extends Contract {
   private async _transferExists(
     ctx: Context,
     compositeKey: string,
-    collectionString
+    collectionString,
   ) {
     const hash = Buffer.from(
-      await ctx.stub.getPrivateDataHash(collectionString, compositeKey)
-    ).toString("utf8");
+      await ctx.stub.getPrivateDataHash(collectionString, compositeKey),
+    ).toString('utf8');
     return hash && hash.length > 0;
   }
   private async _putTransferToCollections(
@@ -217,24 +217,24 @@ export class TransferContract extends Contract {
     ...collections: string[]
   ): Promise<void> {
     await Promise.all(
-      collections.map(async (collectionString) => {
+      collections.map(async collectionString => {
         await ctx.stub.putPrivateData(
           collectionString,
           compositeKey,
-          Buffer.from(JSON.stringify(transfer))
+          Buffer.from(JSON.stringify(transfer)),
         );
-      })
+      }),
     );
     return;
   }
 
   static _getPrivateCollectionString(mspID: string) {
-    return mspID.endsWith("MSP")
+    return mspID.endsWith('MSP')
       ? `_implicit_org_${mspID}`
       : `_implicit_org_${mspID}MSP`;
   }
   static _getClientOrgId(
-    clientIdentity: ClientIdentity
+    clientIdentity: ClientIdentity,
   ): { cliOrgID: string; cliMspID: string } {
     const cliMspID: string = clientIdentity.getMSPID();
     const cliOrgID = cliMspID.slice(0, cliMspID.length - 3);
@@ -250,7 +250,7 @@ export class TransferContract extends Contract {
         message,
       },
       null,
-      2
+      2,
     );
   }
 }
