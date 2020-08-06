@@ -1,4 +1,4 @@
-export class BookingDTO {
+export class Booking {
   bookingID?: string; // bookingOrgID + tspID + uniqueAssociatedTransfersSecret
   bookingNotes: string;
   bookingOrgID: string;
@@ -18,7 +18,6 @@ export class BookingDTO {
     transportServiceProviderName: string;
     uniqueAssociatedTransfersSecret: string;
   }) {
-    console.info(JSON.stringify(params));
     params.transferData.requestedDeparture = new Date(
       params.transferData.requestedDeparture
     );
@@ -47,19 +46,19 @@ export enum BookingStatus {
   APPROVED = "APPROVED",
 }
 export class BookingTransferDataDTO {
-  originLocation: Location;
   destinationLocation: Location;
+  originLocation: Location;
   requestedDeparture: string | Date;
   requestedArrival?: string | Date;
 }
 
 export class Location {
   address?: Address;
-  unlocode: string;
   geoCoordinates?: {
     lat: number;
     lon: number;
   };
+  unlocode: string;
 }
 
 export class Address {

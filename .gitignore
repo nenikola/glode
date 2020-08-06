@@ -9,3 +9,6 @@ dist
 node_modules
 wallet
 /application/api/resources/*
+/application/shared/*.d.ts
+/application/shared/*.js*
+/application/shared/dto
