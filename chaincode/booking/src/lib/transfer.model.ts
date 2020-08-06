@@ -17,7 +17,7 @@ export class ParticipantTransfer {
   constructor(
     bookingNumber: string,
     transportServiceProviderID: string,
-    transferSecret: string
+    transferSecret: string,
   ) {
     this.bookingNumber = bookingNumber;
     this.transferSecret = transferSecret;

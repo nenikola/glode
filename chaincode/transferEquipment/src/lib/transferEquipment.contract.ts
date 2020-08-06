@@ -1,13 +1,13 @@
-"use-strict";
+'use-strict';
 
-import { Contract, Context } from "fabric-contract-api";
-import { ClientIdentity, ChaincodeResponse } from "fabric-shim";
+import { Contract, Context } from 'fabric-contract-api';
+import { ClientIdentity, ChaincodeResponse } from 'fabric-shim';
 import {
   TransferEquipment,
   TransferEquipmentEventDTO,
   TransferEquipmentEvent,
-} from "./transferEquipment.model";
-import { createHash } from "crypto";
+} from './transferEquipment.model';
+import { createHash } from 'crypto';
 
 export class TransferEquipmentContract extends Contract {
   // async updateCurrentLocation(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string, locationString: string) {
@@ -48,27 +48,27 @@ export class TransferEquipmentContract extends Contract {
     ctx: Context,
     registrationNumber: string,
     tspID: string,
-    bookingNumber: string
+    bookingNumber: string,
   ) {
     console.info(`TSPID: ${tspID} | BOOKING_NUMBER: ${bookingNumber}`);
 
     const cliOrg = TransferEquipmentContract._getClientOrgId(
-      ctx.clientIdentity
+      ctx.clientIdentity,
     );
 
     TransferEquipmentContract._isAuthorized(
       cliOrg,
       tspID,
-      "transfer asignment"
+      'transfer asignment',
     );
 
-    const compositeKey: string = ctx.stub.createCompositeKey("te", [
+    const compositeKey: string = ctx.stub.createCompositeKey('te', [
       registrationNumber,
     ]);
     let te: TransferEquipment;
     try {
       te = JSON.parse(
-        Buffer.from(await ctx.stub.getState(compositeKey)).toString("utf8")
+        Buffer.from(await ctx.stub.getState(compositeKey)).toString('utf8'),
       );
     } catch (error) {
       return {
@@ -85,7 +85,9 @@ export class TransferEquipmentContract extends Contract {
       ctx,
       tspID,
       bookingNumber,
-      te.uniqueTransfersEquipmentIDHash ? te.uniqueTransfersEquipmentIDHash : ""
+      te.uniqueTransfersEquipmentIDHash
+        ? te.uniqueTransfersEquipmentIDHash
+        : '',
     );
 
     if (!te.associatedTransferIdHashs) {
@@ -96,17 +98,17 @@ export class TransferEquipmentContract extends Contract {
       return {
         status: 400,
         message:
-          "You are not participant of transfer this TE should be assigned!",
+          'You are not participant of transfer this TE should be assigned!',
       };
     }
     if (
       te.associatedTransferIdHashs.find(
-        (idHash) => idHash === participantAuthResult.transferIDHash
+        idHash => idHash === participantAuthResult.transferIDHash,
       )
     ) {
       return {
         status: 400,
-        message: "Specified transfer already assigned to specified TE!",
+        message: 'Specified transfer already assigned to specified TE!',
       };
     }
     te.associatedTransferIdHashs.push(participantAuthResult.transferIDHash);
@@ -134,12 +136,12 @@ export class TransferEquipmentContract extends Contract {
       return { status: 400, message: `Submitted event data wrong format` };
     }
     let te: TransferEquipment;
-    let teCompositeKey = ctx.stub.createCompositeKey("te", [
+    let teCompositeKey = ctx.stub.createCompositeKey('te', [
       eventDTO.registrationNumber,
     ]);
     try {
       te = JSON.parse(
-        Buffer.from(await ctx.stub.getState(teCompositeKey)).toString("utf8")
+        Buffer.from(await ctx.stub.getState(teCompositeKey)).toString('utf8'),
       );
     } catch (error) {
       return { status: 404, message: `Could not find specified TE!` };
@@ -165,14 +167,14 @@ export class TransferEquipmentContract extends Contract {
       ctx,
       eventDTO.associatedTransferData.tspID,
       eventDTO.associatedTransferData.bookingNumber,
-      te.uniqueTransfersEquipmentIDHash
+      te.uniqueTransfersEquipmentIDHash,
       // ? te.uniqueTransfersEquipmentIDHash
       // : te.uniqueTransfersEquipmentIDHash
     );
     if (
       !participantAuthResult.validated ||
       !te.associatedTransferIdHashs.find(
-        (idHash) => idHash === participantAuthResult.transferIDHash
+        idHash => idHash === participantAuthResult.transferIDHash,
       )
     ) {
       return {
@@ -181,7 +183,7 @@ export class TransferEquipmentContract extends Contract {
       };
     }
     const event: TransferEquipmentEvent = TransferEquipmentEvent.getFromDTO(
-      eventDTO
+      eventDTO,
     );
     if (!te.events) {
       te.events = new Array<TransferEquipmentEvent>();
@@ -193,38 +195,38 @@ export class TransferEquipmentContract extends Contract {
   }
   async createTransferEquipment(ctx: Context, transferEqString: string) {
     const cliOrg = TransferEquipmentContract._getClientOrgId(
-      ctx.clientIdentity
+      ctx.clientIdentity,
     );
     const newTransferEquipment: TransferEquipment = JSON.parse(
-      transferEqString
+      transferEqString,
     );
 
     TransferEquipmentContract._isAuthorized(
       cliOrg,
       newTransferEquipment.ownerID,
-      "TE creation"
+      'TE creation',
     );
 
-    const compositeKey: string = ctx.stub.createCompositeKey("te", [
+    const compositeKey: string = ctx.stub.createCompositeKey('te', [
       newTransferEquipment.registrationNumber,
     ]);
 
     const existingTE = Buffer.from(
-      await ctx.stub.getState(compositeKey)
-    ).toString("utf8");
+      await ctx.stub.getState(compositeKey),
+    ).toString('utf8');
     if (existingTE && existingTE.length > 0) {
       throw new Error(
         JSON.stringify({
           status: 406,
           message: `${newTransferEquipment.ownerID} transfer equipment with registration number [${newTransferEquipment.registrationNumber}] already exists!`,
-        })
+        }),
       );
     }
 
     try {
       await ctx.stub.putState(
         compositeKey,
-        Buffer.from(JSON.stringify(newTransferEquipment))
+        Buffer.from(JSON.stringify(newTransferEquipment)),
       );
 
       // const ep = new KeyEndorsementPolicy();
@@ -241,25 +243,25 @@ export class TransferEquipmentContract extends Contract {
     ctx: Context,
     transferTspID: string,
     transferBookingNumber: string,
-    digestToMatch: string
+    digestToMatch: string,
   ): Promise<{
     digestToMatch: string;
     transferIDHash: string;
     validated: boolean;
   }> {
     const response: ChaincodeResponse = await ctx.stub.invokeChaincode(
-      "transfer",
+      'transfer',
       [
-        "validateTransferParticipant",
+        'validateTransferParticipant',
         transferTspID,
         transferBookingNumber,
         digestToMatch,
       ],
-      "glode-channel"
+      'glode-channel',
     );
-    console.info(Buffer.from(response.payload).toString("utf8"));
+    console.info(Buffer.from(response.payload).toString('utf8'));
     let validationResults = JSON.parse(
-      Buffer.from(response.payload).toString("utf8")
+      Buffer.from(response.payload).toString('utf8'),
     );
     console.info(validationResults);
     return validationResults;
@@ -268,13 +270,13 @@ export class TransferEquipmentContract extends Contract {
   static _isAuthorized(
     orgId: string,
     authorizedOrgId: string,
-    operation?: string
+    operation?: string,
   ): boolean {
     if (orgId !== authorizedOrgId)
       throw new Error(
         `Not authorized to perform ${
-          operation && operation.length > 0 ? operation : "this smart contract"
-        }.`
+          operation && operation.length > 0 ? operation : 'this smart contract'
+        }.`,
       );
     return true;
   }

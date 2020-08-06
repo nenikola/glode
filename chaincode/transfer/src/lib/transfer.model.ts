@@ -7,7 +7,6 @@ export class Transfer {
   transferStatus: TransferStatus;
   transportServiceProviderID: string;
   transportServiceProviderName: string;
-
 }
 
 export class ParticipantTransfer {
@@ -18,7 +17,7 @@ export class ParticipantTransfer {
   constructor(
     bookingNumber: string,
     transportServiceProviderID: string,
-    transferSecret: string
+    transferSecret: string,
   ) {
     this.bookingNumber = bookingNumber;
     this.transferSecret = transferSecret;

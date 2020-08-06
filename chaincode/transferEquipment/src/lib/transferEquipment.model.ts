@@ -10,14 +10,14 @@ export class TransferEquipment {
 }
 
 export enum TransferEquipmentType {
-  TWNYFTCONTAINER = "20_FEET_CONTAINER",
-  FRTYFTCONTAINER = "40_FEET_CONTAINER",
+  TWNYFTCONTAINER = '20_FEET_CONTAINER',
+  FRTYFTCONTAINER = '40_FEET_CONTAINER',
 }
 
 export enum TransferEquipmentStatus {
-  IN_WAREHOUSE = "IN_WAREHOUSE",
-  GATED = "GATED",
-  IN_TRANSPORTATION = "IN_TRANSPORTATION",
+  IN_WAREHOUSE = 'IN_WAREHOUSE',
+  GATED = 'GATED',
+  IN_TRANSPORTATION = 'IN_TRANSPORTATION',
 }
 export class Location {
   address?: Address;
@@ -54,11 +54,11 @@ export class TransferEquipmentEvent {
     transferEquipmentEventType: TransferEquipmentEventType,
     eventLocation: Location,
     eventOccuranceTime: Date,
-    associatedTransferID?: string
+    associatedTransferID?: string,
   ) {
     associatedTransferID
       ? (this.associatedTransferID = associatedTransferID)
-      : "";
+      : '';
     this.eventID = eventID;
     this.transferEquipmentEventType = transferEquipmentEventType;
     this.eventLocation = eventLocation;
@@ -70,16 +70,16 @@ export class TransferEquipmentEvent {
       eventDTO.eventOccuranceTime.getTime(),
       eventDTO.transferEquipmentEventType,
       eventDTO.eventLocation,
-      eventDTO.eventOccuranceTime
+      eventDTO.eventOccuranceTime,
     );
   }
 }
 
 export enum TransferEquipmentEventType {
-  GATE_IN = "GATE_IN",
-  GATE_OUT = "GATE_OUT",
-  COMMODITY_LOADED = "COMMODITY_LOADED",
-  COMMODITY_UNLOADED = "COMMODITY_UNLOADED",
-  LOADED_ON = "LOADED_ON",
-  LOADED_OFF = "LOADED_OFF",
+  GATE_IN = 'GATE_IN',
+  GATE_OUT = 'GATE_OUT',
+  COMMODITY_LOADED = 'COMMODITY_LOADED',
+  COMMODITY_UNLOADED = 'COMMODITY_UNLOADED',
+  LOADED_ON = 'LOADED_ON',
+  LOADED_OFF = 'LOADED_OFF',
 }
