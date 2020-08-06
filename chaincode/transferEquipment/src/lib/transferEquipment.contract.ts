@@ -6,8 +6,7 @@ import {
   TransferEquipment,
   TransferEquipmentEventDTO,
   TransferEquipmentEvent,
-} from './transferEquipment.model';
-import { createHash } from 'crypto';
+} from 'app-shared-library';
 
 export class TransferEquipmentContract extends Contract {
   // async updateCurrentLocation(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string, locationString: string) {

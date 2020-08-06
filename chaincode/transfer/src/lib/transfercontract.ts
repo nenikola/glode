@@ -2,7 +2,7 @@
 
 import { Contract, Context } from 'fabric-contract-api';
 import { ClientIdentity } from 'fabric-shim';
-import { Transfer } from './transfer.model';
+import { Transfer } from 'app-shared-library';
 import { createHash } from 'crypto';
 
 export class TransferContract extends Contract {

@@ -2,9 +2,14 @@
 
 import { Contract, Context } from 'fabric-contract-api';
 import { ClientIdentity } from 'fabric-shim';
-import { createHash, randomBytes } from 'crypto';
-import { Booking, BookingStatus } from './booking.model';
-import { Transfer, TransferStatus, TransferRole } from './transfer.model';
+import { createHash } from 'crypto';
+import {
+  Transfer,
+  TransferStatus,
+  TransferRole,
+  Booking,
+  BookingStatus,
+} from 'app-shared-library';
 
 export class BookingContract extends Contract {
   async queryOrganizationBookings(ctx: Context) {
@@ -165,10 +170,10 @@ export class BookingContract extends Contract {
               currentBooking.transferData.destinationLocation,
             originLocation: currentBooking.transferData.originLocation,
             plannedArrival: currentBooking.transferData.requestedArrival
-              ? currentBooking.transferData.requestedArrival
+              ? new Date(currentBooking.transferData.requestedArrival)
               : undefined,
             plannedDeparture: currentBooking.transferData.requestedDeparture
-              ? currentBooking.transferData.requestedArrival
+              ? new Date(currentBooking.transferData.requestedArrival)
               : undefined,
           },
           transferSecret: currentBooking.uniqueAssociatedTransfersSecret,
