@@ -1,6 +1,6 @@
 import { Controller, Get, Post, HttpCode, HttpStatus, Body } from '@nestjs/common';
-import {TransferEquipmentDomain } from 'app-shared-library'
 import { TransferEquipmentService } from './transfer-equipment.service';
+import { TransferEquipmentEventDTO, TransferEquipment } from 'app-shared-library';
 
 @Controller('te')
 export class TransferEquipmentController {
@@ -8,7 +8,7 @@ export class TransferEquipmentController {
 
     @Post('/events')
     @HttpCode(HttpStatus.CREATED)
-    async submitTeEvent(@Body() transferEquipmentEventDTO: TransferEquipmentDomain.TransferEquipmentEventDTO){
+    async submitTeEvent(@Body() transferEquipmentEventDTO: TransferEquipmentEventDTO){
         console.log("aaa",JSON.stringify(transferEquipmentEventDTO,null,2))
         return await this.teService.submitEvent(transferEquipmentEventDTO);
         // throw new Error('Method not implemented.');
@@ -26,7 +26,7 @@ export class TransferEquipmentController {
     }
     @Post('/')
     @HttpCode(HttpStatus.CREATED)
-    async createTransferEquipment(@Body() transferEquipmentDTO: TransferEquipmentDomain.TransferEquipment){
+    async createTransferEquipment(@Body() transferEquipmentDTO: TransferEquipment){
         console.log(JSON.stringify(transferEquipmentDTO,null,2))
         return await this.teService.save(transferEquipmentDTO);
         // throw new Error('Method not implemented.');

@@ -25,7 +25,7 @@
     "@nestjs/core": "^7.0.0",
     "@nestjs/platform-express": "^7.0.0",
     "@types/js-yaml": "^3.12.4",
-    "app-shared-library": "^1.2.0",
+    "app-shared-library": "^2.0.3",
     "fabric-ca-client": "^2.1.0",
     "fabric-network": "^2.1.0",
     "js-yaml": "^3.14.0",

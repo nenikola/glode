@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
-  TransferDomain,
+ Transfer,
 } from 'app-shared-library';
 import { AppService } from '../app.service';
 import { AccountsService } from '../accounts/accounts.service';
@@ -39,7 +39,7 @@ export class TransfersService {
     return JSON.parse(Buffer.from(result).toString());
   }
 
-  async getAllOrgTransfers(orgID: string): Promise<TransferDomain.Transfer[]> {
+  async getAllOrgTransfers(orgID: string): Promise<Transfer[]> {
     const ccp = this.appService.getConnectionProfile(orgID);
     const wallet = await this.appService.getWallet();
     const identity = await this.accountsService.getIdentity(

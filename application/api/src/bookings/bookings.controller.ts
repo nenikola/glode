@@ -8,9 +8,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
-import {
-  BookingDomain,
-} from 'app-shared-library';
+import { BookingStatus, Booking } from 'app-shared-library';
 
 @Controller('bookings')
 export class BookingsController {
@@ -18,8 +16,8 @@ export class BookingsController {
   @Post('updateStatus')
   @HttpCode(200)
   async updateBookingStatus(
-    @Body('status') newStatus: BookingDomain.BookingStatus,
-    @Body('booking') originalBookingDTO: BookingDomain.BookingDTO,
+    @Body('status') newStatus: BookingStatus,
+    @Body('booking') originalBookingDTO: Booking,
   ) {
     const res = await this.bookingService.updateStatus(
       newStatus,
@@ -32,7 +30,7 @@ export class BookingsController {
   }
   @Post()
   @HttpCode(201)
-  async createBooking(@Body() bookingDTO: BookingDomain.BookingDTO) {
+  async createBooking(@Body() bookingDTO: Booking) {
     await this.bookingService.save(bookingDTO);
     return {
       message: `Booking created.`,

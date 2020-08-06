@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { AppService } from 'src/app.service';
-import {  TransferEquipmentDomain } from 'app-shared-library';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { Gateway } from 'fabric-network';
+import { TransferEquipmentEventDTO, TransferEquipment } from 'app-shared-library';
 
 @Injectable()
 export class TransferEquipmentService {
@@ -30,7 +30,7 @@ export class TransferEquipmentService {
         const res=JSON.parse(Buffer.from(resBuffer).toString());
         return res;
     }
-    async submitEvent(transferEquipmentEventDTO: TransferEquipmentDomain.TransferEquipmentEventDTO) {
+    async submitEvent(transferEquipmentEventDTO: TransferEquipmentEventDTO) {
         const ccp= this.appService.getConnectionProfile(transferEquipmentEventDTO.associatedTransferData.tspID);
         const wallet= await this.appService.getWallet();
         const identity = await this.accountsService.getIdentity( `user1@${transferEquipmentEventDTO.associatedTransferData.tspID}`,wallet,);
@@ -38,17 +38,19 @@ export class TransferEquipmentService {
         await gateway.connect(ccp, {
           wallet,
           identity,
-          discovery: { enabled: false, asLocalhost: true },
+          discovery: { enabled: false, asLocalhost: false },
         });
+        const data=JSON.stringify(transferEquipmentEventDTO);
+        console.log(data);
         const network = await gateway.getNetwork('glode-channel');
         const resBuffer=await network.getContract('transferEquipment')
         .createTransaction('submitTransferEquipmentEvent')
         .setEndorsingPeers(network.getChannel().getEndorsers(transferEquipmentEventDTO.associatedTransferData.tspID+"MSP"))
-        .submit(JSON.stringify(transferEquipmentEventDTO));
+        .submit(data);
         const res=JSON.parse(Buffer.from(resBuffer).toString());
         return res;
     }
-    async save(transferEquipment:TransferEquipmentDomain.TransferEquipment){
+    async save(transferEquipment:TransferEquipment){
         const ccp= this.appService.getConnectionProfile(transferEquipment.ownerID);
         const wallet= await this.appService.getWallet();
         const identity = await this.accountsService.getIdentity( `user1@${transferEquipment.ownerID}`,wallet,);

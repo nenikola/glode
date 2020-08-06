@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import {
-  BookingDomain,
+  Booking,BookingStatus
 } from 'app-shared-library';
 import { AppService } from '../app.service';
 import { Gateway } from 'fabric-network';
@@ -14,7 +14,7 @@ export class BookingsService {
     private readonly appService: AppService,
   ) {}
 
-  async updateStatus(newStatus: BookingDomain.BookingStatus, originalBookingDTO: BookingDomain.BookingDTO) {
+  async updateStatus(newStatus: BookingStatus, originalBookingDTO: Booking) {
     const ccp = this.appService.getConnectionProfile(
       originalBookingDTO.transportServiceProviderID,
     );
@@ -76,7 +76,7 @@ export class BookingsService {
       .evaluateTransaction('queryOrganizationBookings');
     return JSON.parse(Buffer.from(result).toString());
   }
-  async save(booking: BookingDomain.BookingDTO) {
+  async save(booking: Booking) {
     const ccp = this.appService.getConnectionProfile(booking.bookingOrgID);
     const wallet = await this.appService.getWallet();
     const identity = await this.accountsService.getIdentity(

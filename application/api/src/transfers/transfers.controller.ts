@@ -9,9 +9,8 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { TransfersService } from './transfers.service';
-import { TransferDomain } from 'app-shared-library';
 import { MissingArgumentsException } from 'src/errors/validation.error';
-// import { GetTransferSO } from './getTransfer.so';
+import { Transfer } from 'app-shared-library';
 
 @Controller('transfers')
 export class TransfersController {
@@ -39,7 +38,7 @@ export class TransfersController {
       throw new MissingArgumentsException('tspOrg ID');
     }
 
-    const transfer: TransferDomain.Transfer = await this.transfersService.getTransfer(
+    const transfer: Transfer = await this.transfersService.getTransfer(
       bookingNumber,
       tspOrgID,
       'ffA',
@@ -50,7 +49,7 @@ export class TransfersController {
   @Put('/:id')
   async updateTransfer(
     @Param('id') id: string,
-    @Body() updatedTransfer: TransferDomain.Transfer,
+    @Body() updatedTransfer: Transfer,
   ) {
     throw new Error('Method not implemented.');
   }
