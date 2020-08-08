@@ -1,0 +1,27 @@
+{
+  "name": "booking-chaincode",
+  "version": "1.0.0",
+  "description": "Chaincode for processing Bookings",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "fabric-chaincode-node start",
+    "build": "tsc"
+  },
+  "author": "Nikola Nedeljkovic",
+  "license": "ISC",
+  "dependencies": {
+    "app-shared-library": "^1.0.1",
+    "fabric-contract-api": "^2.1.2",
+    "fabric-shim": "^2.1.2"
+  },
+  "devDependencies": {
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5",
+    "eslint": "7.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "prettier": "^1.19.1"
+  }
+}

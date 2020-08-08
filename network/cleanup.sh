@@ -19,6 +19,7 @@ rm -rf organizations/fabric-ca/ffA/msp organizations/fabric-ca/ffA/tls-cert.pem 
 rm -rf organizations/peerOrganizations/
 
 rm -rf channel-artifacts
+rm -rf ../application/api/wallet
 set +x
 
 echo

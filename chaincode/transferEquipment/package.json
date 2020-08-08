@@ -12,11 +12,16 @@
   "author": "Nikola Nedeljkovic",
   "license": "ISC",
   "dependencies": {
+    "app-shared-library": "^2.0.3",
     "fabric-contract-api": "^2.1.2",
     "fabric-shim": "^2.1.2"
   },
   "devDependencies": {
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "eslint": "7.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "prettier": "^1.19.1"
   }
 }
