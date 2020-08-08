@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { AppService } from './../app.service';
-import * as FabricCAServices from 'fabric-ca-client';
-import { X509Identity, Wallet, Identity } from 'fabric-network';
+import { X509Identity, Wallet, Identity, Wallets } from 'fabric-network';
 import * as path from 'path';
+import { AppService } from 'src/app.service';
+import { UserDoesntExistError } from 'src/errors/identity.error';
 
 @Injectable()
 export class AccountsService {
   constructor(private readonly appService: AppService) {}
-  public async getIdentity(
+
+  private async _getIdentity(
     username: string,
     wallet: Wallet,
   ): Promise<Identity> {
@@ -17,37 +18,40 @@ export class AccountsService {
     // Check to see if we've already enrolled the user.
     const identity = await wallet.get(username);
     if (!identity) {
-      console.log(
-        `An identity for the user "${username}" does not exist in the wallet`,
-      );
-      throw new Error(
-        `An identity for the user "${username}" does not exist in the wallet`,
-      );
+      throw new UserDoesntExistError(username);
     }
     return identity;
   }
-  async login(username: string, password: string, orgID: string) {
-    const ccp = this.appService.getConnectionProfile(orgID);
+  private async _getWallet(): Promise<Wallet> {
+    const walletPath = path.join(process.cwd(), 'wallet');
+    const wallet = await Wallets.newFileSystemWallet(walletPath);
+    return wallet;
+  }
 
+  public async getUsersIdentityAndWallet(username, orgID) {
+    const wallet = await this._getWallet();
+    const identity = await this._getIdentity(`${username}@${orgID}`, wallet);
+    return {
+      wallet,
+      identity,
+    };
+  }
+  async login(username: string, password: string, orgID: string) {
     // Create a new CA client for interacting with the CA.
-    const caURL = ccp['certificateAuthorities'][`ca-${orgID}`].url;
-    const ca = new FabricCAServices(caURL);
+    const ca = this.appService.getCAConnection(orgID);
 
     // Create a new file system based wallet for managing identities.
-    const wallet = await this.appService.getWallet();
     // Check to see if we've already enrolled the user.
+    const wallet = await this._getWallet();
+
     try {
-      const userIdentity = await this.getIdentity(
-        `${username}@${orgID}`,
-        wallet,
-      );
-      if (userIdentity) {
-        console.log(
-          `An identity for the user "${username}" exists in the wallet`,
-        );
-        return;
+      await this._getIdentity(`${username}@${orgID}`, wallet);
+      return { username, orgID };
+    } catch (error) {
+      if (error.name !== 'UserDoesntExistError') {
+        throw error;
       }
-    } catch (error) {}
+    }
 
     // Enroll the user1, and import the new identity into the wallet.
     const enrollment = await ca.enroll({
@@ -64,7 +68,8 @@ export class AccountsService {
     };
     await wallet.put(`${username}@${orgID}`, x509Identity);
     console.log(
-      `Successfully registered and enrolled admin user "${username}" and imported it into the wallet`,
+      `Successfully registered user "${username}" and imported it into the wallet`,
     );
+    return { username, orgID };
   }
 }
