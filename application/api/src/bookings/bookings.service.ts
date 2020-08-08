@@ -1,39 +1,28 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import {
-  Booking,BookingStatus
-} from 'app-shared-library';
+import { Booking, BookingStatus } from 'app-shared-library';
 import { AppService } from '../app.service';
-import { Gateway } from 'fabric-network';
+import { Identity, Wallet } from 'fabric-network';
 import { Buffer } from 'buffer';
-import { AccountsService } from '../accounts/accounts.service';
 
 @Injectable()
 export class BookingsService {
-  constructor(
-    private readonly accountsService: AccountsService,
-    private readonly appService: AppService,
-  ) {}
+  constructor(private readonly appService: AppService) {}
 
-  async updateStatus(newStatus: BookingStatus, originalBookingDTO: Booking) {
-    const ccp = this.appService.getConnectionProfile(
-      originalBookingDTO.transportServiceProviderID,
+  async updateStatus(
+    newStatus: BookingStatus,
+    originalBookingDTO: Booking,
+    userParams: {
+      orgID: string;
+      identityOptions: { wallet: Wallet; identity: Identity };
+    },
+  ) {
+    const network = await this.appService.getNetworkConnection(
+      userParams.orgID,
+      userParams.identityOptions,
     );
-    const wallet = await this.appService.getWallet();
-    const identity = await this.accountsService.getIdentity(
-      `user1@${originalBookingDTO.transportServiceProviderID}`,
-      wallet,
-    );
-    const gateway = new Gateway();
-    await gateway.connect(ccp, {
-      wallet,
-      identity,
-      discovery: { enabled: false, asLocalhost: true },
-    });
-
-    const network = await gateway.getNetwork('glode-channel');
     const bookingOrgEndorsers = network
       .getChannel()
-      .getEndorsers(`${originalBookingDTO.bookingOrgID}MSP`);
+      .getEndorsers(`${userParams.orgID}MSP`);
     const tspOrgEndorsers = network
       .getChannel()
       .getEndorsers(`${originalBookingDTO.transportServiceProviderID}MSP`);
@@ -52,60 +41,51 @@ export class BookingsService {
     }
     return contractResponse.message;
   }
-  async getAll(partyID: string) {
-    
-    if (!partyID || partyID.length < 3) {
+  async getAll(userParams: {
+    orgID: string;
+    identityOptions: { wallet: Wallet; identity: Identity };
+  }) {
+    if (!userParams.orgID || userParams.orgID.length < 3) {
       throw new Error('Desired organization ID must be provided!');
     }
-    const ccp = this.appService.getConnectionProfile(partyID);
-    const wallet = await this.appService.getWallet();
-    const identity = await this.accountsService.getIdentity(
-      `user1@${partyID}`,
-      wallet,
+    const network = await this.appService.getNetworkConnection(
+      userParams.orgID,
+      userParams.identityOptions,
     );
-    const gateway = new Gateway();
-    await gateway.connect(ccp, {
-      wallet,
-      identity,
-      discovery: { enabled: false, asLocalhost: true },
-    });
 
-    const network = await gateway.getNetwork('glode-channel');
     const result = await network
       .getContract('booking')
       .evaluateTransaction('queryOrganizationBookings');
     return JSON.parse(Buffer.from(result).toString());
   }
-  async save(booking: Booking) {
-    const ccp = this.appService.getConnectionProfile(booking.bookingOrgID);
-    const wallet = await this.appService.getWallet();
-    const identity = await this.accountsService.getIdentity(
-      `user1@${booking.bookingOrgID}`,
-      wallet,
-      );
-      const gateway = new Gateway();
-      await gateway.connect(ccp, {
-        wallet,
-        identity,
-        discovery: { enabled: false, asLocalhost: true },
-      });
-      
-    const network = await gateway.getNetwork('glode-channel');
+  async save(
+    booking: Booking,
+    userParams: {
+      orgID: string;
+      identityOptions: { wallet: Wallet; identity: Identity };
+    },
+  ) {
+    const network = await this.appService.getNetworkConnection(
+      userParams.orgID,
+      userParams.identityOptions,
+    );
+
     const bookingOrgEndorsers = network
-    .getChannel()
-      .getEndorsers(`${booking.bookingOrgID}MSP`);
-      const tspOrgEndorsers = network
+      .getChannel()
+      .getEndorsers(`${userParams.orgID}MSP`);
+    const tspOrgEndorsers = network
       .getChannel()
       .getEndorsers(`${booking.transportServiceProviderID}MSP`);
-      
-      const contractResponse = await network
+
+    const contractResponse = await network
       .getContract('booking')
       .createTransaction('createBooking')
       .setEndorsingPeers([...bookingOrgEndorsers, ...tspOrgEndorsers])
       .submit(JSON.stringify(booking));
-      return Buffer.from(contractResponse).toString('utf8');
-    }
-    async getByID(bookingID: number) {
-      throw new Error('Method not implemented.');
-    }
+    return Buffer.from(contractResponse).toString('utf8');
+  }
+  async getByID() {
+    // bookingID: number, identityOptions:{wallet:Wallet,identity:Identity}
+    throw new Error('Method not implemented.');
+  }
 }

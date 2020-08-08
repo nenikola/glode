@@ -4,6 +4,6 @@ import { TransferEquipmentController } from './transfer-equipment.controller';
 
 @Module({
   providers: [TransferEquipmentService],
-  controllers: [TransferEquipmentController]
+  controllers: [TransferEquipmentController],
 })
 export class TransferEquipmentModule {}
