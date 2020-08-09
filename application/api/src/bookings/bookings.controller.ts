@@ -6,6 +6,7 @@ import {
   HttpCode,
   UseGuards,
   Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { BookingStatus, Booking } from 'app-shared-library';
@@ -24,6 +25,15 @@ export class BookingsController {
     @Body('booking') originalBookingDTO: Booking,
     @Req() request: Request,
   ) {
+    if (
+      (request.user as any).orgID !==
+      originalBookingDTO.transportServiceProviderID
+    ) {
+      throw new BadRequestException(
+        null,
+        'You are not allowed to update booking status if you are not TSP!',
+      );
+    }
     const res = await this.bookingService.updateStatus(
       newStatus,
       originalBookingDTO,
