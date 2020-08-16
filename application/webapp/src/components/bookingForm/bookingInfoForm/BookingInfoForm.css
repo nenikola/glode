@@ -1,0 +1,37 @@
+.booking-info-form-container {
+  width: 90%;
+  margin: 0 auto;
+  padding: 30px 0;
+  display: flex;
+  font-size: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.booking-info-form-data {
+  margin: 15px 30px;
+  width: 40%;
+}
+.booking-info-form-data input {
+  font-size: 16;
+  margin-top: 10px;
+  color: lightseagreen;
+  height: 30px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.705);
+  border-radius: 20px;
+  border: 2px solid lightseagreen;
+  padding: 0 10px;
+  width: 80%;
+  outline: none;
+}
+.booking-info-form-data input:focus {
+  box-shadow: 0 0 5px lightseagreen;
+}
+.booking-info-form-data input.booking-id,
+.booking-info-form-data input.booking-org-id {
+  text-align: center;
+  opacity: 0.8;
+}
+.booking-info-form-data input.booking-org-id {
+  user-select: none;
+}

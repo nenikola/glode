@@ -8,16 +8,22 @@ import "primereact/resources/themes/nova-light/theme.css";
 import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
 import "./Login.css";
+import { post } from "axios";
+import { Redirect } from "react-router-dom";
 
 class Login extends Component {
   constructor() {
     super();
     this.state = {
       username: "",
-      city: "",
+      password: "",
+      orgID: "",
     };
   }
   render() {
+    if (localStorage.getItem("auth")) {
+      return <Redirect to="/" />;
+    }
     return (
       <div className="login">
         {/* <div className="filter"></div> */}
@@ -49,9 +55,9 @@ class Login extends Component {
                 <Password
                   className="field"
                   id="input-float-password"
-                  value={this.state.value}
+                  value={this.state.password}
                   feedback={false}
-                  onChange={(e) => this.setState({ value: e.target.value })}
+                  onChange={(e) => this.setState({ password: e.target.value })}
                 />
                 <label htmlFor="input-float-password">Password</label>
               </span>
@@ -60,7 +66,7 @@ class Login extends Component {
               <Dropdown
                 className="field"
                 placeholder="Organization"
-                value={this.state.city}
+                value={this.state.orgID}
                 required="true"
                 options={[
                   { label: "Ocean Carrier A", value: "ocA" },
@@ -69,7 +75,7 @@ class Login extends Component {
                   { label: "Inland Transporter B", value: "itB" },
                   { label: "Fright Forwarder A", value: "ffA" },
                 ]}
-                onChange={(e) => this.setState({ city: e.value })}
+                onChange={(e) => this.setState({ orgID: e.value })}
               />
             </div>
           </div>
@@ -89,6 +95,17 @@ class Login extends Component {
               label="LOGIN"
               icon="pi pi-angle-right"
               iconPos="right"
+              onClick={async (e) => {
+                const res = await post(
+                  "http://localhost:5000/auth/login/",
+                  this.state
+                );
+                console.log(JSON.stringify(res.data["access_token"]));
+                localStorage.setItem("auth", res.data["access_token"]);
+                localStorage.setItem("user", this.state.username);
+                localStorage.setItem("org", this.state.orgID);
+                this.setState({ ...this.state, auth: true });
+              }}
             ></Button>
           </div>
         </div>

@@ -13,19 +13,24 @@
   z-index: -1;
   filter: blur(2px);
 }
-.dashboard-logo {
-  font-family: ethnocentric;
-  font-size: 24px;
+.dashboard-main {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  padding: 5px 5px 5px 0;
+}
+div.dashboard-logo {
+  font-family: ethnocentric !important;
+  font-size: 20px;
   writing-mode: sideways-lr;
-  width: 80px;
-  height: 95vh;
+  height: 90vh;
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
 .dashboard-navbar {
   width: 10%;
-  height: 95vh;
+  height: 100%;
   overflow: hidden;
   border-radius: 0 0 0 30px;
 }
@@ -33,7 +38,7 @@
   border: 3px solid #47b6b1;
   border-left: none;
   border-radius: 0 30px 0 0;
-  width: 85%;
-  height: 95vh;
+  width: 90%;
+  height: 100%;
   background-color: rgba(223, 223, 223, 0.9);
 }

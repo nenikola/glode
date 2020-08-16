@@ -1,0 +1,19 @@
+.booking-details-wrapper .buttons-wrapper {
+  height: 5%;
+  margin-top: 50px;
+  display: flex;
+  justify-content: flex-end;
+}
+.booking-details-wrapper .buttons-wrapper button {
+  width: 10%;
+  height: 100%;
+}
+.booking-details-wrapper .buttons-wrapper button.btn-reject {
+  background-color: salmon;
+  border: 2px solid salmon;
+}
+.booking-details-wrapper .buttons-wrapper button.btn-reject:hover {
+  background-color: red;
+  border: 2px solid red;
+  color: white;
+}
