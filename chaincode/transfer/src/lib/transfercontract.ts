@@ -113,14 +113,12 @@ export class TransferContract extends Contract {
       for await (const { value } of ctx.stub.getPrivateDataQueryResult(
         TransferContract._getPrivateCollectionString(cliOrgID),
         `{
-             "selector": {
-                "participants": {
-                   "$elemMatch": {
-                      "participantID": "${cliOrgID}"
-                   }
-                }
+          "selector": {
+             "bookingNumber": {
+                "$ne": null
              }
-          }`,
+          }
+       }`,
       )) {
         const strValue = Buffer.from(value).toString();
         let record: Transfer = JSON.parse(strValue);

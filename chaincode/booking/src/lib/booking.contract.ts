@@ -12,6 +12,27 @@ import {
 } from 'app-shared-library';
 
 export class BookingContract extends Contract {
+  async testContractMethod(
+    ctx: Context,
+    someOrgID: string,
+    tspOrgID: string,
+    bookingNumber: string,
+  ) {
+    const cliOrgID = BookingContract._getClientOrgId(ctx.clientIdentity);
+    let newBooking: Booking;
+    const compositeKey: string = ctx.stub.createCompositeKey('booking', [
+      tspOrgID,
+      bookingNumber,
+    ]);
+
+    const res = Buffer.from(
+      await ctx.stub.getPrivateDataHash(
+        BookingContract._getPrivateCollectionString(cliOrgID),
+        compositeKey,
+      ),
+    ).toString('base64');
+    return JSON.stringify(res);
+  }
   async queryOrganizationBookings(ctx: Context) {
     const cliOrgID = BookingContract._getClientOrgId(ctx.clientIdentity);
     let allResults = [];
@@ -53,7 +74,7 @@ export class BookingContract extends Contract {
     const cliOrgID = BookingContract._getClientOrgId(ctx.clientIdentity);
     let newBooking: Booking;
     try {
-      newBooking = new Booking(JSON.parse(bookingString));
+      newBooking = JSON.parse(bookingString) as Booking;
     } catch (error) {
       return {
         status: 400,
@@ -71,14 +92,14 @@ export class BookingContract extends Contract {
     await ctx.stub.putPrivateData(
       BookingContract._getPrivateCollectionString(cliOrgID),
       compositeKey,
-      Buffer.from(JSON.stringify(newBooking)),
+      new Buffer(bookingString),
     );
     await ctx.stub.putPrivateData(
       BookingContract._getPrivateCollectionString(
         newBooking.transportServiceProviderID,
       ),
       compositeKey,
-      Buffer.from(JSON.stringify(newBooking)),
+      Buffer.from(bookingString),
     );
 
     return { status: 201, message: 'Booking created!' };
@@ -99,7 +120,7 @@ export class BookingContract extends Contract {
     }
     let currentBooking: Booking;
     try {
-      currentBooking = new Booking(JSON.parse(currentBookingString));
+      currentBooking = JSON.parse(currentBookingString);
     } catch (error) {
       return { status: 400, message: 'Supplied booking data wrong format!' };
     }
@@ -134,7 +155,7 @@ export class BookingContract extends Contract {
       await ctx.stub.getPrivateDataHash(bookingOrgCollectionID, compositeKey),
     ).toString('base64');
     const currentBookingHash = createHash('sha256')
-      .update(JSON.stringify(currentBooking))
+      .update(new Buffer(currentBookingString))
       .digest('base64');
     console.info(
       `TSPH: ${tspOrgExistingBookingHash} :: BORGH: ${bookingOrgExistingBookingHash} :: CBDH: ${currentBookingHash}`,
@@ -170,10 +191,14 @@ export class BookingContract extends Contract {
               currentBooking.transferData.destinationLocation,
             originLocation: currentBooking.transferData.originLocation,
             plannedArrival: currentBooking.transferData.requestedArrival
-              ? new Date(currentBooking.transferData.requestedArrival)
+              ? (new Date(
+                  currentBooking.transferData.requestedArrival,
+                ).toISOString() as any)
               : undefined,
             plannedDeparture: currentBooking.transferData.requestedDeparture
-              ? new Date(currentBooking.transferData.requestedArrival)
+              ? (new Date(
+                  currentBooking.transferData.requestedDeparture,
+                ).toISOString() as any)
               : undefined,
           },
           transferSecret: currentBooking.uniqueAssociatedTransfersSecret,
