@@ -1,0 +1,13 @@
+.booking-info-container {
+  margin: 20px 0;
+  display: flex;
+}
+.booking-info-data {
+  margin: 0 30px;
+  max-width: 30%;
+}
+.booking-info-data p {
+  color: lightseagreen;
+  font-weight: bold;
+  font-size: 16px;
+}

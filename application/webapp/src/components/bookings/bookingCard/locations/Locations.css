@@ -1,0 +1,36 @@
+.blackdot {
+  margin: 30px 0;
+  width: 40;
+  text-align: center;
+  padding: 0;
+}
+.blackdot p {
+  text-align: center;
+}
+.blackline {
+  background-color: black;
+  opacity: 0.7;
+  width: calc(50% - 54px);
+  /* width: calc(50% + 40px); */
+  /* width: 50%; */
+  height: 4px;
+  margin-top: 45px;
+  border-radius: 2px;
+}
+.locations .data-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+.locations .data-container .location-data {
+  width: 50%;
+  text-align: center;
+  font-weight: bold;
+}
+.locations .data-container .location-data > p:nth-child(1) {
+  font-weight: normal;
+}
+.pinpic {
+  width: 40px;
+  height: 40px;
+}

@@ -41,7 +41,7 @@
   margin-right: 15%;
   font-size: 64px;
   color: #333;
-  font-family: ethnocentric;
+  font-family: ethnocentric !important;
 }
 .login-logo h4 {
   font-size: 16px;

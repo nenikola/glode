@@ -3,9 +3,13 @@ import Navbar from "./../../components/navbar/Navbar";
 import "./Dashboard.css";
 import { Switch, Route } from "react-router-dom/cjs/react-router-dom.min";
 import Bookings from "../../components/bookings/Bookings";
+import { Redirect } from "react-router-dom";
+import BookingForm from "../../components/bookingForm/BookingForm";
 class Dashboard extends Component {
-  state = {};
   render() {
+    if (!localStorage.getItem("auth")) {
+      return <Redirect to="/login" />;
+    }
     return (
       <div className="dashboard-container">
         <div className="dashboard-filter"></div>
@@ -14,17 +18,23 @@ class Dashboard extends Component {
             <p style={{ display: "inline", color: "#47b6b1" }}>G</p>LODE
           </h1>
         </div>
-        <div className="dashboard-navbar">
-          <Navbar width="100%" height="95vh"></Navbar>
-        </div>
-        <div className="dashboard-data">
-          <Switch>
-            <Route path="/bookings">
-              {" "}
-              <Bookings></Bookings>
-            </Route>
-            <Route path="/transfers"> TRANSFERS</Route>
-          </Switch>
+        <div className="dashboard-main">
+          <div className="dashboard-navbar">
+            <Navbar width="100%" height="100%"></Navbar>
+          </div>
+          <div className="dashboard-data">
+            <Switch>
+              <Route path="/createBooking">
+                <BookingForm></BookingForm>
+              </Route>
+              <Route path="/bookings/:id">BookingID</Route>
+              <Route path="/bookings">
+                <Bookings></Bookings>
+              </Route>
+              <Route path="/transfers">TRANSFERS</Route>
+              <Route path="/">DASHBOARD</Route>
+            </Switch>
+          </div>
         </div>
       </div>
     );

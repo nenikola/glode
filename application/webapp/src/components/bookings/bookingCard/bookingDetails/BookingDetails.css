@@ -1,0 +1,34 @@
+.booking-details-wrapper {
+  display: none;
+}
+.booking-details-wrapper.active {
+  display: block;
+}
+.booking-details {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-around;
+}
+.booking-details > div {
+  max-width: 25%;
+  text-align: center;
+}
+.booking-details-wrapper .buttons-wrapper {
+  height: 5%;
+  margin-top: 50px;
+  display: flex;
+  justify-content: flex-end;
+}
+.booking-details-wrapper .buttons-wrapper button {
+  width: 10%;
+  height: 100%;
+}
+.booking-details-wrapper .buttons-wrapper button.btn-reject {
+  background-color: salmon;
+  border: 2px solid salmon;
+}
+.booking-details-wrapper .buttons-wrapper button.btn-reject:hover {
+  background-color: red;
+  border: 2px solid red;
+  color: white;
+}

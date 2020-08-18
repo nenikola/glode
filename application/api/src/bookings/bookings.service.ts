@@ -22,10 +22,10 @@ export class BookingsService {
     );
     const bookingOrgEndorsers = network
       .getChannel()
-      .getEndorsers(`${userParams.orgID}MSP`);
+      .getEndorsers(`${originalBookingDTO.bookingOrgID}MSP`);
     const tspOrgEndorsers = network
       .getChannel()
-      .getEndorsers(`${originalBookingDTO.transportServiceProviderID}MSP`);
+      .getEndorsers(`${userParams.orgID}MSP`);
     const endorsers = [...bookingOrgEndorsers, ...tspOrgEndorsers];
 
     const contractResponseRaw = await network
