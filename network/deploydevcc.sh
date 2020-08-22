@@ -7,6 +7,9 @@ export SEQUENCE=$3
 export LOGS=$4
 export SIGNATURE_POLICY='OR ("ocAMSP.peer","itAMSP.peer","itBMSP.peer","ffAMSP.peer")'
 
+cd ../chaincode/$1/
+npm run build
+cd  ../../network/
 
 echo
 echo "===== DEPLOYING ${PACKAGE_NAME} CHAINCODE :: VERSION=${VERSION} :: SEQUENCE=${SEQUENCE}"
