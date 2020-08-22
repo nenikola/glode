@@ -238,14 +238,26 @@ export class TransferEquipmentContract extends Contract {
       throw error;
     }
   }
-  async getTEforTransfer(ctx: Context, transferIDHash: string) {
+  async getTEforTransfer(ctx: Context, tspID: string, bookingNumber: string) {
+    const participantAuthResult = await TransferEquipmentContract._isAuthorizedTransferParticipant(
+      ctx,
+      tspID,
+      bookingNumber,
+      '',
+    );
+    if (!participantAuthResult.validated) {
+      return {
+        status: 401,
+        message: `You are not authorized to read this Transfer's TEs!`,
+      };
+    }
     let allResults = [];
     try {
       const query = `{
         "selector": {
            "associatedTransferIdHashs": {
               "$elemMatch": {
-                 "$eq": "${transferIDHash}"
+                 "$eq": "${participantAuthResult.transferIDHash}"
               }
            }
         }
@@ -264,7 +276,66 @@ export class TransferEquipmentContract extends Contract {
       return error;
     }
   }
-
+  async getAvailableTEforTransfer(
+    ctx: Context,
+    tspID: string,
+    bookingNumber: string,
+  ) {
+    const participantAuthResult = await TransferEquipmentContract._isAuthorizedTransferParticipant(
+      ctx,
+      tspID,
+      bookingNumber,
+      '',
+    );
+    if (!participantAuthResult.validated) {
+      return {
+        status: 401,
+        message: `You are not authorized to read this Transfer's TEs!`,
+      };
+    }
+    let allResults = [];
+    try {
+      const query = `{
+        "selector": {
+           "$or": [
+              {
+                "$and":[
+                  {
+                    "uniqueTransfersEquipmentIDHash": {
+                      "$eq": "${participantAuthResult.digestToMatch}"
+                    }
+                  },
+                  {
+                    "associatedTransferIdHashs": {
+                       "$allMatch": {
+                          "$ne": "${participantAuthResult.transferIDHash}"
+                       }
+                    }
+                  }
+                ]
+              },
+              {
+                 "uniqueTransfersEquipmentIDHash": {
+                    "$exists": false
+                 }
+              }
+           ]
+        }
+     }`;
+      console.info(query);
+      // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
+      for await (const { key, value } of ctx.stub.getQueryResult(query)) {
+        const strValue = Buffer.from(value).toString('utf8');
+        console.info('Found <-->', key, ' : ', strValue);
+        let record: TransferEquipment = JSON.parse(strValue);
+        allResults.push(record);
+      }
+      return JSON.stringify(allResults, null, 2);
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
   static async _isAuthorizedTransferParticipant(
     ctx: Context,
     transferTspID: string,
