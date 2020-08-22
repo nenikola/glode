@@ -12,6 +12,7 @@ export class TransferContract extends Contract {
     bookingNumber: string,
     digestToMatch: string,
   ) {
+    console.info(`RECIEVED: ,${tspID},${bookingNumber},${digestToMatch}`);
     const { cliOrgID } = TransferContract._getClientOrgId(ctx.clientIdentity);
 
     const cliOrgCollectionID = TransferContract._getPrivateCollectionString(
@@ -25,12 +26,12 @@ export class TransferContract extends Contract {
       tspID,
       bookingNumber,
     ]);
-
-    const cliPvtDataObj: Transfer = JSON.parse(
-      Buffer.from(
-        await ctx.stub.getPrivateData(cliOrgCollectionID, compositeKey),
-      ).toString(),
-    );
+    console.info(`TRIED TO REACH: ${compositeKey} from ${cliOrgCollectionID}`);
+    const r = Buffer.from(
+      await ctx.stub.getPrivateData(cliOrgCollectionID, compositeKey),
+    ).toString();
+    console.info('r: ', r);
+    const cliPvtDataObj: Transfer = JSON.parse(r);
 
     const cliPvtDataHashStr = Buffer.from(
       await ctx.stub.getPrivateDataHash(cliOrgCollectionID, compositeKey),
@@ -44,11 +45,12 @@ export class TransferContract extends Contract {
       .update(cliPvtDataObj.transferSecret)
       .digest('base64');
 
+    console.info(cliPvtDataObj.transferSecret + ' ' + secretHash);
     return {
       digestToMatch: digestToMatch || secretHash,
       transferIDHash: createHash('sha256')
         .update(tspID + bookingNumber + cliPvtDataObj.transferSecret)
-        .digest('base64'),
+        .digest('hex'),
       validated:
         cliPvtDataHashStr === tspPvtDataHashStr &&
         (cliPvtDataObj.transportServiceProviderID === cliOrgID ||

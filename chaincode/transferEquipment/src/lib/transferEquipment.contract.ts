@@ -238,6 +238,33 @@ export class TransferEquipmentContract extends Contract {
       throw error;
     }
   }
+  async getTEforTransfer(ctx: Context, transferIDHash: string) {
+    let allResults = [];
+    try {
+      const query = `{
+        "selector": {
+           "associatedTransferIdHashs": {
+              "$elemMatch": {
+                 "$eq": "${transferIDHash}"
+              }
+           }
+        }
+     }`;
+      console.info(query);
+      // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
+      for await (const { key, value } of ctx.stub.getQueryResult(query)) {
+        const strValue = Buffer.from(value).toString('utf8');
+        console.info('Found <-->', key, ' : ', strValue);
+        let record: TransferEquipment = JSON.parse(strValue);
+        allResults.push(record);
+      }
+      return JSON.stringify(allResults, null, 2);
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
+
   static async _isAuthorizedTransferParticipant(
     ctx: Context,
     transferTspID: string,
