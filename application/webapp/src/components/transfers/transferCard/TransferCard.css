@@ -1,0 +1,34 @@
+.transfer-card {
+  width: 100%;
+  margin: 10px 0;
+  border: 2px solid darkgray;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  transition: background-color 300ms;
+}
+.transfer-card:hover {
+  background-color: rgba(255, 255, 255, 0.603);
+  border-color: lightseagreen;
+  box-shadow: 0 0 1px lightseagreen;
+}
+
+.transfer-card .data-field {
+  padding: 10px;
+  width: 19%;
+}
+.transfer-card .data-field:nth-of-type(1) {
+  width: 24%;
+}
+.transfer-card .data-field h4 {
+  font-size: 13px;
+}
+.transfer-card .data-field p {
+  font-weight: bold;
+  color: lightseagreen;
+}
+.transfer-card .data-field:nth-of-type(1) p {
+  font-size: 13px;
+}

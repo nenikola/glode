@@ -5,6 +5,8 @@ import { Switch, Route } from "react-router-dom/cjs/react-router-dom.min";
 import Bookings from "../../components/bookings/Bookings";
 import { Redirect } from "react-router-dom";
 import BookingForm from "../../components/bookingForm/BookingForm";
+import Transfers from "../../components/transfers/Transfers";
+import TransferDetails from "../../components/transfers/transferDetails/TransferDetails";
 class Dashboard extends Component {
   render() {
     if (!localStorage.getItem("auth")) {
@@ -31,7 +33,10 @@ class Dashboard extends Component {
               <Route path="/bookings">
                 <Bookings></Bookings>
               </Route>
-              <Route path="/transfers">TRANSFERS</Route>
+              <Route path="/transfers/:id" component={TransferDetails}></Route>
+              <Route path="/transfers">
+                <Transfers></Transfers>
+              </Route>
               <Route path="/">DASHBOARD</Route>
             </Switch>
           </div>
