@@ -42,6 +42,7 @@ export default class BookingForm extends Component {
             },
             unlocode: "",
           },
+          requestedArrival: "",
           requestedDeparture: "",
         },
         transportServiceProviderID: "",
@@ -265,8 +266,8 @@ export default class BookingForm extends Component {
               console.log(
                 JSON.stringify(this.refs.infoForm.getData(), null, 2)
               );
+              booking.transferData.requestedArrival = this.refs.arrDateInput.value;
               booking.transferData.requestedDeparture = this.refs.depDateInput.value;
-              booking.transferData.requestedDeparture = this.refs.arrDateInput.value;
               console.log(JSON.stringify(booking, null, 2));
               post("http://localhost:5000/bookings/", booking, {
                 headers: {

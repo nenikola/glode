@@ -4,6 +4,7 @@
   border-radius: 10px;
   margin-bottom: 10px;
   padding: 10px 20px;
+  transition: background-color 300ms;
 }
 .booking.active {
   background-color: rgba(255, 255, 255, 0.603);
@@ -14,7 +15,7 @@
   color: black;
 }
 .booking:hover {
-  transition: border 200ms;
+  background-color: rgba(255, 255, 255, 0.603);
   border: 1px solid lightseagreen;
   box-shadow: 0 0 2px lightseagreen;
 }
