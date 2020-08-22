@@ -114,4 +114,23 @@ export class TransferEquipmentService {
     const res = JSON.parse(Buffer.from(resBuffer).toString());
     return res;
   }
+  async getTeForTransfer(
+    tspID: string,
+    bookingNumber: string,
+    userParams: {
+      orgID: string;
+      identityOptions: { wallet: Wallet; identity: Identity };
+    },
+  ) {
+    const network = await this.appService.getNetworkConnection(
+      userParams.orgID,
+      userParams.identityOptions,
+    );
+
+    const resBuffer = await network
+      .getContract('transferEquipment')
+      .evaluateTransaction('getTEforTransfer', bookingNumber);
+    const res = JSON.parse(Buffer.from(resBuffer).toString());
+    return res;
+  }
 }

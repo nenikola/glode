@@ -7,6 +7,7 @@ import {
   Body,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { TransferEquipmentService } from './transfer-equipment.service';
 import {
@@ -65,19 +66,29 @@ export class TransferEquipmentController {
     // throw new Error('Method not implemented.');
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('/:id')
-  @HttpCode(HttpStatus.OK)
-  async getTeByID() {
-    // @Req() request: Request
-    throw new Error('Method not implemented.');
-  }
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('/:id')
+  // @HttpCode(HttpStatus.OK)
+  // async getTeByID() {
+  //   // @Req() request: Request
+  //   throw new Error('Method not implemented.');
+  // }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/')
   @HttpCode(HttpStatus.OK)
-  async getAllTe() {
-    // @Req() request: Request
-    throw new Error('Method not implemented.');
+  async getTeForTransfer(
+    // @Query('tspID') tspID: string,
+    @Query('bookingNumber') bookingNumber: string,
+    @Req() request: Request,
+  ) {
+    console.log(bookingNumber);
+
+    return await this.teService.getTeForTransfer(
+      undefined,
+      bookingNumber,
+      request.user as any,
+    );
+    // throw new Error('Method not implemented.');
   }
 }
