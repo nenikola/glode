@@ -7,6 +7,7 @@ import {
   UseGuards,
   Req,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { BookingStatus, Booking } from 'app-shared-library';
@@ -29,6 +30,8 @@ export class BookingsController {
       (request.user as any).orgID !==
       originalBookingDTO.transportServiceProviderID
     ) {
+      console.log(originalBookingDTO);
+
       throw new BadRequestException(
         null,
         'You are not allowed to update booking status if you are not TSP!',
@@ -54,7 +57,22 @@ export class BookingsController {
       message: `Booking created.` + res,
     };
   }
-
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/test')
+  async test(
+    @Query('tspOrgID') tspID: string,
+    @Query('bookingNumber') bookingNumber: string,
+    @Req() request: Request,
+  ) {
+    return {
+      message: `Bookings queried.`,
+      data: await this.bookingService.test(
+        tspID,
+        bookingNumber,
+        request.user as any,
+      ),
+    };
+  }
   @UseGuards(AuthGuard('jwt'))
   @Get('/:id')
   async getBooking() {
