@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./BookingCard.css";
 
-import Locations from "./locations/Locations";
+import LocationsPanel from "./locationsPanel/LocationsPanel";
 import BookingInfo from "./bookingInfo/BookingInfo";
 import BookingDetails from "./bookingDetails/BookingDetails";
 
@@ -23,10 +23,10 @@ class BookingCard extends Component {
       >
         <BookingInfo booking={this.props.booking}></BookingInfo>
         <hr style={{ width: "100%", color: "lightgray" }}></hr>
-        <Locations
+        <LocationsPanel
           active={this.state.active}
           booking={this.props.booking}
-        ></Locations>
+        ></LocationsPanel>
         <BookingDetails
           active={this.state.active}
           booking={this.props.booking}

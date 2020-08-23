@@ -1,0 +1,46 @@
+.locations {
+  padding-top: 10px;
+  width: 100%;
+  height: 60%;
+  display: flex;
+  justify-content: space-between;
+}
+.locations .info {
+  display: flex;
+  flex-direction: column;
+  width: 29%;
+  max-height: 99%;
+}
+
+.locations .map-wrapper {
+  position: relative;
+  border-radius: 15px;
+  border: 2px solid lightseagreen;
+  width: 70%;
+  height: 99%;
+  background-color: burlywood;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+}
+.locations .mapContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  font-family: inherit;
+}
+
+.locations .mapboxgl-popup-content {
+  font-size: 13px;
+  border-radius: 10px;
+}
+.locations .info .info-data p,
+.locations .mapboxgl-popup-content p {
+  font-weight: bold;
+  color: lightseagreen;
+}
+.locations .mapboxgl-popup-content button {
+  display: none;
+}

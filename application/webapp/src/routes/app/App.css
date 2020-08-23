@@ -7,6 +7,10 @@
 * {
   box-sizing: border-box;
   color: black;
+  user-select: none;
+}
+input {
+  user-select: initial !important;
 }
 
 .App-logo {
