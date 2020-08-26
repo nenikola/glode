@@ -9,13 +9,17 @@
 }
 
 .bookings-toolbar {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
-  align-items: flex-end;
-  padding-bottom: 10px;
-  height: 30%;
+  justify-content: space-around;
+  align-items: center;
+  height: 10%;
+}
+.bookings-container .bookings-toolbar .booking-filters-wrapper {
+  width: 85%;
+  height: 80%;
 }
 button {
   outline: none;

@@ -21,6 +21,15 @@
 .transfer-data .info-data.te {
   width: 50%;
 }
+.transfer-data .info-data.te button {
+  margin: 3px;
+  padding: 0 5px;
+  width: auto;
+  color: lightseagreen;
+}
+.transfer-data .info-data.te button:hover {
+  color: white;
+}
 .transfer-data .info-data.te div h5,
 .transfer-data .info-data.te div p {
   display: inline-block;

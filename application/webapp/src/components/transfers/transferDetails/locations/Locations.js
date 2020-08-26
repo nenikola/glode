@@ -68,7 +68,10 @@ class Locations extends Component {
         console.log(markers);
         markers =
           markers.length > 0 &&
-          markers.reduce((array, marker) => [...array, ...marker]);
+          markers.reduce(
+            (array, marker) => (marker ? [...array, ...marker] : array),
+            []
+          );
         this.setState((prev) => ({
           ...prev,
           transferEquipments,
@@ -124,10 +127,7 @@ class Locations extends Component {
       container: this.mapContainer,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [
-        this.props.originLocation.geoCoordinates.lon -
-          (this.props.destinationLocation.geoCoordinates
-            ? this.props.destinationLocation.geoCoordinates.lon
-            : 0),
+        this.props.originLocation.geoCoordinates.lon,
         this.props.originLocation.geoCoordinates.lat,
       ],
       zoom: 4,

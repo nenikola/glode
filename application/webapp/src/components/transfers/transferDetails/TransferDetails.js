@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import "./TransferDetails.css";
 import Locations from "./locations/Locations";
 import TransferData from "./transferData/TransferData";
-
+import { get, post } from "axios";
+import { ListBox } from "primereact/listbox";
 export default class TransferDetails extends Component {
   constructor(props) {
     super(props);
@@ -13,9 +14,80 @@ export default class TransferDetails extends Component {
       transferEquipments: undefined,
     };
   }
+  toggleTeAssignment(fetch) {
+    this.teAssignment.classList.toggle("active");
+    get(
+      `http://localhost:5000/te/available?tspID=${this.state.transfer.transportServiceProviderID}&bookingNumber=${this.state.transfer.bookingNumber}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth")}`,
+        },
+      }
+    ).then((res) => {
+      this.setState((prev) => ({ ...prev, availableTe: res.data }));
+    });
+  }
   render() {
     return (
       <div className="transfer-details">
+        <div ref={(el) => (this.teAssignment = el)} className="te-assignment">
+          <div className="data">
+            <button
+              onClick={(e) => {
+                this.toggleTeAssignment(false);
+                this.setState({
+                  selectedTe: undefined,
+                });
+              }}
+            >
+              {"<"}
+            </button>
+            <div className="availables-list">
+              Available Transfer Equipment:
+              {this.state.availableTe && (
+                <ListBox
+                  value={this.state.selectedTe}
+                  options={this.state.availableTe}
+                  onChange={(e) => this.setState({ selectedTe: e.value })}
+                  itemTemplate={(option) =>
+                    `${option.registrationNumber} === ${JSON.stringify(
+                      option.currentLocation
+                    )}`
+                  }
+                />
+              )}
+            </div>
+            <button
+              className="assign"
+              onClick={(e) => {
+                this.state.selectedTe &&
+                  post(
+                    "http://localhost:5000/te/associate",
+                    {
+                      tspID: this.state.transfer.transportServiceProviderID,
+                      bookingNumber: this.state.transfer.bookingNumber,
+                      registrationNumber: this.state.selectedTe
+                        .registrationNumber,
+                    },
+                    {
+                      headers: {
+                        "Allow-Cross-Origin-Access": "*",
+                        Authorization: "Bearer " + localStorage.getItem("auth"),
+                      },
+                    }
+                  ).then((res) => {
+                    alert(JSON.stringify(res.data));
+                    this.toggleTeAssignment();
+                    this.setState({
+                      selectedTe: undefined,
+                    });
+                  });
+              }}
+            >
+              Assign
+            </button>
+          </div>
+        </div>
         <div className="toolbar">
           <button
             onClick={(e) => {
@@ -29,6 +101,7 @@ export default class TransferDetails extends Component {
           <TransferData
             transfer={this.state.transfer}
             transferEquipments={this.state.transferEquipments}
+            onTeAssign={() => this.toggleTeAssignment(true)}
           ></TransferData>
         </div>
         <Locations

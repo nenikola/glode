@@ -29,7 +29,10 @@ const TransferInfo = (props) => {
         <p>{props.transfer.transferData.plannedArrival || "N/A"}</p>
       </div>
       <div className="info-data te">
-        <h4>Transfer Equipment:</h4>
+        <h4>
+          Transfer Equipment:{" "}
+          <button onClick={(e) => props.onTeAssign()}>{"Assign new"}</button>
+        </h4>
         <hr></hr>
         {props.transferEquipments &&
           props.transferEquipments.map((t) => (

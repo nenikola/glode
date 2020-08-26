@@ -7,10 +7,92 @@
   width: 100%;
   height: 100%;
 }
+.transfer-details .te-assignment {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 5;
+  border-radius: 0 25px 0 0;
+  justify-content: center;
+  align-items: center;
+}
+.transfer-details .te-assignment.active {
+  display: flex;
+  background-color: rgba(211, 211, 211, 0.829);
+}
+
+.transfer-details .te-assignment .data {
+  position: relative;
+  border: 2px solid lightseagreen;
+  opacity: 0;
+  width: 60%;
+  height: 60%;
+  background-color: white;
+  border-radius: 25px;
+}
+.transfer-details .te-assignment.active .data {
+  opacity: 1;
+}
+.transfer-details .te-assignment.active .data button {
+  height: 5%;
+  margin: 10px;
+}
+.transfer-details .te-assignment.active .data .availables-list {
+  width: 90%;
+  height: 80%;
+  margin: 0 auto;
+  position: relative;
+}
+.transfer-details .te-assignment.active .data .availables-list .p-listbox {
+  width: 100%;
+  height: 90%;
+}
+
+.transfer-details
+  .te-assignment.active
+  .data
+  .availables-list
+  .p-listbox
+  .p-listbox-item.p-highlight,
+.transfer-details
+  .te-assignment.active
+  .data
+  .availables-list
+  .p-listbox
+  .p-listbox-item.p-highlight:focus {
+  background-color: lightseagreen;
+  box-shadow: 0 0 3px 3px lightseagreen;
+}
+.transfer-details
+  .te-assignment.active
+  .data
+  .availables-list
+  .p-listbox
+  .p-listbox-item:focus {
+  box-shadow: 0 0 0.3em lightseagreen inset;
+}
+.transfer-details .te-assignment.active .data button.assign {
+  width: 10%;
+  height: 8%;
+  margin: 0;
+  position: absolute;
+  right: 5%;
+  background-color: lightseagreen;
+  color: white;
+}
+.transfer-details .te-assignment.active .data button.assign:hover {
+  background-color: rgba(32, 178, 171, 0.678);
+}
 .transfer-details .toolbar {
   height: 5%;
   width: 100%;
   padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
 }
 .transfer-details button {
   height: 100%;
