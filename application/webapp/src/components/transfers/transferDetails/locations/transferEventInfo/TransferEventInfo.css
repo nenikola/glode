@@ -1,0 +1,58 @@
+.info .destination-origin {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+.info .info-data {
+  font-size: 14px;
+  border: 2px solid darkgray;
+  margin-bottom: 5px;
+  padding: 15px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.info .destination-origin .info-data {
+  width: 49%;
+}
+.info .info-data p {
+  display: block;
+  overflow-wrap: break-word;
+  width: 100%;
+}
+.info .te-events {
+  flex-grow: 1;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.info .te-events .info-data {
+  margin-right: 25px;
+  transition: box-shadow 300ms;
+}
+.info .te-events .info-data div h4 {
+  font-size: 14px;
+}
+.info .te-events .info-data .flags {
+  position: absolute;
+  right: 15px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.info .te-events .info-data .flag {
+  border-radius: 10px;
+  font-size: 10px;
+  padding: 2px 6px;
+  font-weight: bold;
+  color: white;
+}
+.info .te-events .info-data .flag.no-coords {
+  background-color: red;
+}
+.info .te-events .info-data .flag.current-loc {
+  background-color: coral;
+}
+.info .te-events .info-data:hover {
+  border-color: lightseagreen;
+  box-shadow: 0 0 3px lightseagreen;
+}

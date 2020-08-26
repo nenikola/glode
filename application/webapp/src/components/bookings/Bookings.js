@@ -3,9 +3,10 @@ import { DataScroller } from "primereact/datascroller";
 import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.min.css";
 import { get } from "axios";
-import "./Bookings.css";
 import BookingCard from "./bookingCard/BookingCard";
 import { Link } from "react-router-dom";
+import BookingFilters from "./bookingFilters/BookingFilters";
+import "./Bookings.css";
 export default class Bookings extends Component {
   constructor() {
     super();
@@ -45,11 +46,12 @@ export default class Bookings extends Component {
     return (
       <div className="bookings-container">
         <div className="bookings-toolbar">
+          <div className="booking-filters-wrapper">
+            <BookingFilters></BookingFilters>
+          </div>
           <Link to="createBooking">
             <button>create new booking</button>
           </Link>
-          <button>create new </button>
-          <button>create booking</button>
         </div>
         <div className="scrollbar-wrapper">
           <SimpleBar

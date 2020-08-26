@@ -75,17 +75,36 @@ export class TransferEquipmentController {
   // }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/')
+  @Get('/available')
   @HttpCode(HttpStatus.OK)
-  async getTeForTransfer(
-    // @Query('tspID') tspID: string,
+  async getAvailableTeForTransfer(
+    @Query('tspID') tspID: string,
     @Query('bookingNumber') bookingNumber: string,
     @Req() request: Request,
   ) {
     console.log(bookingNumber);
 
     return await this.teService.getTeForTransfer(
-      undefined,
+      true,
+      tspID,
+      bookingNumber,
+      request.user as any,
+    );
+    // throw new Error('Method not implemented.');
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/')
+  @HttpCode(HttpStatus.OK)
+  async getTeForTransfer(
+    @Query('tspID') tspID: string,
+    @Query('bookingNumber') bookingNumber: string,
+    @Req() request: Request,
+  ) {
+    console.log(bookingNumber);
+
+    return await this.teService.getTeForTransfer(
+      false,
+      tspID,
       bookingNumber,
       request.user as any,
     );

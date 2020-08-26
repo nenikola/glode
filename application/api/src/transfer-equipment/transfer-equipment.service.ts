@@ -115,6 +115,7 @@ export class TransferEquipmentService {
     return res;
   }
   async getTeForTransfer(
+    available: boolean,
     tspID: string,
     bookingNumber: string,
     userParams: {
@@ -129,7 +130,11 @@ export class TransferEquipmentService {
 
     const resBuffer = await network
       .getContract('transferEquipment')
-      .evaluateTransaction('getTEforTransfer', bookingNumber);
+      .evaluateTransaction(
+        available ? 'getAvailableTEforTransfer' : 'getTEforTransfer',
+        tspID,
+        bookingNumber,
+      );
     const res = JSON.parse(Buffer.from(resBuffer).toString());
     return res;
   }

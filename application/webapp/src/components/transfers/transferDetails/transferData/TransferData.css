@@ -1,0 +1,38 @@
+.transfer-data {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.transfer-data .info-data {
+  font-size: 14px;
+  margin-bottom: 5px;
+  padding: 10px;
+  width: 25%;
+}
+.transfer-data .info-data p {
+  display: block;
+  overflow-wrap: break-word;
+  width: 100%;
+  color: lightseagreen;
+  font-weight: bold;
+}
+.transfer-data .info-data.te {
+  width: 50%;
+}
+.transfer-data .info-data.te button {
+  margin: 3px;
+  padding: 0 5px;
+  width: auto;
+  color: lightseagreen;
+}
+.transfer-data .info-data.te button:hover {
+  color: white;
+}
+.transfer-data .info-data.te div h5,
+.transfer-data .info-data.te div p {
+  display: inline-block;
+  max-width: 25%;
+  padding: 0 5px;
+}

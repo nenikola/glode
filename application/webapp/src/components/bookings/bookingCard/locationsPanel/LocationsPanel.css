@@ -17,17 +17,17 @@
   margin-top: 45px;
   border-radius: 2px;
 }
-.locations .data-container {
+.locations-panel .data-container {
   margin-top: 30px;
   display: flex;
   justify-content: space-between;
 }
-.locations .data-container .location-data {
+.locations-panel .data-container .location-data {
   width: 50%;
   text-align: center;
   font-weight: bold;
 }
-.locations .data-container .location-data > p:nth-child(1) {
+.locations-panel .data-container .location-data > p:nth-child(1) {
   font-weight: normal;
 }
 .pinpic {

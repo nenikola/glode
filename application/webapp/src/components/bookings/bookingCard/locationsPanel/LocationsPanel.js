@@ -1,9 +1,9 @@
 import React from "react";
 import { ReactComponent as PinPic } from "./placeholder.svg";
-import "./Locations.css";
-function Locations(props) {
+import "./LocationsPanel.css";
+function LocationsPanel(props) {
   return (
-    <div className="locations">
+    <div className="locations-panel">
       <div className="data-container">
         <div className="location-data">
           <p>Origin Location:</p>
@@ -42,4 +42,4 @@ function Locations(props) {
   );
 }
 
-export default Locations;
+export default LocationsPanel;

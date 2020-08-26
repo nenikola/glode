@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import mapboxgl from "mapbox-gl";
 import "./TransferDetails.css";
-import SimpleBar from "simplebar-react";
+import Locations from "./locations/Locations";
+import TransferData from "./transferData/TransferData";
+import { get, post } from "axios";
+import { ListBox } from "primereact/listbox";
 export default class TransferDetails extends Component {
   constructor(props) {
     super(props);
@@ -9,103 +11,83 @@ export default class TransferDetails extends Component {
       transfer: JSON.parse(localStorage.getItem("transfers")).find(
         (transfer) => transfer.bookingNumber === this.props.match.params.id
       ),
-      teEvents: undefined,
-      map: undefined,
+      transferEquipments: undefined,
     };
-    mapboxgl.accessToken =
-      "pk.eyJ1IjoibmVuaWtvbGEiLCJhIjoiY2p4ZDhzd2F1MDd6ZDN6b3ZubGt0aGozMCJ9.P1ZFsEVmiXr7OKZvopWsow";
   }
-  componentDidMount() {
-    let map = new mapboxgl.Map({
-      container: this.mapContainer,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [
-        this.state.transfer.transferData.originLocation.geoCoordinates.lon -
-          this.state.transfer.transferData.destinationLocation.geoCoordinates
-            .lon,
-        this.state.transfer.transferData.originLocation.geoCoordinates.lat,
-      ],
-      zoom: 4,
-    });
-    map.on("load", () => {
-      var marker = new mapboxgl.Marker({ color: "lightseagreen" })
-        .setLngLat([
-          this.state.transfer.transferData.originLocation.geoCoordinates.lon,
-          this.state.transfer.transferData.originLocation.geoCoordinates.lat,
-        ])
-        .setPopup(
-          new mapboxgl.Popup().setHTML(
-            `<div>
-              <h4>Origin location:</h4>
-              <p>${this.state.transfer.transferData.originLocation.address.address}</p>
-              <p>${this.state.transfer.transferData.originLocation.address.city}</p>
-              <p>${this.state.transfer.transferData.originLocation.address.country}</p>
-          </div>`
-          )
-        )
-        .addTo(map);
-      var marker1 = new mapboxgl.Marker({ color: "lightseagreen" })
-        .setLngLat([
-          this.state.transfer.transferData.destinationLocation.geoCoordinates
-            .lon,
-          this.state.transfer.transferData.destinationLocation.geoCoordinates
-            .lat,
-        ])
-        .setPopup(
-          new mapboxgl.Popup().setHTML(
-            `<div>
-              <h4>Destination location:</h4>
-              <p>${this.state.transfer.transferData.destinationLocation.address.address}</p>
-              <p>${this.state.transfer.transferData.destinationLocation.address.city}</p>
-              <p>${this.state.transfer.transferData.destinationLocation.address.country}</p>
-          </div>`
-          )
-        )
-        .addTo(map);
-      //TODO - replace with real data
-      const a = () => {
-        this.setState((prev) => ({ ...prev, teEvents: [1, 2, 3, 4, 5] }));
-      };
-      setTimeout(() => {
-        a();
-      }, 3000);
-      this.setState((prevState) => ({
-        ...prevState,
-        map,
-      }));
+  toggleTeAssignment(fetch) {
+    this.teAssignment.classList.toggle("active");
+    get(
+      `http://localhost:5000/te/available?tspID=${this.state.transfer.transportServiceProviderID}&bookingNumber=${this.state.transfer.bookingNumber}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth")}`,
+        },
+      }
+    ).then((res) => {
+      this.setState((prev) => ({ ...prev, availableTe: res.data }));
     });
   }
   render() {
-    if (this.state.teEvents) {
-      this.state.teEvents.map((e) => {
-        const marker = new mapboxgl.Marker({
-          color: "lightseagreen",
-        })
-          .setLngLat([
-            this.state.transfer.transferData.destinationLocation.geoCoordinates
-              .lon +
-              e * 2,
-            this.state.transfer.transferData.destinationLocation.geoCoordinates
-              .lat -
-              e * 1,
-          ])
-          .setPopup(
-            new mapboxgl.Popup().setHTML(
-              `<div>
-                        <h4>Event ${e}:</h4>
-                        <p>${this.state.transfer.transferData.destinationLocation.address.address}</p>
-                        <p>${this.state.transfer.transferData.destinationLocation.address.city}</p>
-                        <p>${this.state.transfer.transferData.destinationLocation.address.country}</p>
-                    </div>`
-            )
-          );
-        if (this.state.map) {
-          marker.addTo(this.state.map);
-        }
-      });
-    }
     return (
       <div className="transfer-details">
+        <div ref={(el) => (this.teAssignment = el)} className="te-assignment">
+          <div className="data">
+            <button
+              onClick={(e) => {
+                this.toggleTeAssignment(false);
+                this.setState({
+                  selectedTe: undefined,
+                });
+              }}
+            >
+              {"<"}
+            </button>
+            <div className="availables-list">
+              Available Transfer Equipment:
+              {this.state.availableTe && (
+                <ListBox
+                  value={this.state.selectedTe}
+                  options={this.state.availableTe}
+                  onChange={(e) => this.setState({ selectedTe: e.value })}
+                  itemTemplate={(option) =>
+                    `${option.registrationNumber} === ${JSON.stringify(
+                      option.currentLocation
+                    )}`
+                  }
+                />
+              )}
+            </div>
+            <button
+              className="assign"
+              onClick={(e) => {
+                this.state.selectedTe &&
+                  post(
+                    "http://localhost:5000/te/associate",
+                    {
+                      tspID: this.state.transfer.transportServiceProviderID,
+                      bookingNumber: this.state.transfer.bookingNumber,
+                      registrationNumber: this.state.selectedTe
+                        .registrationNumber,
+                    },
+                    {
+                      headers: {
+                        "Allow-Cross-Origin-Access": "*",
+                        Authorization: "Bearer " + localStorage.getItem("auth"),
+                      },
+                    }
+                  ).then((res) => {
+                    alert(JSON.stringify(res.data));
+                    this.toggleTeAssignment();
+                    this.setState({
+                      selectedTe: undefined,
+                    });
+                  });
+              }}
+            >
+              Assign
+            </button>
+          </div>
+        </div>
         <div className="toolbar">
           <button
             onClick={(e) => {
@@ -115,105 +97,27 @@ export default class TransferDetails extends Component {
             {"<"}
           </button>
         </div>
-        <div className="transfer-data"></div>
-        <div className="locations">
-          <div className="info">
-            <div className="destination-origin">
-              <div className="info-data">
-                <div>
-                  <h4>Origin location:</h4>
-                  <p>
-                    {
-                      this.state.transfer.transferData.originLocation.address
-                        .address
-                    }
-                  </p>
-                  <p>
-                    {
-                      this.state.transfer.transferData.originLocation.address
-                        .city
-                    }
-                    {" - "}
-                    {
-                      this.state.transfer.transferData.originLocation.address
-                        .country
-                    }
-                  </p>
-                </div>
-              </div>
-              <div className="info-data">
-                <div>
-                  <h4>Destination location:</h4>
-                  <p>
-                    {
-                      this.state.transfer.transferData.destinationLocation
-                        .address.address
-                    }
-                  </p>
-                  <p>
-                    {
-                      this.state.transfer.transferData.destinationLocation
-                        .address.city
-                    }
-                    {" - "}
-                    {
-                      this.state.transfer.transferData.destinationLocation
-                        .address.country
-                    }
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="te-events">
-              <SimpleBar style={{ width: "100%", height: "100%" }}>
-                {[1, 2, 3, 4, 5].map((e) => {
-                  return (
-                    <div
-                      className="info-data"
-                      // onClick={() => {
-                      //   marker.togglePopup();
-                      // }}
-                    >
-                      <div>
-                        <h4>Event :</h4>
-                        <p>
-                          {
-                            this.state.transfer.transferData.originLocation
-                              .address.address
-                          }
-                        </p>
-                        <p>
-                          {
-                            this.state.transfer.transferData.originLocation
-                              .address.city
-                          }
-                          {" - "}
-                          {
-                            this.state.transfer.transferData.originLocation
-                              .address.country
-                          }
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </SimpleBar>
-            </div>
-          </div>
-          <div className="map-wrapper">
-            <div
-              className={
-                this.state.map ? "loading-circle" : "loading-circle active"
-              }
-            >
-              <div className="loader">Loading...</div>
-            </div>
-            <div
-              ref={(el) => (this.mapContainer = el)}
-              className="mapContainer"
-            />
-          </div>
+        <div className="transfer-data-wrapper">
+          <TransferData
+            transfer={this.state.transfer}
+            transferEquipments={this.state.transferEquipments}
+            onTeAssign={() => this.toggleTeAssignment(true)}
+          ></TransferData>
         </div>
+        <Locations
+          tspID={this.state.transfer.transportServiceProviderID}
+          bookingNumber={this.state.transfer.bookingNumber}
+          originLocation={this.state.transfer.transferData.originLocation}
+          destinationLocation={
+            this.state.transfer.transferData.destinationLocation
+          }
+          onTeFetch={(te) =>
+            this.setState((prev) => ({
+              ...prev,
+              transferEquipments: te,
+            }))
+          }
+        ></Locations>
       </div>
     );
   }
