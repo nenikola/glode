@@ -88,10 +88,22 @@ export class BookingsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async queryBookings(@Req() request: Request) {
+  async queryBookings(
+    @Req() request: Request,
+    @Query('bookingOrgID') bookingOrgID: string,
+    @Query('transportServiceProviderID') transportServiceProviderID: string,
+    @Query('bookingStatus') bookingStatus: string,
+    @Query('transferEquipmentType') transferEquipmentType: string,
+  ) {
     return {
       message: `Bookings queried.`,
-      data: await this.bookingService.getAll(request.user as any),
+      data: await this.bookingService.getAll(
+        request.user as any,
+        bookingOrgID,
+        transportServiceProviderID,
+        bookingStatus,
+        transferEquipmentType,
+      ),
     };
   }
 }

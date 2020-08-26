@@ -33,25 +33,44 @@ export class BookingContract extends Contract {
     ).toString('base64');
     return JSON.stringify(res);
   }
-  async queryOrganizationBookings(ctx: Context) {
+  async queryOrganizationBookings(
+    ctx: Context,
+    bookingOrgID: string,
+    transportServiceProviderID: string,
+    bookingStatus: string,
+    transferEquipmentType: string,
+  ) {
     const cliOrgID = BookingContract._getClientOrgId(ctx.clientIdentity);
     let allResults = [];
     try {
-      const query = `{
-        "selector": {
-           "_id": {
-              "$gt": null
-           },
-           "$or": [
-              {
-                 "bookingOrgID": "${cliOrgID}"
+      const queryObj = {
+        selector: {
+          $and: [
+            {
+              _id: {
+                $gt: null,
               },
-              {
-                 "transportServiceProviderID": "${cliOrgID}"
-              }
-           ]
-        }
-     }`;
+            },
+          ],
+        },
+      };
+      if (bookingOrgID) {
+        queryObj.selector.$and.push({ bookingOrgID } as any);
+      }
+      if (transportServiceProviderID) {
+        queryObj.selector.$and.push({ transportServiceProviderID } as any);
+      }
+      if (bookingStatus) {
+        queryObj.selector.$and.push({ bookingStatus } as any);
+      }
+      if (transferEquipmentType) {
+        queryObj.selector.$and.push({
+          equipmentData: {
+            transferEquipmentType,
+          },
+        } as any);
+      }
+      const query = JSON.stringify(queryObj);
       console.info(query);
       // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
       for await (const { key, value } of ctx.stub.getPrivateDataQueryResult(

@@ -108,10 +108,16 @@ export class BookingsService {
     }
     return contractResponse.message;
   }
-  async getAll(userParams: {
-    orgID: string;
-    identityOptions: { wallet: Wallet; identity: Identity };
-  }) {
+  async getAll(
+    userParams: {
+      orgID: string;
+      identityOptions: { wallet: Wallet; identity: Identity };
+    },
+    bookingOrgID: string,
+    transportServiceProviderID: string,
+    bookingStatus: string,
+    transferEquipmentType: string,
+  ) {
     if (!userParams.orgID || userParams.orgID.length < 3) {
       throw new Error('Desired organization ID must be provided!');
     }
@@ -120,9 +126,18 @@ export class BookingsService {
       userParams.identityOptions,
     );
 
+    const params = {
+      bookingOrgID: bookingOrgID || '',
+      transportServiceProviderID: transportServiceProviderID || '',
+      bookingStatus: bookingStatus || '',
+      transferEquipmentType: transferEquipmentType || '',
+    };
     const result = await network
       .getContract('booking')
-      .evaluateTransaction('queryOrganizationBookings');
+      .evaluateTransaction(
+        'queryOrganizationBookings',
+        ...Object.values(params),
+      );
     return JSON.parse(Buffer.from(result).toString());
   }
   async save(
