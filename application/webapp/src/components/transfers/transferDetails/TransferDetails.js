@@ -81,6 +81,7 @@ export default class TransferDetails extends Component {
                     this.setState({
                       selectedTe: undefined,
                     });
+                    this.props.history.go(0);
                   });
               }}
             >
@@ -101,7 +102,9 @@ export default class TransferDetails extends Component {
           <TransferData
             transfer={this.state.transfer}
             transferEquipments={this.state.transferEquipments}
-            onTeAssign={() => this.toggleTeAssignment(true)}
+            onTeAssign={() => {
+              this.toggleTeAssignment(true);
+            }}
           ></TransferData>
         </div>
         <Locations
