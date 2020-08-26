@@ -42,12 +42,32 @@ export default class Bookings extends Component {
     return <BookingCard booking={booking} />;
   }
 
+  queryBookings(filters) {
+    get("http://localhost:5000/bookings", {
+      params: filters,
+      headers: {
+        "Allow-Cross-Origin-Access": "*",
+        Authorization: "Bearer " + localStorage.getItem("auth"),
+      },
+    })
+      .then((res) => {
+        console.log("update", JSON.stringify(res.data.data, null, 2));
+        localStorage.setItem("bookings", JSON.stringify(res.data.data));
+        this.setState({
+          bookings: res.data.data,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
   render() {
     return (
       <div className="bookings-container">
         <div className="bookings-toolbar">
           <div className="booking-filters-wrapper">
-            <BookingFilters></BookingFilters>
+            <BookingFilters
+              onQuery={(filters) => this.queryBookings(filters)}
+            ></BookingFilters>
           </div>
           <Link to="createBooking">
             <button>create new booking</button>
@@ -62,14 +82,19 @@ export default class Bookings extends Component {
               paddingLeft: "5px",
             }}
           >
-            <DataScroller
-              value={this.state.bookings}
-              rows={this.state.bookings.length}
-              itemTemplate={this.itemTemplate}
-            ></DataScroller>
+            {this.state.bookings.map((booking) => this.itemTemplate(booking))}
           </SimpleBar>
         </div>
       </div>
     );
   }
+}
+
+{
+  /* <DataScroller
+            
+value={this.state.bookings}
+rows={this.state.bookings.length}
+itemTemplate={this.itemTemplate}
+></DataScroller> */
 }

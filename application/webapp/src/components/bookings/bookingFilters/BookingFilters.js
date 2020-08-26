@@ -8,8 +8,8 @@ export default class BookingFilters extends Component {
     super(props);
     this.state = {
       bookingOrgID: "",
-      tspID: "",
-      status: { status: "ALL" },
+      transportServiceProviderID: "",
+      bookingStatus: "",
       transferEquipmentType: "",
     };
   }
@@ -30,49 +30,51 @@ export default class BookingFilters extends Component {
         <span className="p-float-label">
           <InputText
             className="field"
-            id="input-float-tspID"
-            value={this.state.tspID}
-            onChange={(e) => this.setState({ tspID: e.target.value })}
+            id="input-float-transportServiceProviderID"
+            value={this.state.transportServiceProviderID}
+            onChange={(e) =>
+              this.setState({ transportServiceProviderID: e.target.value })
+            }
           />
-          <label htmlFor="input-float-tspID">
+          <label htmlFor="input-float-transportServiceProviderID">
             Transport Service Provider ID
           </label>
         </span>
         <div className="dropdown-wrapper">
           Status:
           <Dropdown
-            optionLabel="status"
-            value={this.state.status}
-            options={[
-              { status: "SUBMITTED" },
-              { status: "APPROVED" },
-              { status: "REJECTED" },
-              { status: "ALL" },
-            ]}
-            onChange={(e) => this.setState({ status: e.value })}
+            value={this.state.bookingStatus}
+            options={["SUBMITTED", "APPROVED", "REJECTED", "ALL"]}
+            onChange={(e) =>
+              this.setState({ bookingStatus: e.value === "ALL" ? "" : e.value })
+            }
             placeholder="Select a status"
-            itemTemplate={(status) => status.status}
+            itemTemplate={(bookingStatus) => bookingStatus}
           />
         </div>
         <div className="dropdown-wrapper">
           Transfer Equipment Type:
           <Dropdown
-            optionLabel="transferEquipmentType"
-            value={this.state.status}
-            options={[
-              { transferEquipmentType: "20_FEET_CONTAINER" },
-              { transferEquipmentType: "40_FEET_CONTAINER" },
-            ]}
-            onChange={(e) => this.setState({ transferEquipmentType: e.value })}
-            placeholder="Select a TE type"
-            itemTemplate={(transferEquipmentType) =>
-              transferEquipmentType.transferEquipmentType
+            value={this.state.transferEquipmentType}
+            options={["20_FEET_CONTAINER", "40_FEET_CONTAINER", "ALL"]}
+            onChange={(e) =>
+              this.setState({
+                transferEquipmentType: e.value === "ALL" ? "" : e.value,
+              })
             }
+            placeholder="Select a TE type"
+            itemTemplate={(transferEquipmentType) => transferEquipmentType}
           />
         </div>
 
         <div className="button-wrapper">
-          <button>search</button>
+          <button
+            onClick={(e) => {
+              this.props.onQuery(this.state);
+            }}
+          >
+            search
+          </button>
         </div>
       </div>
     );
