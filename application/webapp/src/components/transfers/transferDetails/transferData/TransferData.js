@@ -31,7 +31,12 @@ const TransferInfo = (props) => {
       <div className="info-data te">
         <h4>
           Transfer Equipment:{" "}
-          <button onClick={(e) => props.onTeAssign()}>{"Assign new"}</button>
+          {props.transfer.transportServiceProviderID ===
+          localStorage.getItem("org") ? (
+            <button onClick={(e) => props.onTeAssign()}>{"Assign new"}</button>
+          ) : (
+            ""
+          )}
         </h4>
         <hr></hr>
         {props.transferEquipments &&
