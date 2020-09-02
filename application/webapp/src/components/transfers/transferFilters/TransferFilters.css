@@ -1,0 +1,100 @@
+.transfer-filters {
+  width: 100%;
+  height: 100%;
+  border: 1px solid darkgray;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.transfer-filters > div:first-of-type {
+  height: 60%;
+}
+.p-float-label label {
+  font-size: 14px;
+}
+.p-float-label input {
+}
+.p-link:focus {
+  box-shadow: 0 0 3px 2px lightseagreen !important;
+}
+
+.p-float-label input.p-inputtext:enabled:focus {
+  box-shadow: 0 0 3px 2px lightseagreen !important;
+  border-color: lightseagreen;
+}
+.dropdown-wrapper,
+.calendar-wrapper {
+  position: relative;
+  width: 15%;
+  font-size: 14px;
+}
+.dropdown-wrapper div,
+.calendar-wrapper div {
+  color: dimgrey;
+}
+.dropdown-wrapper .p-dropdown {
+  text-align: center;
+  width: 100%;
+}
+.transfer-filters .dropdown-wrapper .p-dropdown .p-dropdown-label,
+.transfer-filters .dropdown-wrapper .p-dropdown .p-dropdown-panel {
+  background-color: white;
+}
+.dropdown-wrapper .p-dropdown .p-dropdown-trigger,
+.dropdown-wrapper .p-dropdown .p-dropdown-trigger-icon {
+  color: white;
+  background-color: lightseagreen !important;
+}
+.dropdown-wrapper .p-dropdown .p-dropdown-item {
+  text-align: center;
+}
+.calendar-wrapper .p-calendar .p-hightlight,
+.dropdown-wrapper .p-dropdown:not(.p-disabled).p-focus {
+  border-color: lightseagreen !important;
+}
+.calendar-wrapper .p-datepicker table td > span.p-highlight,
+.dropdown-wrapper
+  .p-dropdown
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item.p-highlight {
+  background-color: lightseagreen;
+}
+.calendar-wrapper
+  p-datepicker
+  p-component
+  p-input-overlay
+  p-shadow
+  p-input-overlay-visible {
+  height: 274px;
+}
+.calendar-wrapper button.p-button {
+  background-color: lightseagreen;
+  border: none;
+  font-size: 14px;
+}
+.calendar-wrapper button.p-button * {
+  color: white;
+}
+.calendar-wrapper button.p-button:enabled:hover {
+  color: white;
+  border-color: lightseagreen;
+  background-color: lightseagreen;
+  opacity: 0.8;
+}
+.calendar-wrapper .p-inputtext:enabled:focus {
+  box-shadow: none !important;
+  border-color: lightseagreen;
+}
+.transfer-filters .button-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.transfer-filters button {
+  height: 50%;
+  padding: 0 10px;
+}

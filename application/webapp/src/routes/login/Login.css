@@ -64,28 +64,28 @@ input.p-inputtext:enabled:focus {
   font-weight: lighter;
   font-size: 15px;
 }
-button.p-button {
+.login button.p-button {
   color: #47b6b1;
   background-color: #1d3b47;
   border: none;
   font-size: 18px;
 }
-button.p-button:enabled:focus {
+.login button.p-button:enabled:focus {
   box-shadow: none;
 }
-button.p-button:enabled:hover {
+.login button.p-button:enabled:hover {
   color: #1d3b47;
   border-color: #295364;
   background-color: #2953649a;
 }
-.p-dropdown-trigger {
+.login .p-dropdown-trigger {
   background-color: #1d3b47 !important;
   color: #47b6b1 !important;
 }
-.p-dropdown-label {
+.login .p-dropdown-label {
   color: #1d3b47 !important;
   background-color: #2953641a !important;
 }
-.p-dropdown:not(.p-disabled).p-focus {
+.login .p-dropdown:not(.p-disabled).p-focus {
   box-shadow: none !important;
 }
