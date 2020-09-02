@@ -8,6 +8,7 @@ export LOGS=$4
 export SIGNATURE_POLICY='OR ("ocAMSP.peer","itAMSP.peer","itBMSP.peer","ffAMSP.peer")'
 
 cd ../chaincode/$1/
+echo ls
 npm run build
 cd  ../../network/
 

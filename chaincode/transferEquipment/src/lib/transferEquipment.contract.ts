@@ -6,43 +6,13 @@ import {
   TransferEquipment,
   TransferEquipmentEventDTO,
   TransferEquipmentEvent,
+  TransferEquipmentEventType,
+  Location,
 } from 'app-shared-library';
+import { GetTEforTransfer } from './getTeForTransfer';
+import { GetAvailableTEforTransfer } from './getAvailableTeForTransfer';
 
 export class TransferEquipmentContract extends Contract {
-  // async updateCurrentLocation(ctx: Context, registrationNumber: string, tspID: string, bookingNumber: string, locationString: string) {
-  //     let location: Location;
-  //     try {
-  //         location = JSON.parse(locationString);
-  //         if (!location || !location.unlocode) {
-  //             throw new Error("Location UNLOCODE must be specified!")
-  //         }
-  //     } catch (error) {
-  //         return { status: 400, message: `Bad location format :: ${error}` };
-  //     }
-
-  //     const compositeKey = ctx.stub.createCompositeKey('te', [registrationNumber]);
-  //     let transferEquipment: TransferEquipment;
-  //     try {
-  //         transferEquipment = JSON.parse(Buffer.from(await ctx.stub.getState(compositeKey)).toString('utf8'));
-  //     } catch (error) {
-  //         return { status: 400, message: `Could not find and read TE[${registrationNumber}]` }
-  //     }
-
-  //     if (!transferEquipment.associatedTransferIDs.find((id) => id === ctx.stub.createCompositeKey('transfer', [tspID, bookingNumber]))) {
-  //         return { status: 400, message: `Specified transfer is not assigned to TE[${registrationNumber}]!` }
-  //     }
-
-  //     if (!(await TransferEquipmentContract._isAuthorizedTransferParticipant(ctx, tspID, bookingNumber))) {
-  //         return { status: 400, message: "You are not participant of specified transfer!" }
-  //     }
-
-  //     transferEquipment.currentLocation = location;
-
-  //     await ctx.stub.putState(compositeKey, Buffer.from(JSON.stringify(transferEquipment)));
-  //     return { status: 200, message: `Successfully updated TE[${transferEquipment.registrationNumber}] location to Location[${JSON.stringify(location, null, 2)}]` };
-
-  // }
-
   async addAssociatedTransfer(
     ctx: Context,
     registrationNumber: string,
@@ -89,8 +59,8 @@ export class TransferEquipmentContract extends Contract {
         : '',
     );
 
-    if (!te.associatedTransferIdHashs) {
-      te.associatedTransferIdHashs = new Array<string>();
+    if (!te.associatedTransfersIdHashes) {
+      te.associatedTransfersIdHashes = new Array<string>();
     }
 
     if (!participantAuthResult.validated) {
@@ -101,7 +71,7 @@ export class TransferEquipmentContract extends Contract {
       };
     }
     if (
-      te.associatedTransferIdHashs.find(
+      te.associatedTransfersIdHashes.find(
         idHash => idHash === participantAuthResult.transferIDHash,
       )
     ) {
@@ -110,7 +80,7 @@ export class TransferEquipmentContract extends Contract {
         message: 'Specified transfer already assigned to specified TE!',
       };
     }
-    te.associatedTransferIdHashs.push(participantAuthResult.transferIDHash);
+    te.associatedTransfersIdHashes.push(participantAuthResult.transferIDHash);
 
     if (
       !te.uniqueTransfersEquipmentIDHash ||
@@ -128,10 +98,21 @@ export class TransferEquipmentContract extends Contract {
     };
   }
   async submitTransferEquipmentEvent(ctx: Context, eventString: string) {
-    let eventDTO: TransferEquipmentEventDTO;
+    let eventDTO;
+    let event: TransferEquipmentEvent;
     try {
-      eventDTO = JSON.parse(eventString);
+      eventDTO = JSON.parse(eventString) as any;
+      eventDTO.eventOccuranceTime = new Date(eventDTO.eventOccuranceTime);
+      event = new TransferEquipmentEvent(
+        eventDTO.registrationNumber + eventDTO.eventOccuranceTime.getTime(),
+        TransferEquipmentEventType.getFromPlainObj(
+          eventDTO.transferEquipmentEventType,
+        ),
+        Location.getFromPlainObj(eventDTO.eventLocation),
+        eventDTO.eventOccuranceTime,
+      );
     } catch (error) {
+      console.info(error);
       return { status: 400, message: `Submitted event data wrong format` };
     }
     let te: TransferEquipment;
@@ -145,34 +126,16 @@ export class TransferEquipmentContract extends Contract {
     } catch (error) {
       return { status: 404, message: `Could not find specified TE!` };
     }
-    // const dtoTransferIdHash = createHash("sha256")
-    //   .update(
-    //     eventDTO.associatedTransferData.tspID +
-    //       eventDTO.associatedTransferData.bookingNumber
-    //   )
-    //   .digest("base64");
-    // if (
-    //   !te.associatedTransferIdHashs ||
-    //   !te.associatedTransferIdHashs.find(
-    //     (transferIDHash) => transferIDHash === dtoTransferIdHash
-    //   )
-    // ) {
-    //   return {
-    //     status: 400,
-    //     message: `Specified associated transfer not associated with specified TE!`,
-    //   };
-    // }
+
     const participantAuthResult = await TransferEquipmentContract._isAuthorizedTransferParticipant(
       ctx,
       eventDTO.associatedTransferData.tspID,
       eventDTO.associatedTransferData.bookingNumber,
       te.uniqueTransfersEquipmentIDHash,
-      // ? te.uniqueTransfersEquipmentIDHash
-      // : te.uniqueTransfersEquipmentIDHash
     );
     if (
       !participantAuthResult.validated ||
-      !te.associatedTransferIdHashs.find(
+      !te.associatedTransfersIdHashes.find(
         idHash => idHash === participantAuthResult.transferIDHash,
       )
     ) {
@@ -181,9 +144,7 @@ export class TransferEquipmentContract extends Contract {
         message: `You are not authorized to submit events for specified TE!`,
       };
     }
-    const event: TransferEquipmentEvent = TransferEquipmentEvent.getFromDTO(
-      eventDTO,
-    );
+
     if (!te.events) {
       te.events = new Array<TransferEquipmentEvent>();
     }
@@ -202,7 +163,7 @@ export class TransferEquipmentContract extends Contract {
 
     TransferEquipmentContract._isAuthorized(
       cliOrg,
-      newTransferEquipment.ownerID,
+      newTransferEquipment.owner.organizationID,
       'TE creation',
     );
 
@@ -217,7 +178,7 @@ export class TransferEquipmentContract extends Contract {
       throw new Error(
         JSON.stringify({
           status: 406,
-          message: `${newTransferEquipment.ownerID} transfer equipment with registration number [${newTransferEquipment.registrationNumber}] already exists!`,
+          message: `${newTransferEquipment.owner.organizationID} transfer equipment with registration number [${newTransferEquipment.registrationNumber}] already exists!`,
         }),
       );
     }
@@ -228,10 +189,6 @@ export class TransferEquipmentContract extends Contract {
         Buffer.from(JSON.stringify(newTransferEquipment)),
       );
 
-      // const ep = new KeyEndorsementPolicy();
-      // ep.addOrgs("PEER", ctx.clientIdentity.getMSPID());
-      // await ctx.stub.setStateValidationParameter(compositeKey, ep.getPolicy());
-
       return { status: 201, message: `Successfully created` };
     } catch (error) {
       console.info(`ERROR: ${error}`);
@@ -239,103 +196,23 @@ export class TransferEquipmentContract extends Contract {
     }
   }
   async getTEforTransfer(ctx: Context, tspID: string, bookingNumber: string) {
-    const participantAuthResult = await TransferEquipmentContract._isAuthorizedTransferParticipant(
-      ctx,
-      tspID,
-      bookingNumber,
-      '',
-    );
-    if (!participantAuthResult.validated) {
-      return {
-        status: 401,
-        message: `You are not authorized to read this Transfer's TEs!`,
-      };
+    if (!tspID || !bookingNumber) {
+      throw new Error('ArgumentMissingError');
     }
-    let allResults = [];
-    try {
-      const query = `{
-        "selector": {
-           "associatedTransferIdHashs": {
-              "$elemMatch": {
-                 "$eq": "${participantAuthResult.transferIDHash}"
-              }
-           }
-        }
-     }`;
-      console.info(query);
-      // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
-      for await (const { key, value } of ctx.stub.getQueryResult(query)) {
-        const strValue = Buffer.from(value).toString('utf8');
-        console.info('Found <-->', key, ' : ', strValue);
-        let record: TransferEquipment = JSON.parse(strValue);
-        allResults.push(record);
-      }
-      return JSON.stringify(allResults, null, 2);
-    } catch (error) {
-      console.error(error);
-      return error;
-    }
+    return await GetTEforTransfer.handler(ctx, tspID, bookingNumber);
   }
+
   async getAvailableTEforTransfer(
     ctx: Context,
     tspID: string,
     bookingNumber: string,
   ) {
-    const participantAuthResult = await TransferEquipmentContract._isAuthorizedTransferParticipant(
-      ctx,
-      tspID,
-      bookingNumber,
-      '',
-    );
-    if (!participantAuthResult.validated) {
-      return {
-        status: 401,
-        message: `You are not authorized to read this Transfer's TEs!`,
-      };
+    if (!tspID || !bookingNumber) {
+      throw new Error('ArgumentMissingError');
     }
-    let allResults = [];
-    try {
-      const query = `{
-        "selector": {
-           "$or": [
-              {
-                "$and":[
-                  {
-                    "uniqueTransfersEquipmentIDHash": {
-                      "$eq": "${participantAuthResult.digestToMatch}"
-                    }
-                  },
-                  {
-                    "associatedTransferIdHashs": {
-                       "$allMatch": {
-                          "$ne": "${participantAuthResult.transferIDHash}"
-                       }
-                    }
-                  }
-                ]
-              },
-              {
-                 "uniqueTransfersEquipmentIDHash": {
-                    "$exists": false
-                 }
-              }
-           ]
-        }
-     }`;
-      console.info(query);
-      // for await (const { key, value } of ctx.stub.getStateByPartialCompositeKey('transfer', [transportServiceProviderID])) {
-      for await (const { key, value } of ctx.stub.getQueryResult(query)) {
-        const strValue = Buffer.from(value).toString('utf8');
-        console.info('Found <-->', key, ' : ', strValue);
-        let record: TransferEquipment = JSON.parse(strValue);
-        allResults.push(record);
-      }
-      return JSON.stringify(allResults, null, 2);
-    } catch (error) {
-      console.error(error);
-      return error;
-    }
+    return await GetAvailableTEforTransfer.handler(ctx, tspID, bookingNumber);
   }
+
   static async _isAuthorizedTransferParticipant(
     ctx: Context,
     transferTspID: string,

@@ -26,12 +26,20 @@ export class TransferContract extends Contract {
       tspID,
       bookingNumber,
     ]);
-    console.info(`TRIED TO REACH: ${compositeKey} from ${cliOrgCollectionID}`);
-    const r = Buffer.from(
+
+    const transfer = Buffer.from(
       await ctx.stub.getPrivateData(cliOrgCollectionID, compositeKey),
     ).toString();
-    console.info('r: ', r);
-    const cliPvtDataObj: Transfer = JSON.parse(r);
+    if (!transfer) {
+      return {
+        digestToMatch: digestToMatch,
+        transferIDHash: '',
+        validated: false,
+      };
+    }
+    const cliPvtDataObj: Transfer = Transfer.getFromPlainObj(
+      JSON.parse(transfer),
+    );
 
     const cliPvtDataHashStr = Buffer.from(
       await ctx.stub.getPrivateDataHash(cliOrgCollectionID, compositeKey),
@@ -42,20 +50,20 @@ export class TransferContract extends Contract {
     ).toString('base64');
 
     const secretHash = createHash('sha256')
-      .update(cliPvtDataObj.transferSecret)
+      .update(cliPvtDataObj.associationID)
       .digest('base64');
 
-    console.info(cliPvtDataObj.transferSecret + ' ' + secretHash);
+    console.info(cliPvtDataObj.associationID + ' ' + secretHash);
     return {
       digestToMatch: digestToMatch || secretHash,
       transferIDHash: createHash('sha256')
-        .update(tspID + bookingNumber + cliPvtDataObj.transferSecret)
+        .update(tspID + bookingNumber + cliPvtDataObj.associationID)
         .digest('hex'),
       validated:
         cliPvtDataHashStr === tspPvtDataHashStr &&
-        (cliPvtDataObj.transportServiceProviderID === cliOrgID ||
+        (cliPvtDataObj.transportServiceProvider.organizationID === cliOrgID ||
           cliPvtDataObj.participants.find(
-            participant => participant.participantID === cliOrgID,
+            participant => participant.organizationID === cliOrgID,
           )) &&
         (digestToMatch ? digestToMatch === secretHash : true),
     };
@@ -80,10 +88,10 @@ export class TransferContract extends Contract {
     try {
       const transfer: Transfer = JSON.parse(transferStr);
       if (
-        cliOrgID === transfer.transportServiceProviderID ||
+        cliOrgID === transfer.transportServiceProvider.organizationID ||
         (transfer.participants &&
           transfer.participants.find(
-            participant => participant.participantID === cliOrgID,
+            participant => participant.organizationID === cliOrgID,
           ))
       ) {
         return JSON.stringify(transfer, null, 2);
@@ -140,20 +148,16 @@ export class TransferContract extends Contract {
 
     let newTransfer: Transfer;
     try {
-      newTransfer = JSON.parse(transferString);
+      newTransfer = Transfer.getFromPlainObj(
+        JSON.parse(transferString) as Transfer,
+      );
     } catch (error) {
       return TransferContract.getReturnMessage(
         400,
         'Bad supplied transfer format.',
       );
     }
-    if (!newTransfer) {
-      return TransferContract.getReturnMessage(
-        400,
-        'You must supply tranfer data.',
-      );
-    }
-    if (cliOrgID !== newTransfer.transportServiceProviderID) {
+    if (cliOrgID !== newTransfer.transportServiceProvider.organizationID) {
       return TransferContract.getReturnMessage(
         403,
         'You are not authorized to read this transfer!',
@@ -161,7 +165,7 @@ export class TransferContract extends Contract {
     }
 
     const compositeKey: string = ctx.stub.createCompositeKey('transfer', [
-      newTransfer.transportServiceProviderID,
+      newTransfer.transportServiceProvider.organizationID,
       newTransfer.bookingNumber,
     ]);
 
@@ -170,7 +174,7 @@ export class TransferContract extends Contract {
     ) {
       return TransferContract.getReturnMessage(
         406,
-        `${newTransfer.transportServiceProviderID} transfer with booking number [${newTransfer.bookingNumber}] already exists!`,
+        `Transfer with booking number [${newTransfer.bookingNumber}] already exists!`,
       );
     }
 
@@ -178,7 +182,7 @@ export class TransferContract extends Contract {
       await ctx.stub.putPrivateData(
         cliOrgPvtCollectionString,
         compositeKey,
-        Buffer.from(JSON.stringify(newTransfer)),
+        new Buffer(JSON.stringify(newTransfer)),
       );
       if (newTransfer.participants && newTransfer.participants.length > 0) {
         await this._putTransferToCollections(
@@ -187,7 +191,7 @@ export class TransferContract extends Contract {
           newTransfer,
           ...newTransfer.participants.map(participant =>
             TransferContract._getPrivateCollectionString(
-              participant.participantID,
+              participant.organizationID,
             ),
           ),
         );
@@ -221,7 +225,7 @@ export class TransferContract extends Contract {
         await ctx.stub.putPrivateData(
           collectionString,
           compositeKey,
-          Buffer.from(JSON.stringify(transfer)),
+          new Buffer(JSON.stringify(transfer)),
         );
       }),
     );
