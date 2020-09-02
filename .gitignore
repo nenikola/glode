@@ -12,3 +12,4 @@ wallet
 /application/shared/*.d.ts
 /application/shared/*.js*
 /application/shared/dto
+/application/shared/models
