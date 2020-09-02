@@ -7,19 +7,15 @@ function LocationsPanel(props) {
       <div className="data-container">
         <div className="location-data">
           <p>Origin Location:</p>
-          <p>{props.booking.transferData.originLocation.address.address}</p>
-          <p>{props.booking.transferData.originLocation.address.city}</p>
-          <p>{props.booking.transferData.originLocation.address.country} </p>
+          <p>{props.booking.originLocation.address}</p>
+          <p>{props.booking.originLocation.city}</p>
+          <p>{props.booking.originLocation.country} </p>
         </div>
         <div className="location-data">
           <p>Destination Location:</p>
-          <p>
-            {props.booking.transferData.destinationLocation.address.address}
-          </p>
-          <p>{props.booking.transferData.destinationLocation.address.city}</p>
-          <p>
-            {props.booking.transferData.destinationLocation.address.country}
-          </p>
+          <p>{props.booking.destinationLocation.address}</p>
+          <p>{props.booking.destinationLocation.city}</p>
+          <p>{props.booking.destinationLocation.country}</p>
         </div>
       </div>
       <div
@@ -30,12 +26,16 @@ function LocationsPanel(props) {
       >
         <div className="blackdot">
           <PinPic className="pinpic"></PinPic>
-          <p>[{props.booking.transferData.originLocation.unlocode}]</p>
+          <p>[{props.booking.originLocation.unlocode}]</p>
         </div>
         <div className="blackline"></div>
         <div className="blackdot">
           <PinPic className="pinpic"></PinPic>
-          <p>[{props.booking.transferData.destinationLocation.unlocode}]</p>
+          {props.booking.originLocation.unlocode ? (
+            <p>[{props.booking.destinationLocation.unlocode}]</p>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

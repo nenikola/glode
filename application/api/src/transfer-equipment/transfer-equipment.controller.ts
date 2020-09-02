@@ -8,6 +8,7 @@ import {
   UseGuards,
   Req,
   Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { TransferEquipmentService } from './transfer-equipment.service';
 import {
@@ -82,15 +83,19 @@ export class TransferEquipmentController {
     @Query('bookingNumber') bookingNumber: string,
     @Req() request: Request,
   ) {
-    console.log(bookingNumber);
-
-    return await this.teService.getTeForTransfer(
-      true,
-      tspID,
-      bookingNumber,
-      request.user as any,
-    );
-    // throw new Error('Method not implemented.');
+    try {
+      return await this.teService.getTeForTransfer(
+        true,
+        tspID,
+        bookingNumber,
+        request.user as any,
+      );
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException(
+        'Available transfer equipment could not be found.',
+      );
+    }
   }
   @UseGuards(AuthGuard('jwt'))
   @Get('/')
@@ -100,14 +105,16 @@ export class TransferEquipmentController {
     @Query('bookingNumber') bookingNumber: string,
     @Req() request: Request,
   ) {
-    console.log(bookingNumber);
-
-    return await this.teService.getTeForTransfer(
-      false,
-      tspID,
-      bookingNumber,
-      request.user as any,
-    );
-    // throw new Error('Method not implemented.');
+    try {
+      return await this.teService.getTeForTransfer(
+        false,
+        tspID,
+        bookingNumber,
+        request.user as any,
+      );
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('Transfer equipment could not be found.');
+    }
   }
 }

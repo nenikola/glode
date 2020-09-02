@@ -4,6 +4,7 @@ import Locations from "./locations/Locations";
 import TransferData from "./transferData/TransferData";
 import { get, post } from "axios";
 import { ListBox } from "primereact/listbox";
+import LoadingCircle from "../../loadingCirle/LoadingCircle";
 export default class TransferDetails extends Component {
   constructor(props) {
     super(props);
@@ -17,15 +18,17 @@ export default class TransferDetails extends Component {
   toggleTeAssignment(fetch) {
     this.teAssignment.classList.toggle("active");
     get(
-      `http://localhost:5000/te/available?tspID=${this.state.transfer.transportServiceProviderID}&bookingNumber=${this.state.transfer.bookingNumber}`,
+      `http://localhost:5000/te/available?tspID=${this.state.transfer.transportServiceProvider.organizationID}&bookingNumber=${this.state.transfer.bookingNumber}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth")}`,
         },
       }
-    ).then((res) => {
-      this.setState((prev) => ({ ...prev, availableTe: res.data }));
-    });
+    )
+      .then((res) => {
+        this.setState((prev) => ({ ...prev, availableTe: res.data }));
+      })
+      .catch((err) => this.setState((prev) => ({ ...prev, availableTe: err })));
   }
   render() {
     return (
@@ -44,7 +47,9 @@ export default class TransferDetails extends Component {
             </button>
             <div className="availables-list">
               Available Transfer Equipment:
-              {this.state.availableTe && (
+              {<LoadingCircle active={this.state.availableTe}></LoadingCircle>}
+              {this.state.availableTe &&
+              typeof this.state.availableTe.length ? (
                 <ListBox
                   value={this.state.selectedTe}
                   options={this.state.availableTe}
@@ -55,38 +60,48 @@ export default class TransferDetails extends Component {
                     )}`
                   }
                 />
+              ) : (
+                <div style={{ textAlign: "center" }}>
+                  Available TransferEquipment could not be found.
+                </div>
               )}
             </div>
-            <button
-              className="assign"
-              onClick={(e) => {
-                this.state.selectedTe &&
-                  post(
-                    "http://localhost:5000/te/associate",
-                    {
-                      tspID: this.state.transfer.transportServiceProviderID,
-                      bookingNumber: this.state.transfer.bookingNumber,
-                      registrationNumber: this.state.selectedTe
-                        .registrationNumber,
-                    },
-                    {
-                      headers: {
-                        "Allow-Cross-Origin-Access": "*",
-                        Authorization: "Bearer " + localStorage.getItem("auth"),
+            {this.state.availableTe &&
+            typeof this.state.availableTe == "array" ? (
+              <button
+                className="assign"
+                onClick={(e) => {
+                  this.state.selectedTe &&
+                    post(
+                      "http://localhost:5000/te/associate",
+                      {
+                        tspID: this.state.transfer.transportServiceProviderID,
+                        bookingNumber: this.state.transfer.bookingNumber,
+                        registrationNumber: this.state.selectedTe
+                          .registrationNumber,
                       },
-                    }
-                  ).then((res) => {
-                    alert(JSON.stringify(res.data));
-                    this.toggleTeAssignment();
-                    this.setState({
-                      selectedTe: undefined,
+                      {
+                        headers: {
+                          "Allow-Cross-Origin-Access": "*",
+                          Authorization:
+                            "Bearer " + localStorage.getItem("auth"),
+                        },
+                      }
+                    ).then((res) => {
+                      alert(JSON.stringify(res.data));
+                      this.toggleTeAssignment();
+                      this.setState({
+                        selectedTe: undefined,
+                      });
+                      this.props.history.go(0);
                     });
-                    this.props.history.go(0);
-                  });
-              }}
-            >
-              Assign
-            </button>
+                }}
+              >
+                Assign
+              </button>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div className="toolbar">
@@ -108,12 +123,10 @@ export default class TransferDetails extends Component {
           ></TransferData>
         </div>
         <Locations
-          tspID={this.state.transfer.transportServiceProviderID}
+          tspID={this.state.transfer.transportServiceProvider.organizationID}
           bookingNumber={this.state.transfer.bookingNumber}
-          originLocation={this.state.transfer.transferData.originLocation}
-          destinationLocation={
-            this.state.transfer.transferData.destinationLocation
-          }
+          originLocation={this.state.transfer.originLocation}
+          destinationLocation={this.state.transfer.destinationLocation}
           onTeFetch={(te) =>
             this.setState((prev) => ({
               ...prev,

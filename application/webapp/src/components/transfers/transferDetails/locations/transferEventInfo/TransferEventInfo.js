@@ -10,22 +10,22 @@ const TransferEventInfo = (props) => {
         <div className="info-data">
           <div>
             <h4>Origin location:</h4>
-            <p>{props.originLocation.address.address}</p>
+            <p>{props.originLocation.address}</p>
             <p>
-              {props.originLocation.address.city}
+              {props.originLocation.city}
               {" - "}
-              {props.originLocation.address.country}
+              {props.originLocation.country}
             </p>
           </div>
         </div>
         <div className="info-data">
           <div>
             <h4>Destination location:</h4>
-            <p>{props.destinationLocation.address.address}</p>
+            <p>{props.destinationLocation.address}</p>
             <p>
-              {props.destinationLocation.address.city}
+              {props.destinationLocation.city}
               {" - "}
-              {props.destinationLocation.address.country}
+              {props.destinationLocation.country}
             </p>
           </div>
         </div>
@@ -67,20 +67,14 @@ const TransferEventInfo = (props) => {
                       </div>
                       <div>
                         <h4>- Location:</h4>
+                        <p>{e.eventLocation ? e.eventLocation.address : ""}</p>
                         <p>
-                          {e.eventLocation.address
-                            ? e.eventLocation.address.address
-                            : ""}
-                        </p>
-                        <p>
-                          {e.eventLocation.address
-                            ? e.eventLocation.address.city
-                            : ""}
+                          {e.eventLocation ? e.eventLocation.city : ""}
                           {"  "}
-                          {e.eventLocation.address
-                            ? e.eventLocation.address.country
+                          {e.eventLocation ? e.eventLocation.country : ""}
+                          {e.eventLocation.unlocode
+                            ? `  [${e.eventLocation.unlocode}]`
                             : ""}
-                          {"  "}[{e.eventLocation.unlocode || ""}]
                         </p>
                       </div>
                       <div>

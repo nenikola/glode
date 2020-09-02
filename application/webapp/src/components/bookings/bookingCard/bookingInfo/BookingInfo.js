@@ -9,13 +9,13 @@ const BookingInfo = (props) => (
     </div>
     <div className="booking-info-data">
       <h4>Booking Organization ID: </h4>
-      <p>{props.booking.bookingOrgID}</p>
+      <p>{props.booking.bookingOrg.organizationID}</p>
     </div>
     <div className="booking-info-data">
       <h4>Transport Service Provider [ ID / Name ]: </h4>
       <p>
-        {props.booking.transportServiceProviderID} /{" "}
-        {props.booking.transportServiceProviderName}
+        {props.booking.transportServiceProvider.organizationID} /{" "}
+        {props.booking.transportServiceProvider.organizationName}
       </p>
     </div>
     <div
@@ -30,16 +30,16 @@ const BookingInfo = (props) => (
       <p
         style={{
           color:
-            props.booking.bookingStatus === "SUBMITTED"
+            props.booking.bookingStatus.statusName === "SUBMITTED"
               ? "lightseagreen"
-              : props.booking.bookingStatus === "APPROVED"
+              : props.booking.bookingStatus.statusName === "APPROVED"
               ? "green"
               : "red",
           fontWeight: "bold",
         }}
       >
         <hr></hr>
-        {props.booking.bookingStatus}
+        {props.booking.statusName}
       </p>
     </div>
   </div>

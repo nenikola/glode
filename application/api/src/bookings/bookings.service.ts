@@ -5,39 +5,16 @@ import { Identity, Wallet } from 'fabric-network';
 import { Buffer } from 'buffer';
 @Injectable()
 export class BookingsService {
-  async test(
-    tspOrgID: string,
-    bookingNumber: string,
-    userParams: {
-      orgID: string;
-      identityOptions: { wallet: Wallet; identity: Identity };
-    },
-  ) {
-    const network = await this.appService.getNetworkConnection(
-      userParams.orgID,
-      userParams.identityOptions,
-    );
-    const cliOrgEndorsers = network
-      .getChannel()
-      .getEndorsers(`${userParams.orgID}MSP`);
-    const contractResponse = await network
-      .getContract('booking')
-      .createTransaction('testContractMethod')
-      .setEndorsingPeers([...cliOrgEndorsers])
-      .submit(userParams.orgID, tspOrgID, bookingNumber);
-    return Buffer.from(contractResponse).toString('utf8');
-  }
   constructor(private readonly appService: AppService) {}
 
   async updateStatus(
     newStatus: BookingStatus,
-    originalBookingDTO: Booking,
+    booking: Booking,
     userParams: {
       orgID: string;
       identityOptions: { wallet: Wallet; identity: Identity };
     },
   ) {
-    console.info(newStatus);
     const network = await this.appService.getNetworkConnection(
       userParams.orgID,
       userParams.identityOptions,
@@ -47,57 +24,21 @@ export class BookingsService {
 
     const bookingOrgEndorsers = network
       .getChannel()
-      .getEndorsers(`${originalBookingDTO.bookingOrgID}MSP`);
+      .getEndorsers(`${booking.bookingOrg.organizationID}MSP`);
 
     const tspOrgEndorsers = network
       .getChannel()
       .getEndorsers(`${userParams.orgID}MSP`);
-    console.info(tspOrgEndorsers.map(e => e.name));
-    const endorsers = [...bookingOrgEndorsers, ...tspOrgEndorsers];
-    // console.info(
-    //   JSON.stringify(originalBookingDTO),
-    //   '\n-------------------------------------------',
-    // );
-    // console.info(
-    //   `{"bookingID":"9b262306-e1e5-4ec2-ae0c-a655d1746a8a","bookingOrgID":"ffA","bookingStatus":"SUBMITTED","equipmentData":{"transferEquipmentQuantity":"","transferEquipmentType":"20_FEET_CONTAINER"},"transferData":{"destinationLocation":{"address":{"address":"llll","city":"lllll","country":"llll"},"unlocode":"llll","geoCoordinates":{"lat":0,"lon":0}},"originLocation":{"address":{"address":"lll","city":"llll","country":"llll"},"unlocode":"llll","geoCoordinates":{"lat":0,"lon":0}},"requestedDeparture":""},"transportServiceProviderID":"ocA","transportServiceProviderName":"OCA","uniqueAssociatedTransfersSecret":"9b262306-e1e5-4ec2-ae0c-a655d1746a8a"}`,
-    // );
 
-    // console.info(
-    //   createHash('sha256')
-    //     .update(JSON.stringify(originalBookingDTO))
-    //     .digest('base64'),
-    //   '\n-------------------------------------------\n',
-    //   createHash('sha256')
-    //     .update(
-    //       `{"bookingID":"9b262306-e1e5-4ec2-ae0c-a655d1746a8a","bookingOrgID":"ffA","bookingStatus":"SUBMITTED","equipmentData":{"transferEquipmentQuantity":"","transferEquipmentType":"20_FEET_CONTAINER"},"transferData":{"destinationLocation":{"address":{"address":"llll","city":"lllll","country":"llll"},"unlocode":"llll","geoCoordinates":{"lat":0,"lon":0}},"originLocation":{"address":{"address":"lll","city":"llll","country":"llll"},"unlocode":"llll","geoCoordinates":{"lat":0,"lon":0}},"requestedDeparture":""},"transportServiceProviderID":"ocA","transportServiceProviderName":"OCA","uniqueAssociatedTransfersSecret":"9b262306-e1e5-4ec2-ae0c-a655d1746a8a"}`,
-    //     )
-    //     .digest('base64'),
-    // );
-    // console.info(
-    //   `${JSON.stringify(originalBookingDTO)}` ==
-    //     `{"bookingID":"9b262306-e1e5-4ec2-ae0c-a655d1746a8a","bookingOrgID":"ffA","bookingStatus":"SUBMITTED","equipmentData":{"transferEquipmentQuantity":"","transferEquipmentType":"20_FEET_CONTAINER"},"transferData":{"destinationLocation":{"address":{"address":"llll","city":"lllll","country":"llll"},"unlocode":"llll","geoCoordinates":{"lat":0,"lon":0}},"originLocation":{"address":{"address":"lll","city":"llll","country":"llll"},"unlocode":"llll","geoCoordinates":{"lat":0,"lon":0}},"requestedDeparture":""},"transportServiceProviderID":"ocA","transportServiceProviderName":"OCA","uniqueAssociatedTransfersSecret":"9b262306-e1e5-4ec2-ae0c-a655d1746a8a"}`,
-    // );
-    // console.info(
-    //   `${JSON.stringify(originalBookingDTO)}`.length,
-    //   `{"bookingID":"9b262306-e1e5-4ec2-ae0c-a655d1746a8a","bookingOrgID":"ffA","bookingStatus":"SUBMITTED","equipmentData":{"transferEquipmentQuantity":"","transferEquipmentType":"20_FEET_CONTAINER"},"transferData":{"destinationLocation":{"address":{"address":"llll","city":"lllll","country":"llll"},"unlocode":"llll","geoCoordinates":{"lat":0,"lon":0}},"originLocation":{"address":{"address":"lll","city":"llll","country":"llll"},"unlocode":"llll","geoCoordinates":{"lat":0,"lon":0}},"requestedDeparture":""},"transportServiceProviderID":"ocA","transportServiceProviderName":"OCA","uniqueAssociatedTransfersSecret":"9b262306-e1e5-4ec2-ae0c-a655d1746a8a"}`
-    //     .length,
-    // );
-    // originalBookingDTO = {
-    //   ...originalBookingDTO,
-    //   transferData: {
-    //     originLocation: originalBookingDTO.transferData.originLocation,
-    //     destinationLocation:
-    //       originalBookingDTO.transferData.destinationLocation,
-    //     requestedDeparture: originalBookingDTO.transferData.requestedDeparture,
-    //   },
-    // };
+    const endorsers = [...bookingOrgEndorsers, ...tspOrgEndorsers];
+
     const tx = await network
       .getContract('booking')
       .createTransaction('updateBookingStatus')
       .setEndorsingPeers(endorsers);
     const contractResponseRaw = await tx.submit(
-      newStatus,
-      JSON.stringify(originalBookingDTO),
+      JSON.stringify(newStatus),
+      JSON.stringify(booking),
     );
 
     const contractResponse = JSON.parse(
@@ -158,13 +99,16 @@ export class BookingsService {
       .getEndorsers(`${userParams.orgID}MSP`);
     const tspOrgEndorsers = network
       .getChannel()
-      .getEndorsers(`${booking.transportServiceProviderID}MSP`);
-    console.info(Object.values(booking));
+      .getEndorsers(`${booking.transportServiceProvider.organizationID}MSP`);
+
+    const endorsers = [...bookingOrgEndorsers, ...tspOrgEndorsers];
+
+    console.log(endorsers.map(e => e.name));
 
     const contractResponse = await network
       .getContract('booking')
       .createTransaction('createBooking')
-      .setEndorsingPeers([...bookingOrgEndorsers, ...tspOrgEndorsers])
+      .setEndorsingPeers(endorsers)
       .submit(JSON.stringify(booking));
     return Buffer.from(contractResponse).toString('utf8');
   }

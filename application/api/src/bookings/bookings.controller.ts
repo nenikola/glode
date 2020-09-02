@@ -10,9 +10,9 @@ import {
   Query,
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
-import { BookingStatus, Booking } from 'app-shared-library';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
+import { BookingStatus, Booking, Organization } from 'app-shared-library';
 
 @Controller('bookings')
 export class BookingsController {
@@ -23,15 +23,19 @@ export class BookingsController {
   @HttpCode(200)
   async updateBookingStatus(
     @Body('status') newStatus: BookingStatus,
-    @Body('booking') originalBookingDTO: Booking,
+    @Body('booking') booking: Booking,
     @Req() request: Request,
   ) {
+    console.log(
+      '--------------------- UPDATE BOOKING STATUS ------------------',
+      newStatus,
+      JSON.stringify(booking),
+    );
+
     if (
       (request.user as any).orgID !==
-      originalBookingDTO.transportServiceProviderID
+      booking.transportServiceProvider.organizationID
     ) {
-      console.log(originalBookingDTO);
-
       throw new BadRequestException(
         null,
         'You are not allowed to update booking status if you are not TSP!',
@@ -39,7 +43,7 @@ export class BookingsController {
     }
     const res = await this.bookingService.updateStatus(
       newStatus,
-      originalBookingDTO,
+      booking,
       request.user as any,
     );
     return {
@@ -51,28 +55,28 @@ export class BookingsController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @HttpCode(201)
-  async createBooking(@Body() bookingDTO: Booking, @Req() request: Request) {
-    const res = await this.bookingService.save(bookingDTO, request.user as any);
+  async createBooking(@Body() booking: Booking, @Req() request: Request) {
+    const res = await this.bookingService.save(booking, request.user as any);
     return {
       message: `Booking created.` + res,
     };
   }
-  @UseGuards(AuthGuard('jwt'))
-  @Get('/test')
-  async test(
-    @Query('tspOrgID') tspID: string,
-    @Query('bookingNumber') bookingNumber: string,
-    @Req() request: Request,
-  ) {
-    return {
-      message: `Bookings queried.`,
-      data: await this.bookingService.test(
-        tspID,
-        bookingNumber,
-        request.user as any,
-      ),
-    };
-  }
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('/test')
+  // async test(
+  //   @Query('tspOrgID') tspID: string,
+  //   @Query('bookingNumber') bookingNumber: string,
+  //   @Req() request: Request,
+  // ) {
+  //   return {
+  //     message: `Bookings queried.`,
+  //     data: await this.bookingService.test(
+  //       tspID,
+  //       bookingNumber,
+  //       request.user as any,
+  //     ),
+  //   };
+  // }
   @UseGuards(AuthGuard('jwt'))
   @Get('/:id')
   async getBooking() {

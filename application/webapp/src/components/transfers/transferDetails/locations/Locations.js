@@ -150,9 +150,9 @@ class Locations extends Component {
           new mapboxgl.Popup().setHTML(
             `<div>
               <h4>Origin location:</h4>
-              <p>${originLocation.address.address}</p>
-              <p>${originLocation.address.city}</p>
-              <p>${originLocation.address.country}</p>
+              <p>${originLocation.address}</p>
+              <p>${originLocation.city}</p>
+              <p>${originLocation.country}</p>
           </div>`
           )
         )
@@ -170,9 +170,9 @@ class Locations extends Component {
             new mapboxgl.Popup().setHTML(
               `<div>
                     <h4>Destination location:</h4>
-                    <p>${destinationLocation.address.address}</p>
-                    <p>${destinationLocation.address.city}</p>
-                    <p>${destinationLocation.address.country}</p>
+                    <p>${destinationLocation.address}</p>
+                    <p>${destinationLocation.city}</p>
+                    <p>${destinationLocation.country}</p>
                 </div>`
             )
           )

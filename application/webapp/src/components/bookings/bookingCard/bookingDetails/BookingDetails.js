@@ -23,11 +23,15 @@ const BookingDetails = (props) => (
           <div>
             <p style={{ marginTop: 15 }}>Type:</p>
             <p style={{ color: "lightseagreen", fontWeight: "bold" }}>
-              {props.booking.equipmentData.transferEquipmentType}
+              {props.booking.transferEquipmentType
+                ? props.booking.transferEquipmentQuantity.teTypeName
+                : "/"}
             </p>
             <p style={{ marginTop: 15 }}>Quantity:</p>
             <p style={{ color: "lightseagreen", fontWeight: "bold" }}>
-              {props.booking.equipmentData.transferEquipmentQuantity}
+              {props.booking.transferEquipmentQuantity
+                ? props.booking.transferEquipmentQuantity
+                : "/"}
             </p>
           </div>
         </div>
@@ -45,7 +49,7 @@ const BookingDetails = (props) => (
           <div>
             <p style={{ marginTop: 15 }}>Date:</p>
             <p style={{ color: "lightseagreen", fontWeight: "bold" }}>
-              {props.booking.transferData.requestedDeparture}
+              {props.booking.requestedDeparture}
             </p>
           </div>
         </div>
@@ -65,9 +69,9 @@ const BookingDetails = (props) => (
           <div>
             <p style={{ marginTop: 15 }}>Date:</p>
             <p style={{ color: "lightseagreen", fontWeight: "bold" }}>
-              {!props.booking.transferData.requestedArrival
+              {!props.booking.requestedArrival
                 ? "N / A"
-                : props.booking.transferData.requestedArrival}
+                : props.booking.requestedArrival}
             </p>
           </div>
         </div>
