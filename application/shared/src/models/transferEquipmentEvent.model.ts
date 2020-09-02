@@ -1,4 +1,9 @@
-import { TransferEquipmentEventType } from "./transferEquipmentEventType.model";
+import {
+  TransferEquipmentEventType,
+  TransferEquipmentEventTypes,
+} from "./transferEquipmentEventType.model";
+import { Location } from "./location.model";
+import { TransferEquipmentTypes } from "./transferEquipmentType.model";
 
 export class TransferEquipmentEvent {
   eventID: string;
@@ -15,5 +20,15 @@ export class TransferEquipmentEvent {
     this.eventLocation = eventLocation;
     this.eventOccuranceTime = eventOccuranceTime;
     this.transferEquipmentEventType = transferEquipmentEventType;
+  }
+  static getFromPlainObj(obj: TransferEquipmentEvent): any {
+    return new TransferEquipmentEvent(
+      obj.eventID,
+      TransferEquipmentEventType.getFromPlainObj(
+        obj.transferEquipmentEventType
+      ),
+      Location.getFromPlainObj(obj.eventLocation),
+      new Date(obj.eventOccuranceTime)
+    );
   }
 }

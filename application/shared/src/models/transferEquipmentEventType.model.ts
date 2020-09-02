@@ -1,5 +1,3 @@
-import { TransferEquipmentType } from "./transferEquipmentType.model";
-
 export enum TransferEquipmentEventTypeNames {
   GATE_IN = "GATE_IN",
   GATE_OUT = "GATE_OUT",
@@ -17,12 +15,16 @@ export class TransferEquipmentEventType {
     this.teEventTypeID = teEventTypeID;
     this.teEventTypeName = teEventTypeName;
   }
+
+  static getFromPlainObj(obj: TransferEquipmentEventType) {
+    return TransferEquipmentEventTypes[obj.teEventTypeName];
+  }
 }
 
 export class TransferEquipmentEventTypes {
   static GATE_IN: {
     teEventTypeID: 0;
-    teEventTypeName: "GATE_OUT";
+    teEventTypeName: "GATE_IN";
   };
   static GATE_OUT: {
     teEventTypeID: 1;

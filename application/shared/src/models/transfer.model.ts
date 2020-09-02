@@ -40,16 +40,29 @@ export class Transfer {
     this.transportServiceProvider = transportServiceProvider;
   }
 
-  //   toJSON() {
-  //     return JSON.stringify({
-  //       associationID: this.associationID,
-  //       bookingNumber: this.bookingNumber,
-  //       destinationLocation: this.destinationLocation,
-  //       originLocation: this.originLocation,
-  //       plannedArrival: this.plannedArrival.toISOString(),
-  //       plannedDeparture: this.plannedDeparture.toISOString(),
-  //       transferEquipmentQuantity: this.transferEquipmentQuantity,
-  //       transportServiceProvider: this.transportServiceProvider.toJSON(),
-  //     });
-  //   }
+  static getFromPlainObj(obj: {
+    associationID: string;
+    bookingNumber: string;
+    destinationLocation: Location;
+    originLocation: Location;
+    participants: Organization[];
+    plannedArrival: string | Date;
+    plannedDeparture: string | Date;
+    transferEquipmentQuantity: number;
+    transportServiceProvider: Organization;
+  }) {
+    return new Transfer(
+      obj.associationID,
+      obj.bookingNumber,
+      Location.getFromPlainObj(obj.destinationLocation),
+      Location.getFromPlainObj(obj.originLocation),
+      obj.participants.map((participant) =>
+        Organization.getFromPlainObj(participant)
+      ),
+      new Date(obj.plannedArrival),
+      new Date(obj.plannedDeparture),
+      obj.transferEquipmentQuantity,
+      Organization.getFromPlainObj(obj.transportServiceProvider)
+    );
+  }
 }

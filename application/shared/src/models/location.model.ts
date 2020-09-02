@@ -23,15 +23,15 @@ export class Location {
       lon: geoCoordinates.lon,
     };
   }
-  //   toJSON() {
-  //     return JSON.stringify({
-  //       address: this.address,
-  //       city: this.city,
-  //       country: this.country,
-  //       geoCoordinates: {
-  //         lat: this.geoCoordinates.lat,
-  //         lon: this.geoCoordinates.lon,
-  //       },
-  //     });
-  //   }
+  static getFromPlainObj(obj: {
+    address: string;
+    city: string;
+    country: string;
+    geoCoordinates: {
+      lat: number;
+      lon: number;
+    };
+  }) {
+    return new Location(obj.address, obj.city, obj.country, obj.geoCoordinates);
+  }
 }

@@ -1,6 +1,7 @@
 import { BookingStatus } from "./bookingStatus.model";
 import { Organization } from "./organization.model";
 import { TransferEquipmentType } from "./transferEquipmentType.model";
+import { Location } from "./location.model";
 
 export class Booking {
   associationID: string;
@@ -46,7 +47,33 @@ export class Booking {
     this.transferEquipmentType = transferEquipmentType;
     this.transportServiceProvider = transportServiceProvider;
   }
-
+  static getFromPlainObj(obj: {
+    associationID: string;
+    bookingID: string;
+    bookingOrg: Organization;
+    bookingStatus: BookingStatus;
+    destinationLocation: Location;
+    originLocation: Location;
+    requestedArrival: string | Date;
+    requestedDeparture: string | Date;
+    transferEquipmentQuantity: number;
+    transferEquipmentType: TransferEquipmentType;
+    transportServiceProvider: Organization;
+  }) {
+    return new Booking(
+      obj.associationID,
+      obj.bookingID,
+      Organization.getFromPlainObj(obj.bookingOrg),
+      BookingStatus.getFromPlainObj(obj.bookingStatus),
+      Location.getFromPlainObj(obj.destinationLocation),
+      Location.getFromPlainObj(obj.originLocation),
+      new Date(obj.requestedArrival),
+      new Date(obj.requestedDeparture),
+      obj.transferEquipmentQuantity,
+      obj.transferEquipmentType,
+      Organization.getFromPlainObj(obj.transportServiceProvider)
+    );
+  }
   //   toJSON() {
   //     return JSON.stringify({
   //       associationID: this.associationID,
