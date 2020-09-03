@@ -7,6 +7,7 @@ import BookingCard from "./bookingCard/BookingCard";
 import { Link } from "react-router-dom";
 import BookingFilters from "./bookingFilters/BookingFilters";
 import "./Bookings.css";
+import { BookingStatuses } from "app-shared-library";
 export default class Bookings extends Component {
   constructor() {
     super();
@@ -43,6 +44,9 @@ export default class Bookings extends Component {
   }
 
   queryBookings(filters) {
+    console.log(BookingStatuses["SUBMITTED"]);
+
+    console.log(JSON.stringify(filters));
     get("http://localhost:5000/bookings", {
       params: filters,
       headers: {

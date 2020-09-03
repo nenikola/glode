@@ -62,9 +62,15 @@ export class TransferEquipmentController {
     @Body() transferEquipmentDTO: TransferEquipment,
     @Req() request: Request,
   ) {
-    console.log(JSON.stringify(transferEquipmentDTO, null, 2));
-    return await this.teService.save(transferEquipmentDTO, request.user as any);
-    // throw new Error('Method not implemented.');
+    try {
+      console.log(JSON.stringify(transferEquipmentDTO, null, 2));
+      return await this.teService.save(
+        transferEquipmentDTO,
+        request.user as any,
+      );
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 
   // @UseGuards(AuthGuard('jwt'))

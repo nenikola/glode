@@ -2,13 +2,19 @@ import React, { Component } from "react";
 import { InputText } from "primereact/inputtext/";
 import "./BookingFilters.css";
 import { Dropdown } from "primereact/dropdown";
+import {
+  ExistingOrganizations,
+  BookingStatuses,
+  BookingStatusNames,
+  TransferEquipmentTypes,
+} from "app-shared-library";
 
 export default class BookingFilters extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bookingOrgID: "",
-      transportServiceProviderID: "",
+      bookingOrg: "",
+      transportServiceProvider: "",
       bookingStatus: "",
       transferEquipmentType: "",
     };
@@ -18,59 +24,118 @@ export default class BookingFilters extends Component {
     return (
       <div className="booking-filters">
         <div>Filters:</div>
-        <span className="p-float-label">
-          <InputText
-            className="field"
-            id="input-float-bookingOrgID"
-            value={this.state.bookingOrgID}
-            onChange={(e) => this.setState({ bookingOrgID: e.target.value })}
+        <div className="dropdown-wrapper">
+          <div>Booking Organization:</div>
+          <Dropdown
+            showClear={true}
+            value={this.state.bookingOrg}
+            optionLabel={"organizationName"}
+            options={[
+              ExistingOrganizations.OCA,
+              ExistingOrganizations.OCB,
+              ExistingOrganizations.ITA,
+              ExistingOrganizations.ITB,
+              ExistingOrganizations.FFA,
+            ]}
+            onChange={(e) => {
+              console.log(e.value);
+              this.setState({
+                bookingOrg: e.value,
+              });
+            }}
+            placeholder="Select a TSP"
           />
-          <label htmlFor="input-float-bookingOrgID">Booking Org ID</label>
-        </span>
-        <span className="p-float-label">
-          <InputText
-            className="field"
-            id="input-float-transportServiceProviderID"
-            value={this.state.transportServiceProviderID}
-            onChange={(e) =>
-              this.setState({ transportServiceProviderID: e.target.value })
-            }
+        </div>
+        <div className="dropdown-wrapper">
+          <div>Transport Service Provider:</div>
+          <Dropdown
+            showClear={true}
+            value={this.state.transportServiceProvider}
+            optionLabel={"organizationName"}
+            options={[
+              ExistingOrganizations.OCA,
+              ExistingOrganizations.OCB,
+              ExistingOrganizations.ITA,
+              ExistingOrganizations.ITB,
+              ExistingOrganizations.FFA,
+            ]}
+            onChange={(e) => {
+              console.log(e.value);
+              this.setState({
+                transportServiceProvider: e.value,
+              });
+            }}
+            placeholder="Select a TSP"
           />
-          <label htmlFor="input-float-transportServiceProviderID">
-            Transport Service Provider ID
-          </label>
-        </span>
+        </div>
         <div className="dropdown-wrapper">
           Status:
           <Dropdown
+            showClear={true}
             value={this.state.bookingStatus}
-            options={["SUBMITTED", "APPROVED", "REJECTED", "ALL"]}
+            optionLabel={"bookingStatusName"}
+            options={[
+              {
+                bookingStatusID: 0,
+                bookingStatusName: BookingStatusNames.SUBMITTED,
+              },
+              {
+                bookingStatusID: 1,
+                bookingStatusName: BookingStatusNames.APPROVED,
+              },
+              {
+                bookingStatusID: 2,
+                bookingStatusName: BookingStatusNames.REJECTED,
+              },
+            ]}
             onChange={(e) =>
-              this.setState({ bookingStatus: e.value === "ALL" ? "" : e.value })
+              this.setState({
+                bookingStatus: e.value,
+              })
             }
             placeholder="Select a status"
-            itemTemplate={(bookingStatus) => bookingStatus}
+            itemTemplate={(bookingStatus) => bookingStatus.bookingStatusName}
           />
         </div>
         <div className="dropdown-wrapper">
           Transfer Equipment Type:
           <Dropdown
+            showClear={true}
             value={this.state.transferEquipmentType}
-            options={["20_FEET_CONTAINER", "40_FEET_CONTAINER", "ALL"]}
+            optionLabel={"teTypeName"}
+            options={[
+              TransferEquipmentTypes.TWNYFTCONTAINER,
+              TransferEquipmentTypes.FRTYFTCONTAINER,
+            ]}
             onChange={(e) =>
               this.setState({
-                transferEquipmentType: e.value === "ALL" ? "" : e.value,
+                transferEquipmentType: e.value,
               })
             }
             placeholder="Select a TE type"
-            itemTemplate={(transferEquipmentType) => transferEquipmentType}
+            itemTemplate={(transferEquipmentType) =>
+              transferEquipmentType.teTypeName
+            }
           />
         </div>
 
         <div className="button-wrapper">
           <button
             onClick={(e) => {
-              this.props.onQuery(this.state);
+              this.props.onQuery({
+                bookingOrgID: this.state.bookingOrg
+                  ? this.state.bookingOrg.organizationID
+                  : "",
+                transportServiceProviderID: this.state.transportServiceProvider
+                  ? this.state.transportServiceProvider.organizationID
+                  : "",
+                transferEquipmentType: this.state.transferEquipmentType
+                  ? this.state.transferEquipmentType.teTypeName
+                  : "",
+                bookingStatus: this.state.bookingStatus
+                  ? this.state.bookingStatus.bookingStatusName
+                  : "",
+              });
             }}
           >
             search

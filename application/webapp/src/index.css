@@ -19,3 +19,38 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+button {
+  border-radius: 3px !important;
+}
+
+.dropdown-wrapper .p-dropdown {
+  width: 100%;
+  border: 1px solid lightseagreen !important;
+}
+.dropdown-wrapper .p-dropdown .p-dropdown-item,
+.dropdown-wrapper .p-dropdown .p-dropdown-label {
+  text-align: center;
+}
+.dropdown-wrapper .p-dropdown-trigger,
+.dropdown-wrapper .p-dropdown-trigger-icon {
+  background-color: lightseagreen !important;
+  color: white !important;
+}
+.dropdown-wrapper
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item.p-highlight,
+.dropdown-wrapper
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item-group.p-highlight {
+  background-color: lightseagreen;
+  color: white;
+}
+.dropdown-wrapper .p-dropdown:not(.p-disabled).p-focus,
+.dropdown-wrapper .p-dropdown:not(.p-disabled):hover,
+.dropdown-wrapper .p-dropdown:not(.p-disabled) input:focus {
+  border: 1px solid lightseagreen !important;
+  box-shadow: 0 0 0 1px lightseagreen !important;
+}

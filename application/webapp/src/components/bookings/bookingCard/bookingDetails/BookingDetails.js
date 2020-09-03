@@ -4,6 +4,8 @@ import { ReactComponent as CalendarPic } from "./calendar.svg";
 import { ReactComponent as VesselPic } from "./vessel.svg";
 import "./BookingDetails.css";
 import BookingOptions from "../bookingOptions/BookingOptions";
+import * as moment from "moment";
+
 const BookingDetails = (props) => (
   <div
     className={
@@ -24,7 +26,7 @@ const BookingDetails = (props) => (
             <p style={{ marginTop: 15 }}>Type:</p>
             <p style={{ color: "lightseagreen", fontWeight: "bold" }}>
               {props.booking.transferEquipmentType
-                ? props.booking.transferEquipmentQuantity.teTypeName
+                ? props.booking.transferEquipmentType.teTypeName
                 : "/"}
             </p>
             <p style={{ marginTop: 15 }}>Quantity:</p>
@@ -49,7 +51,9 @@ const BookingDetails = (props) => (
           <div>
             <p style={{ marginTop: 15 }}>Date:</p>
             <p style={{ color: "lightseagreen", fontWeight: "bold" }}>
-              {props.booking.requestedDeparture}
+              {props.booking.requestedDeparture
+                ? moment(props.booking.requestedDeparture).format("DD.MM.YYYY.")
+                : "N / A"}
             </p>
           </div>
         </div>
@@ -69,9 +73,9 @@ const BookingDetails = (props) => (
           <div>
             <p style={{ marginTop: 15 }}>Date:</p>
             <p style={{ color: "lightseagreen", fontWeight: "bold" }}>
-              {!props.booking.requestedArrival
-                ? "N / A"
-                : props.booking.requestedArrival}
+              {props.booking.requestedArrival
+                ? moment(props.booking.requestedArrival).format("DD.MM.YYYY.")
+                : "N / A"}
             </p>
           </div>
         </div>

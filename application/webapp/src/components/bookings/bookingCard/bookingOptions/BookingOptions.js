@@ -1,12 +1,15 @@
 import React from "react";
 import { post } from "axios";
+import { BookingStatuses } from "app-shared-library";
 
 const BookingOptions = (props) => {
+  console.log(JSON.stringify(props.booking));
   return (
     <div>
-      {props.booking.transportServiceProviderID ===
+      {props.booking.transportServiceProvider.organizationID ===
         localStorage.getItem("org") &&
-      props.booking.bookingStatus === "SUBMITTED" ? (
+      props.booking.bookingStatus &&
+      props.booking.bookingStatus.bookingStatusName === "SUBMITTED" ? (
         <div
           className={
             props.active ? "buttons-wrapper active" : "buttons-wrapper"
@@ -22,7 +25,7 @@ const BookingOptions = (props) => {
               );
               post(
                 "http://localhost:5000/bookings/updateStatus",
-                { status: "APPROVED", booking: booking },
+                { status: BookingStatuses.APPROVED, booking: booking },
                 {
                   headers: {
                     "Content-Type": "application/json",

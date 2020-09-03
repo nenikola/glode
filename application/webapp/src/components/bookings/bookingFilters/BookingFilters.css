@@ -17,39 +17,11 @@
 }
 .p-float-label input {
 }
+.booking-filters .dropdown-wrapper {
+  min-width: 18%;
+}
 .p-float-label input.p-inputtext:enabled:focus {
   box-shadow: 0 0 3px 2px lightseagreen !important;
-  border-color: lightseagreen;
-}
-.dropdown-wrapper {
-  width: 15%;
-  font-size: 14px;
-  color: dimgrey;
-}
-.dropdown-wrapper .p-dropdown {
-  text-align: center;
-  width: 100%;
-}
-.dropdown-wrapper .p-dropdown .p-dropdown-panel {
-  background-color: lightgray;
-}
-.dropdown-wrapper .p-dropdown .p-dropdown-trigger,
-.dropdown-wrapper .p-dropdown .p-dropdown-trigger-icon {
-  color: white;
-  background-color: lightseagreen !important;
-}
-.dropdown-wrapper .p-dropdown .p-dropdown-item {
-  text-align: center;
-}
-.dropdown-wrapper .p-dropdown:not(.p-disabled).p-focus {
-  border-color: lightseagreen;
-}
-.dropdown-wrapper
-  .p-dropdown
-  .p-dropdown-panel
-  .p-dropdown-items
-  .p-dropdown-item.p-highlight {
-  background-color: lightseagreen;
 }
 .booking-filters .button-wrapper {
   height: 100%;

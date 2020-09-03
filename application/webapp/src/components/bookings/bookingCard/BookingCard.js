@@ -4,6 +4,7 @@ import "./BookingCard.css";
 import LocationsPanel from "./locationsPanel/LocationsPanel";
 import BookingInfo from "./bookingInfo/BookingInfo";
 import BookingDetails from "./bookingDetails/BookingDetails";
+import BookingOptions from "./bookingOptions/BookingOptions";
 
 class BookingCard extends Component {
   constructor() {

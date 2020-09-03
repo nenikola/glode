@@ -29,17 +29,19 @@ const BookingInfo = (props) => (
       <h4>STATUS </h4>
       <p
         style={{
-          color:
-            props.booking.bookingStatus.statusName === "SUBMITTED"
+          color: props.booking.bookingStatus
+            ? props.booking.bookingStatus.bookingStatusName === "SUBMITTED"
               ? "lightseagreen"
-              : props.booking.bookingStatus.statusName === "APPROVED"
+              : props.booking.bookingStatus.bookingStatusName === "APPROVED"
               ? "green"
-              : "red",
+              : ""
+            : "red",
           fontWeight: "bold",
         }}
       >
         <hr></hr>
-        {props.booking.statusName}
+        {props.booking.bookingStatus &&
+          props.booking.bookingStatus.bookingStatusName}
       </p>
     </div>
   </div>

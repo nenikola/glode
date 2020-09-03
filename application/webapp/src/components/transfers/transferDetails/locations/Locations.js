@@ -54,11 +54,33 @@ class Locations extends Component {
                         `<div>
                                   <h4>Event:</h4>
                                   <p>id: ${e.eventID}</p>
-                                  <p>${e.transferEquipmentEventType}</p>
+                                  <h4>- Location:</h4>
+                                  <p>${
+                                    e.eventLocation
+                                      ? e.eventLocation.address
+                                      : ""
+                                  }</p>
+                                  <p>
+                                    ${
+                                      e.eventLocation
+                                        ? e.eventLocation.city
+                                        : ""
+                                    }
+                                    ${
+                                      e.eventLocation
+                                        ? e.eventLocation.country
+                                        : ""
+                                    }
+                                    ${
+                                      e.eventLocation.unlocode
+                                        ? `  [${e.eventLocation.unlocode}]`
+                                        : ""
+                                    }
+                                  </p>
                               </div>`
                       )
                     );
-
+                  console.log(JSON.stringify(e, null, 2));
                   return {
                     id: JSON.stringify(e),
                     marker,

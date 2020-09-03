@@ -10,6 +10,7 @@ import "primeflex/primeflex.css";
 import "./Login.css";
 import { post } from "axios";
 import { Redirect } from "react-router-dom";
+import { ExistingOrganizations } from "app-shared-library";
 
 class Login extends Component {
   constructor() {
@@ -17,7 +18,7 @@ class Login extends Component {
     this.state = {
       username: "",
       password: "",
-      orgID: "",
+      organization: "",
     };
   }
   render() {
@@ -63,20 +64,28 @@ class Login extends Component {
               </span>
             </div>
             <div className="fieldWrapper">
-              <Dropdown
-                className="field"
-                placeholder="Organization"
-                value={this.state.orgID}
-                required="true"
-                options={[
-                  { label: "Ocean Carrier A", value: "ocA" },
-                  { label: "Ocean Carrier B", value: "ocB" },
-                  { label: "Inland Transporter A", value: "itA" },
-                  { label: "Inland Transporter B", value: "itB" },
-                  { label: "Fright Forwarder A", value: "ffA" },
-                ]}
-                onChange={(e) => this.setState({ orgID: e.value })}
-              />
+              <div className="dropdown-wrapper">
+                <Dropdown
+                  showClear={true}
+                  className="dropdown"
+                  value={this.state.organization}
+                  optionLabel={"organizationName"}
+                  options={[
+                    ExistingOrganizations.OCA,
+                    ExistingOrganizations.OCB,
+                    ExistingOrganizations.ITA,
+                    ExistingOrganizations.ITB,
+                    ExistingOrganizations.FFA,
+                  ]}
+                  onChange={(e) => {
+                    console.log(e.value);
+                    this.setState({
+                      organization: e.value,
+                    });
+                  }}
+                  placeholder="Select an organization"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -93,17 +102,23 @@ class Login extends Component {
                 width: "70%",
               }}
               label="LOGIN"
-              icon="pi pi-angle-right"
-              iconPos="right"
               onClick={async (e) => {
-                const res = await post(
-                  "http://localhost:5000/auth/login/",
-                  this.state
-                );
+                const res = await post("http://localhost:5000/auth/login/", {
+                  username: this.state.username,
+                  password: this.state.password,
+                  orgID: this.state.organization.organizationID,
+                });
                 console.log(JSON.stringify(res.data["access_token"]));
                 localStorage.setItem("auth", res.data["access_token"]);
                 localStorage.setItem("user", this.state.username);
-                localStorage.setItem("org", this.state.orgID);
+                localStorage.setItem(
+                  "org",
+                  this.state.organization.organizationID
+                );
+                localStorage.setItem(
+                  "orgName",
+                  this.state.organization.organizationName
+                );
                 this.setState({ ...this.state, auth: true });
               }}
             ></Button>

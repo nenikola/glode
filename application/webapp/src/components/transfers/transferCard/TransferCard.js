@@ -23,9 +23,7 @@ const TransferCard = (props) => {
           <h4>Planned Departure:</h4>
           <p>
             {props.transfer.plannedDeparture
-              ? moment(props.transfer.plannedDeparture).format(
-                  "DD.MM.YYYY.  HH:mm "
-                )
+              ? moment(props.transfer.plannedDeparture).format("DD.MM.YYYY.")
               : "N / A"}
           </p>
         </div>
@@ -33,9 +31,7 @@ const TransferCard = (props) => {
           <h4>Planned Arrival:</h4>
           <p>
             {props.transfer.plannedArrival
-              ? moment(props.transfer.plannedArrival).format(
-                  "DD.MM.YYYY.  HH:mm "
-                )
+              ? moment(props.transfer.plannedArrival).format("DD.MM.YYYY.")
               : "N / A"}{" "}
           </p>
         </div>

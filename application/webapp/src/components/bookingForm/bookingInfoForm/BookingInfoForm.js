@@ -1,15 +1,20 @@
 import React, { PureComponent } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./BookingInfoForm.css";
-
+import { ExistingOrganizations } from "app-shared-library";
+import { Dropdown } from "primereact/dropdown";
 export default class BookingInfoForm extends PureComponent {
   constructor(props) {
     super();
     this.state = {
       bookingID: props.bookingID || uuidv4(),
-      bookingOrgID: props.bookingOrgID || localStorage.getItem("org") || "N/A",
-      transportServiceProviderID: props.transportServiceProviderID || "",
-      transportServiceProviderName: props.transportServiceProviderName || "",
+      bookingOrg:
+        props.bookingOrg || {
+          organizationID: localStorage.getItem("org"),
+          organizationName: localStorage.getItem("orgName"),
+        } ||
+        "N/A",
+      transportServiceProvider: props.transportServiceProvider || "",
       bookingStatus: props.bookingStatus || "N/A",
     };
   }
@@ -30,40 +35,37 @@ export default class BookingInfoForm extends PureComponent {
           ></input>
         </div>
         <div className="booking-info-form-data">
-          <h4>Booking Organization ID: </h4>
+          <h4>Booking Organization: </h4>
           <input
             className="booking-org-id"
-            value={this.state.bookingOrgID}
+            value={this.state.bookingOrg.organizationName}
             disabled
           ></input>
         </div>
         <div className="booking-info-form-data">
-          <h4>Transport Service Provider ID: </h4>
-          <input
-            className="booking-tsp-id"
-            value={this.state.transportServiceProviderID}
-            onChange={(e) => {
-              const val = e.target.value;
-              this.setState((prevState) => ({
-                ...prevState,
-                transportServiceProviderID: val,
-              }));
-            }}
-          ></input>
-        </div>
-        <div className="booking-info-form-data">
-          <h4>Transport Service Provider Name: </h4>
-          <input
-            className="booking-tsp-id"
-            value={this.state.transportServiceProviderName}
-            onChange={(e) => {
-              const val = e.target.value;
-              this.setState((prevState) => ({
-                ...prevState,
-                transportServiceProviderName: val,
-              }));
-            }}
-          ></input>
+          <h4>Transport Service Provider: </h4>
+          <div className="dropdown-wrapper">
+            <Dropdown
+              showClear={true}
+              className="dropdown"
+              value={this.state.transportServiceProvider}
+              optionLabel={"organizationName"}
+              options={[
+                ExistingOrganizations.OCA,
+                ExistingOrganizations.OCB,
+                ExistingOrganizations.ITA,
+                ExistingOrganizations.ITB,
+                ExistingOrganizations.FFA,
+              ]}
+              onChange={(e) => {
+                console.log(e.value);
+                this.setState({
+                  transportServiceProvider: e.value,
+                });
+              }}
+              placeholder="Select a TSP"
+            />
+          </div>
         </div>
         <div
           style={{

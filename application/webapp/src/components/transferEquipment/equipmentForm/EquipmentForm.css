@@ -1,0 +1,60 @@
+.equipment-form-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.equipment-form-wrapper .equipment-form {
+  width: 70%;
+  height: 90%;
+  background-color: lightgray;
+  border-radius: 20px;
+  border: 1px solid lightseagreen;
+  padding: 20px 10px;
+}
+.equipment-form-wrapper .equipment-form .form-field {
+  width: 100%;
+  display: flex;
+  margin: 20px 0;
+}
+.equipment-form-wrapper .equipment-form .form-multiple {
+  width: 100%;
+  display: flex;
+  margin: 20px 0;
+}
+.equipment-form-wrapper .equipment-form .form-submit {
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 0 5%;
+}
+.equipment-form-wrapper .equipment-form .form-multiple > div {
+  width: 50%;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid gray;
+}
+.equipment-form-wrapper .equipment-form h4 {
+  min-width: 25%;
+  text-align: right;
+  padding: 0 20px;
+}
+.equipment-form-wrapper .equipment-form h5 {
+  min-width: 50%;
+  text-align: right;
+  padding: 0 20px;
+}
+.equipment-form-wrapper .equipment-form .form-field > input {
+  width: 50%;
+  border: 1px solid lightseagreen;
+  border-radius: 3px;
+  height: 24px;
+}
+.equipment-form-wrapper .equipment-form .form-field .dropdown-wrapper {
+  width: 50%;
+}
+.equipment-form-wrapper .equipment-form .form-field input.owner-name {
+  user-select: none;
+}

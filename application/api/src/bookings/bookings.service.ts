@@ -73,6 +73,8 @@ export class BookingsService {
       bookingStatus: bookingStatus || '',
       transferEquipmentType: transferEquipmentType || '',
     };
+    console.log(JSON.stringify(params));
+
     const result = await network
       .getContract('booking')
       .evaluateTransaction(
