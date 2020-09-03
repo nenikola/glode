@@ -1,5 +1,6 @@
 import React from "react";
 import "./TransferData.css";
+import * as moment from "moment";
 // import TransferEquipmentType from "app-shared-library";
 const TransferInfo = (props) => {
   return (
@@ -19,11 +20,19 @@ const TransferInfo = (props) => {
       </div>
       <div className="info-data">
         <h4>Planned Departure</h4>
-        <p>{props.transfer.plannedDeparture || "N/A"}</p>
+        <p>
+          {props.transfer.plannedDeparture
+            ? moment(props.transfer.plannedDeparture).format("DD.MM.YYYY.")
+            : "N / A"}
+        </p>
       </div>
       <div className="info-data">
         <h4>Planned Arrival:</h4>
-        <p>{props.transfer.plannedArrival || "N/A"}</p>
+        <p>
+          {props.transfer.plannedArrival
+            ? moment(props.transfer.plannedArrival).format("DD.MM.YYYY.")
+            : "N / A"}
+        </p>
       </div>
       <div className="info-data te">
         <h4>
@@ -43,6 +52,14 @@ const TransferInfo = (props) => {
               <p> {t.registrationNumber || "N/A"} </p>
               <h5>TE Type:</h5>
               <p>{t.transferEquipmentType.teTypeName || "N/A"}</p>
+              <button
+                onClick={() => {
+                  console.log(t.registrationNumber);
+                  props.onEventSubmit(t.registrationNumber);
+                }}
+              >
+                Submit new event
+              </button>
               <hr></hr>
             </div>
           ))}

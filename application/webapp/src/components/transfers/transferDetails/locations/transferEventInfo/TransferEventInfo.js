@@ -2,6 +2,7 @@ import React from "react";
 import LoadingCircle from "../../../../loadingCirle/LoadingCircle";
 import SimpleBar from "simplebar-react";
 import "./TransferEventInfo.css";
+import * as moment from "moment";
 
 const TransferEventInfo = (props) => {
   return (
@@ -79,7 +80,11 @@ const TransferEventInfo = (props) => {
                       </div>
                       <div>
                         <h4>- Occurance Time:</h4>
-                        <p>{e.eventOccuranceTime}</p>
+                        <p>
+                          {e.eventOccuranceTime
+                            ? moment(e.eventOccuranceTime).format("DD.MM.YYYY.")
+                            : "N / A"}
+                        </p>
                       </div>
                     </div>
                   );

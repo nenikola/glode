@@ -7,6 +7,8 @@ import { Redirect } from "react-router-dom";
 import BookingForm from "../../components/bookingForm/BookingForm";
 import Transfers from "../../components/transfers/Transfers";
 import TransferDetails from "../../components/transfers/transferDetails/TransferDetails";
+import Login from "../login/Login";
+import EquipmentForm from "../../components/transferEquipment/equipmentForm/EquipmentForm";
 class Dashboard extends Component {
   render() {
     if (!localStorage.getItem("auth")) {
@@ -37,7 +39,19 @@ class Dashboard extends Component {
               <Route path="/transfers">
                 <Transfers></Transfers>
               </Route>
-              <Route path="/">DASHBOARD</Route>
+              <Route path="/transfers">
+                <Transfers></Transfers>
+              </Route>
+              <Route path="/equipment">
+                <EquipmentForm></EquipmentForm>
+              </Route>
+              <Route exact path="/">
+                {localStorage.getItem("org") ? (
+                  <Redirect to="/bookings" />
+                ) : (
+                  <Login />
+                )}
+              </Route>
             </Switch>
           </div>
         </div>

@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { TransfersService } from './transfers.service';
 import { MissingArgumentsException } from 'src/errors/validation.error';
-import { Transfer } from 'app-shared-library';
+import { Transfer, Organization } from 'app-shared-library';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 
@@ -19,13 +19,30 @@ import { Request } from 'express';
 export class TransfersController {
   constructor(private readonly transfersService: TransfersService) {}
 
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('/')
+  // async getAllTransfers(@Req() request: Request) {
+  //   const pTransfers = await this.transfersService.getAllOrgTransfers(
+  //     request.user as any,
+  //   );
+  //   return pTransfers;
+  // }
   @UseGuards(AuthGuard('jwt'))
   @Get('/')
-  async getAllTransfers(@Req() request: Request) {
-    const pTransfers = await this.transfersService.getAllOrgTransfers(
+  async queryTransfers(
+    @Req() request: Request,
+    @Query('transportServiceProviderID') transportServiceProviderID: string,
+    @Query('departureBefore') depB: string,
+    @Query('arrivalBefore') arrB: string,
+  ) {
+    const results = await this.transfersService.queryTransfers(
+      // Organization.getFromPlainObj(JSON.parse(transportServiceProvider)),
+      transportServiceProviderID,
+      new Date(depB),
+      new Date(arrB),
       request.user as any,
     );
-    return pTransfers;
+    return results;
   }
 
   @UseGuards(AuthGuard('jwt'))

@@ -5,8 +5,9 @@ import App from "./routes/app/App";
 import * as serviceWorker from "./serviceWorker";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/nova-light/theme.css";
-import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
 ReactDOM.render(
   <React.StrictMode>
     <App />

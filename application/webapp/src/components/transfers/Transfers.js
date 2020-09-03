@@ -23,15 +23,12 @@ export default class Transfers extends Component {
     const transfers = JSON.parse(localStorage.getItem("transfers"));
     console.log(transfers);
     if (!transfers) {
-      get(
-        "http://localhost:5000/transfers?orgID=" + localStorage.getItem("org"),
-        {
-          headers: {
-            "Allow-Cross-Origin-Access": "*",
-            Authorization: "Bearer " + localStorage.getItem("auth"),
-          },
-        }
-      )
+      get("http://localhost:5000/transfers", {
+        headers: {
+          "Allow-Cross-Origin-Access": "*",
+          Authorization: "Bearer " + localStorage.getItem("auth"),
+        },
+      })
         .then((res) => {
           console.log("update");
           localStorage.setItem("transfers", JSON.stringify(res.data));
@@ -54,10 +51,10 @@ export default class Transfers extends Component {
       },
     })
       .then((res) => {
-        console.log("update", JSON.stringify(res.data.data, null, 2));
-        localStorage.setItem("transfers", JSON.stringify(res.data.data));
+        console.log("update", JSON.stringify(res.data, null, 2));
+        localStorage.setItem("transfers", JSON.stringify(res.data));
         this.setState({
-          transfers: res.data.data,
+          transfers: res.data,
         });
       })
       .catch((err) => console.log(err));
@@ -69,17 +66,22 @@ export default class Transfers extends Component {
         <div>
           <TransferFilters
             onQuery={(filters) => {
-              this.props.onQuery(filters);
+              this.queryTransfers(filters);
             }}
           ></TransferFilters>
         </div>
         <div className="transfers-data-wrapper">
-          <SimpleBar style={{ maxHeight: "100%", paddingRight: "10px" }}>
-            <DataScroller
-              value={[...this.state.transfers].reverse()}
-              rows={this.state.transfers.length}
-              itemTemplate={this.itemTemplate}
-            ></DataScroller>
+          <SimpleBar
+            style={{
+              maxWidth: "100%",
+              maxHeight: "100%",
+              paddingRight: "10px",
+              paddingLeft: "5px",
+            }}
+          >
+            {this.state.transfers
+              .reverse()
+              .map((transfer) => this.itemTemplate(transfer))}
           </SimpleBar>
         </div>
       </div>

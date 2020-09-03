@@ -20,31 +20,10 @@ export default class TransferFilters extends Component {
     return (
       <div className="transfer-filters">
         <div>Filters:</div>
-        {/* <span className="p-float-label">
-          <InputText
-            className="field"
-            id="input-float-bookingOrgID"
-            value={this.state.bookingOrgID}
-            onChange={(e) => this.setState({ bookingOrgID: e.target.value })}
-          />
-          <label htmlFor="input-float-bookingOrgID">Booking Org ID</label>
-        </span> */}
-        {/* <span className="p-float-label">
-          <InputText
-            className="field"
-            id="input-float-transportServiceProvider"
-            value={this.state.transportServiceProvider}
-            onChange={(e) =>
-              this.setState({ transportServiceProviderID: e.target.value })
-            }
-          />
-          <label htmlFor="input-float-transportServiceProvider">
-            Transport Service Provider
-          </label>
-        </span> */}
         <div className="dropdown-wrapper">
           <div>Transport Service Provider:</div>
           <Dropdown
+            showClear={true}
             value={this.state.transportServiceProvider}
             optionLabel={"organizationName"}
             options={[
@@ -53,15 +32,11 @@ export default class TransferFilters extends Component {
               ExistingOrganizations.ITA,
               ExistingOrganizations.ITB,
               ExistingOrganizations.FFA,
-              {
-                organizationName: "ALL",
-              },
             ]}
             onChange={(e) => {
               console.log(e.value);
               this.setState({
-                transportServiceProvider:
-                  e.value.organizationName === "ALL" ? "" : e.value,
+                transportServiceProvider: e.value,
               });
             }}
             placeholder="Select a TSP"
@@ -87,7 +62,12 @@ export default class TransferFilters extends Component {
         <div className="button-wrapper">
           <button
             onClick={(e) => {
-              this.props.onQuery(this.state);
+              this.props.onQuery({
+                transportServiceProviderID: this.state.transportServiceProvider
+                  .organizationID,
+                departureBefore: this.state.departureBefore,
+                arrivalBefore: this.state.arrivalBefore,
+              });
             }}
           >
             search

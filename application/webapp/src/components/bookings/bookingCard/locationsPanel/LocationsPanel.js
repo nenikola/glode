@@ -26,7 +26,11 @@ function LocationsPanel(props) {
       >
         <div className="blackdot">
           <PinPic className="pinpic"></PinPic>
-          <p>[{props.booking.originLocation.unlocode}]</p>
+          {props.booking.originLocation.unlocode ? (
+            <p>[{props.booking.originLocation.unlocode}]</p>
+          ) : (
+            ""
+          )}
         </div>
         <div className="blackline"></div>
         <div className="blackdot">

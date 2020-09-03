@@ -1,17 +1,28 @@
 .booking-details-data {
-  width: 90%;
+  width: 98%;
   margin: 10px auto;
   border-radius: 10px;
   border: 1px solid darkgray;
-  padding: 10px;
+  padding: 10px 10px;
   display: flex;
   align-items: center;
   background-color: rgba(211, 211, 211, 0.623);
+  overflow: visible;
+  flex-wrap: wrap;
+}
+.booking-details-data .booking-details-data {
+  margin: 0;
+  padding: 5px 10px;
 }
 .booking-details-data h4 {
   display: inline-block;
   flex-grow: 1;
-  max-width: 15%;
+  min-width: 15%;
+  max-width: 20%;
+  margin-left: 30px;
+}
+.booking-details-data .transfers-dropdown {
+  width: 70%;
 }
 .booking-details-data .sub-data {
   flex-grow: 2;
@@ -19,25 +30,37 @@
   align-items: flex-start;
   flex-direction: column;
   justify-content: space-around;
-  max-width: 20%;
+  max-width: 25%;
 }
+.booking-details-data .sub-data .dropdown-wrapper {
+  margin-top: 10px;
+  width: 80%;
+}
+
 .booking-details-data input {
   margin-top: 10px;
   color: lightseagreen;
   height: 30px;
   font-weight: bold;
-  background-color: rgba(255, 255, 255, 0.705);
-  border-radius: 20px;
-  border: 2px solid lightseagreen;
+  border-radius: 3px;
+  border: 1px solid lightseagreen;
   padding: 0 10px;
   outline: none;
 }
 .booking-details-data input:focus {
   box-shadow: 0 0 5px lightseagreen;
 }
+.booking-details-data .calendar-wrapper {
+  position: relative;
+  height: 30px;
+  margin: 15px 0;
+}
+.booking-details-data .calendar-wrapper .p-calendar input {
+  margin: 0;
+}
 .booking-form .buttons-wrapper {
   height: 5%;
-  margin: 20px 5%;
+  margin: 5spx 5%;
   display: flex;
   justify-content: flex-end;
 }

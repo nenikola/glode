@@ -7,6 +7,7 @@
   width: 100%;
   height: 100%;
 }
+.transfer-details .te-event-form,
 .transfer-details .te-assignment {
   display: none;
   position: absolute;
@@ -20,6 +21,7 @@
   justify-content: center;
   align-items: center;
 }
+.transfer-details .te-event-form.active,
 .transfer-details .te-assignment.active {
   display: flex;
   background-color: rgba(211, 211, 211, 0.829);
@@ -34,9 +36,20 @@
   background-color: white;
   border-radius: 25px;
 }
+.transfer-details .te-event-form .data {
+  position: relative;
+  border: 2px solid lightseagreen;
+  opacity: 0;
+  width: 70%;
+  height: 95%;
+  background-color: white;
+  border-radius: 25px;
+}
+.transfer-details .te-event-form.active .data,
 .transfer-details .te-assignment.active .data {
   opacity: 1;
 }
+.transfer-details .te-event-form.active .data button.back,
 .transfer-details .te-assignment.active .data button {
   height: 5%;
   margin: 10px;
@@ -46,6 +59,21 @@
   height: 80%;
   margin: 0 auto;
   position: relative;
+}
+.transfer-details .te-assignment.active .data .te-available-item {
+  display: flex;
+  border-bottom: 1px solid lightseagreen;
+}
+.transfer-details .te-assignment.active .data .te-available-item > div {
+  padding: 5px 20px;
+}
+
+.transfer-details
+  .te-assignment.active
+  .data
+  .availables-list
+  .p-listbox-list-wrapper {
+  max-height: 100%;
 }
 .transfer-details .te-assignment.active .data .availables-list .p-listbox {
   width: 100%;

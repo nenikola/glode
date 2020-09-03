@@ -1,189 +1,189 @@
 {
   "program": {
     "fileInfos": {
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es5.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es5.d.ts": {
         "version": "70ae6416528e68c2ee7b62892200d2ca631759943d4429f8b779b947ff1e124d",
         "signature": "70ae6416528e68c2ee7b62892200d2ca631759943d4429f8b779b947ff1e124d",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.d.ts": {
         "version": "dc47c4fa66b9b9890cf076304de2a9c5201e94b740cffdf09f87296d877d71f6",
         "signature": "dc47c4fa66b9b9890cf076304de2a9c5201e94b740cffdf09f87296d877d71f6",
         "affectsGlobalScope": false
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2016.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2016.d.ts": {
         "version": "7a387c58583dfca701b6c85e0adaf43fb17d590fb16d5b2dc0a2fbd89f35c467",
         "signature": "7a387c58583dfca701b6c85e0adaf43fb17d590fb16d5b2dc0a2fbd89f35c467",
         "affectsGlobalScope": false
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.d.ts": {
         "version": "8a12173c586e95f4433e0c6dc446bc88346be73ffe9ca6eec7aa63c8f3dca7f9",
         "signature": "8a12173c586e95f4433e0c6dc446bc88346be73ffe9ca6eec7aa63c8f3dca7f9",
         "affectsGlobalScope": false
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.dom.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.dom.d.ts": {
         "version": "9affb0a2ddc57df5b8174c0af96c288d697a262e5bc9ca1f544c999dc64a91e6",
         "signature": "9affb0a2ddc57df5b8174c0af96c288d697a262e5bc9ca1f544c999dc64a91e6",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.dom.iterable.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.dom.iterable.d.ts": {
         "version": "fb0c09b697dc42afa84d1587e3c994a2f554d2a45635e4f0618768d16a86b69a",
         "signature": "fb0c09b697dc42afa84d1587e3c994a2f554d2a45635e4f0618768d16a86b69a",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.webworker.importscripts.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.webworker.importscripts.d.ts": {
         "version": "7fac8cb5fc820bc2a59ae11ef1c5b38d3832c6d0dfaec5acdb5569137d09a481",
         "signature": "7fac8cb5fc820bc2a59ae11ef1c5b38d3832c6d0dfaec5acdb5569137d09a481",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.scripthost.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.scripthost.d.ts": {
         "version": "097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd",
         "signature": "097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.core.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.core.d.ts": {
         "version": "63e0cc12d0f77394094bd19e84464f9840af0071e5b9358ced30511efef1d8d2",
         "signature": "63e0cc12d0f77394094bd19e84464f9840af0071e5b9358ced30511efef1d8d2",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.collection.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.collection.d.ts": {
         "version": "43fb1d932e4966a39a41b464a12a81899d9ae5f2c829063f5571b6b87e6d2f9c",
         "signature": "43fb1d932e4966a39a41b464a12a81899d9ae5f2c829063f5571b6b87e6d2f9c",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.generator.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.generator.d.ts": {
         "version": "cdccba9a388c2ee3fd6ad4018c640a471a6c060e96f1232062223063b0a5ac6a",
         "signature": "cdccba9a388c2ee3fd6ad4018c640a471a6c060e96f1232062223063b0a5ac6a",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.iterable.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.iterable.d.ts": {
         "version": "42f5e41e5893da663dbf0394268f54f1da4b43dc0ddd2ea4bf471fe5361d6faf",
         "signature": "42f5e41e5893da663dbf0394268f54f1da4b43dc0ddd2ea4bf471fe5361d6faf",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.promise.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.promise.d.ts": {
         "version": "0b7a905675e6cb4211c128f0a3aa47d414b275180a299a9aad5d3ec298abbfc4",
         "signature": "0b7a905675e6cb4211c128f0a3aa47d414b275180a299a9aad5d3ec298abbfc4",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.proxy.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.proxy.d.ts": {
         "version": "dfff68b3c34338f6b307a25d4566de15eed7973b0dc5d69f9fde2bcac1c25315",
         "signature": "dfff68b3c34338f6b307a25d4566de15eed7973b0dc5d69f9fde2bcac1c25315",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.reflect.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.reflect.d.ts": {
         "version": "cb609802a8698aa28b9c56331d4b53f590ca3c1c3a255350304ae3d06017779d",
         "signature": "cb609802a8698aa28b9c56331d4b53f590ca3c1c3a255350304ae3d06017779d",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.symbol.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.symbol.d.ts": {
         "version": "3013574108c36fd3aaca79764002b3717da09725a36a6fc02eac386593110f93",
         "signature": "3013574108c36fd3aaca79764002b3717da09725a36a6fc02eac386593110f93",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts": {
         "version": "4670208dd7da9d6c774ab1b75c1527a810388c7989c4905de6aaea8561cb9dce",
         "signature": "4670208dd7da9d6c774ab1b75c1527a810388c7989c4905de6aaea8561cb9dce",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2016.array.include.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2016.array.include.d.ts": {
         "version": "3be5a1453daa63e031d266bf342f3943603873d890ab8b9ada95e22389389006",
         "signature": "3be5a1453daa63e031d266bf342f3943603873d890ab8b9ada95e22389389006",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.object.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.object.d.ts": {
         "version": "17bb1fc99591b00515502d264fa55dc8370c45c5298f4a5c2083557dccba5a2a",
         "signature": "17bb1fc99591b00515502d264fa55dc8370c45c5298f4a5c2083557dccba5a2a",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts": {
         "version": "d0db416bccdb33975548baf09a42ee8c47eace1aac7907351a000f1e568e7232",
         "signature": "d0db416bccdb33975548baf09a42ee8c47eace1aac7907351a000f1e568e7232",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.string.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.string.d.ts": {
         "version": "6a6b173e739a6a99629a8594bfb294cc7329bfb7b227f12e1f7c11bc163b8577",
         "signature": "6a6b173e739a6a99629a8594bfb294cc7329bfb7b227f12e1f7c11bc163b8577",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.intl.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.intl.d.ts": {
         "version": "12a310447c5d23c7d0d5ca2af606e3bd08afda69100166730ab92c62999ebb9d",
         "signature": "12a310447c5d23c7d0d5ca2af606e3bd08afda69100166730ab92c62999ebb9d",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.typedarrays.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.typedarrays.d.ts": {
         "version": "b0124885ef82641903d232172577f2ceb5d3e60aed4da1153bab4221e1f6dd4e",
         "signature": "b0124885ef82641903d232172577f2ceb5d3e60aed4da1153bab4221e1f6dd4e",
         "affectsGlobalScope": true
       },
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.full.d.ts": {
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.full.d.ts": {
         "version": "d2f31f19e1ba6ed59be9259d660a239d9a3fcbbc8e038c6b2009bde34b175fed",
         "signature": "d2f31f19e1ba6ed59be9259d660a239d9a3fcbbc8e038c6b2009bde34b175fed",
         "affectsGlobalScope": false
       },
-      "./src/dto/transferEquipment.dto.model.ts": {
-        "version": "a1c844a72269319de6ec28dcd69cb5d479358d244cd1b965066bcc95096b7cb0",
-        "signature": "2308af864b0a0a83f059aae84d694fd20d2837f5f560498afde64fc59e7d5dcd",
+      "./src/dto/transferequipment.dto.model.ts": {
+        "version": "324e31d143e472c42bff70455bfe49346352dccb48c617b686bfce3660758242",
+        "signature": "87c64a071177c16c61fc179c809ef53e0624a2824912a2eb138f40380870e9c4",
         "affectsGlobalScope": false
       },
-      "./src/models/bookingStatus.model.ts": {
-        "version": "92bf3d73cc425e6d964e21abf00d1cae081fddb29d156f872babdcaffb82c84c",
-        "signature": "d65357bbffd837582ec3f37f0f07edab5b9dc85eefd128fdb93bedf9d972efd4",
+      "./src/models/bookingstatus.model.ts": {
+        "version": "492482a0406f19e226dd33d85af8d0265a239d4451477bac002ba0709d646619",
+        "signature": "e751cd7effcd67b603b2f418d60e45432d579731537011b8e7dd520b846af12b",
         "affectsGlobalScope": false
       },
       "./src/models/organization.model.ts": {
-        "version": "59b05eb76de2ca920f79a8a6d527d0cb14583e1e7eeeb7534739a57c6a064812",
-        "signature": "149e5ba0713c30371092017ac7b7fff7e03b54a54deeb43db7b33761e55fca61",
+        "version": "bf3091e3768127299fdac47e114ba2641f1eb3ea9d716d51966bb90698d626f8",
+        "signature": "6f9dc69143f89f777d96f2f0242b7ab4edf1f193c3c8370d172b204f2dfbfe9e",
         "affectsGlobalScope": false
       },
-      "./src/models/transferEquipmentType.model.ts": {
-        "version": "e485e51073f10f94747f33acf039bca2cbe37fabda82e9fca4c2b3027bab4e84",
-        "signature": "70163cee3705f2212247281d89db4aedc66647444f31cbc30e0a2e6c6ecca7a3",
+      "./src/models/transferequipmenttype.model.ts": {
+        "version": "7e37e98194169243595f03742c94cdaffd1e76589c982af42ad9663bc000cbbc",
+        "signature": "553a5526b9448ed7592fed57c03b59cde335a30f9ec8368a78f2abc1938c3ae7",
         "affectsGlobalScope": false
       },
       "./src/models/location.model.ts": {
-        "version": "74692330f75a300321991500aa40a75c425d5409253f3f1925f0e85054613a4d",
-        "signature": "7c10af85f9dfa1901f12b4c05bc24453ab2645924ef23f137646b424aeb96512",
+        "version": "3a9d0d008485447c76eef3a4347de25b278cfef79de05a68f3e7f7e265df9855",
+        "signature": "a5c13bff86d855f2997e9027bfa9f2dc6765c3f79a7605707fceade457d18b51",
         "affectsGlobalScope": false
       },
       "./src/models/booking.model.ts": {
-        "version": "144d5c88abe8b0ea98c0509108bfffbc9b6f7cc5e6874ae1c92bfb2fbfa6819a",
-        "signature": "53c2431216ef64a66c744484a0a24b3e4c6f7ca8e31e988bf1b663220e6d44e9",
+        "version": "23b9493c837746e501ff09dcbadaf901b58a0c1261b5b1c37a104cf7043143e3",
+        "signature": "fd9e149c93f2a764cafe888f9b63dfca2f69cf0d6c168c5b392bd36ca1fc4864",
         "affectsGlobalScope": false
       },
       "./src/models/transfer.model.ts": {
-        "version": "b569aada5a512d065de9d2541ebd03bd0afdb373f726b2451ac6e4336f3c6385",
-        "signature": "79deb82aa61fd6b4f37cb8f756bc5693ed5538a81ae4b117572e2ae36572e652",
+        "version": "9c95d77a080f62c2d290ec470ef20a59065ec05a0891007e4548694667439880",
+        "signature": "4a29f4bc89f20300ae268b6f8955b18e8ae893c22872a0bfe8d223b7967f92d8",
         "affectsGlobalScope": false
       },
-      "./src/models/transferEquipmentEventType.model.ts": {
-        "version": "70a6ec8b4e2571e8deb2782bb16c621b46cb32cc0c13b96c55143968922a8c87",
-        "signature": "f6bd75b97467214e5de5fcba66fc7715dd10e74dfa0cae15c362d05e952c569b",
+      "./src/models/transferequipmenteventtype.model.ts": {
+        "version": "376846612256e50ea9efd206f58d916965dc82afb240ff7013b75e3c984f217b",
+        "signature": "435f3467c95212d6c8ce2ae2abe8d3440eababbc384dd9abccdd2cb334a9afb3",
         "affectsGlobalScope": false
       },
-      "./src/models/transferEquipmentEvent.model.ts": {
-        "version": "ae1689d4ae99919a50b0cc82198f8ce62e2fab46aff537d04efd55d5ef709b32",
-        "signature": "5f81a37e08c62327e23027cb4932c0877331928a49cb9871a6b61e7d4fa7f38d",
+      "./src/models/transferequipmentevent.model.ts": {
+        "version": "77d003f88244866c02affb876c44460537e245362ce9e7b0ace4a49a5b78b57a",
+        "signature": "74533ce80cea5bddeed277f7a884d426b7d9073bc26122a8ef9967fe65534498",
         "affectsGlobalScope": false
       },
-      "./src/models/transferEquipment.model.ts": {
-        "version": "ca9f68286ef5fab400c383712b730356aa561428d1598dd7d0758434f61869e0",
-        "signature": "a9cd7ec8f91d0459ef6bbd1547bf8ae653c24af91187067b42931d4308638779",
+      "./src/models/transferequipment.model.ts": {
+        "version": "832e4711e3bb80a338d71b8729e2b07736ddc1c25bb5d7baa98d980e99c11c6e",
+        "signature": "2787c3b4daf69c6bc935e028487c0caa641419c18bb89f95c6aa2e86ff50330c",
         "affectsGlobalScope": false
       },
       "./src/index.ts": {
-        "version": "684f50c43b4dec57771ae8e02e84e6e1119e83d602e16ef4c890ca82026154ea",
-        "signature": "514518e65e5460cc8981927c62af6ce7fcd81b1a575e17c5c0d320fcfc031abd",
+        "version": "c9caf4fb2a6350527d9602a0fca8375aa54794c7adefc77e1d1342339cd07040",
+        "signature": "c67ea4610f911a285c0fa80766e239a388ebe7d0c894d5b90dbcc466c2278f1c",
         "affectsGlobalScope": false
       },
       "./src/dto/booking.dto.model.ts": {
-        "version": "d6268bc827f50bccc01b0e0c3228e6efe2f81b75dd56ee3ec627f648ecd92885",
-        "signature": "474513e497b9761fd244a388eda394dc315bb43694cd4c7835d657367e8c0ddd",
+        "version": "dda17cd117d95a8bd2767da8b4c683b54413b0eacfd9d4e01704750b885dffff",
+        "signature": "7079a691cd87c42e16a6ed849a73f91accd95f5c49c66c03245029cb6072fa30",
         "affectsGlobalScope": false
       },
       "./src/dto/transfer.dto.model.ts": {
-        "version": "e6e482d0804e80e5ba4c75c882bf4c421d06372a17134ebbc514f5bffff75c3a",
-        "signature": "f98708a6ed85e953f1d27fa89ac1e8c447d83d44cf207311e07bb249383b9695",
+        "version": "0506091bdf1dede706042e2e11614c3e686077faa0fe638208189a597cd2d04a",
+        "signature": "c04853a2299cca210deb8c6c0b04acfff5046ee37017a6f72da04a88d4b8ce72",
         "affectsGlobalScope": false
       }
     },
@@ -203,112 +203,112 @@
     },
     "referencedMap": {
       "./src/index.ts": [
-        "./src/dto/transferEquipment.dto.model.ts",
+        "./src/dto/transferequipment.dto.model.ts",
         "./src/models/booking.model.ts",
-        "./src/models/bookingStatus.model.ts",
+        "./src/models/bookingstatus.model.ts",
         "./src/models/location.model.ts",
         "./src/models/organization.model.ts",
         "./src/models/transfer.model.ts",
-        "./src/models/transferEquipment.model.ts",
-        "./src/models/transferEquipmentEvent.model.ts",
-        "./src/models/transferEquipmentEventType.model.ts",
-        "./src/models/transferEquipmentType.model.ts"
+        "./src/models/transferequipment.model.ts",
+        "./src/models/transferequipmentevent.model.ts",
+        "./src/models/transferequipmenteventtype.model.ts",
+        "./src/models/transferequipmenttype.model.ts"
       ],
       "./src/models/booking.model.ts": [
-        "./src/models/bookingStatus.model.ts",
+        "./src/models/bookingstatus.model.ts",
         "./src/models/location.model.ts",
         "./src/models/organization.model.ts",
-        "./src/models/transferEquipmentType.model.ts"
+        "./src/models/transferequipmenttype.model.ts"
       ],
       "./src/models/transfer.model.ts": [
         "./src/models/location.model.ts",
         "./src/models/organization.model.ts"
       ],
-      "./src/models/transferEquipment.model.ts": [
+      "./src/models/transferequipment.model.ts": [
         "./src/models/location.model.ts",
         "./src/models/organization.model.ts",
-        "./src/models/transferEquipmentEvent.model.ts",
-        "./src/models/transferEquipmentType.model.ts"
+        "./src/models/transferequipmentevent.model.ts",
+        "./src/models/transferequipmenttype.model.ts"
       ],
-      "./src/models/transferEquipmentEvent.model.ts": [
+      "./src/models/transferequipmentevent.model.ts": [
         "./src/models/location.model.ts",
-        "./src/models/transferEquipmentEventType.model.ts",
-        "./src/models/transferEquipmentType.model.ts"
+        "./src/models/transferequipmenteventtype.model.ts",
+        "./src/models/transferequipmenttype.model.ts"
       ]
     },
     "exportedModulesMap": {
       "./src/index.ts": [
-        "./src/dto/transferEquipment.dto.model.ts",
+        "./src/dto/transferequipment.dto.model.ts",
         "./src/models/booking.model.ts",
-        "./src/models/bookingStatus.model.ts",
+        "./src/models/bookingstatus.model.ts",
         "./src/models/location.model.ts",
         "./src/models/organization.model.ts",
         "./src/models/transfer.model.ts",
-        "./src/models/transferEquipment.model.ts",
-        "./src/models/transferEquipmentEvent.model.ts",
-        "./src/models/transferEquipmentEventType.model.ts",
-        "./src/models/transferEquipmentType.model.ts"
+        "./src/models/transferequipment.model.ts",
+        "./src/models/transferequipmentevent.model.ts",
+        "./src/models/transferequipmenteventtype.model.ts",
+        "./src/models/transferequipmenttype.model.ts"
       ],
       "./src/models/booking.model.ts": [
-        "./src/models/bookingStatus.model.ts",
+        "./src/models/bookingstatus.model.ts",
         "./src/models/location.model.ts",
         "./src/models/organization.model.ts",
-        "./src/models/transferEquipmentType.model.ts"
+        "./src/models/transferequipmenttype.model.ts"
       ],
       "./src/models/transfer.model.ts": [
         "./src/models/location.model.ts",
         "./src/models/organization.model.ts"
       ],
-      "./src/models/transferEquipment.model.ts": [
+      "./src/models/transferequipment.model.ts": [
         "./src/models/location.model.ts",
         "./src/models/organization.model.ts",
-        "./src/models/transferEquipmentEvent.model.ts",
-        "./src/models/transferEquipmentType.model.ts"
+        "./src/models/transferequipmentevent.model.ts",
+        "./src/models/transferequipmenttype.model.ts"
       ],
-      "./src/models/transferEquipmentEvent.model.ts": [
+      "./src/models/transferequipmentevent.model.ts": [
         "./src/models/location.model.ts",
-        "./src/models/transferEquipmentEventType.model.ts"
+        "./src/models/transferequipmenteventtype.model.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.dom.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.dom.iterable.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.collection.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.core.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.generator.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.iterable.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.promise.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.proxy.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.reflect.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.symbol.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2016.array.include.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2016.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.full.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.intl.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.object.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.string.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es2017.typedarrays.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.es5.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.scripthost.d.ts",
+      "../../../../../appdata/roaming/npm/node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
       "./src/dto/booking.dto.model.ts",
       "./src/dto/transfer.dto.model.ts",
-      "./src/dto/transferEquipment.dto.model.ts",
+      "./src/dto/transferequipment.dto.model.ts",
       "./src/index.ts",
       "./src/models/booking.model.ts",
-      "./src/models/bookingStatus.model.ts",
+      "./src/models/bookingstatus.model.ts",
       "./src/models/location.model.ts",
       "./src/models/organization.model.ts",
       "./src/models/transfer.model.ts",
-      "./src/models/transferEquipment.model.ts",
-      "./src/models/transferEquipmentEvent.model.ts",
-      "./src/models/transferEquipmentEventType.model.ts",
-      "./src/models/transferEquipmentType.model.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.dom.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.dom.iterable.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.collection.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.core.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.generator.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.iterable.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.promise.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.proxy.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.reflect.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.symbol.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2016.array.include.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2016.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.full.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.intl.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.object.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.string.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es2017.typedarrays.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.es5.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.scripthost.d.ts",
-      "../../../../../../../usr/local/lib/node_modules/typescript/lib/lib.webworker.importscripts.d.ts"
+      "./src/models/transferequipment.model.ts",
+      "./src/models/transferequipmentevent.model.ts",
+      "./src/models/transferequipmenteventtype.model.ts",
+      "./src/models/transferequipmenttype.model.ts"
     ]
   },
-  "version": "3.9.5"
+  "version": "3.9.7"
 }

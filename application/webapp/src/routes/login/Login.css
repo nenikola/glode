@@ -46,8 +46,8 @@
 .login-logo h4 {
   font-size: 16px;
 }
-input.p-inputtext:enabled:focus {
-  box-shadow: 0 0 3px 2px #295364 !important;
+.login .p-float-label input.p-inputtext:enabled:focus {
+  box-shadow: 0 0 5px 1px #1d3b47d8 !important;
 }
 .login .field {
   background-color: #29536446;
@@ -58,6 +58,9 @@ input.p-inputtext:enabled:focus {
 .login .fieldWrapper {
   margin: 10px 0;
   width: 100%;
+}
+.login .fieldWrapper .p-float-label > label {
+  color: #1a2436;
 }
 .login label {
   color: #1a2436;
@@ -78,13 +81,44 @@ input.p-inputtext:enabled:focus {
   border-color: #295364;
   background-color: #2953649a;
 }
-.login .p-dropdown-trigger {
+.login .p-dropdown {
+  background-color: transparent;
+}
+
+.login
+  .dropdown-wrapper
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item.p-highlight,
+.login
+  .dropdown-wrapper
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item-group.p-highlight {
+  background-color: #1d3b47 !important;
+  color: #47b6b1 !important;
+}
+.login .dropdown-wrapper .p-dropdown-panel {
+  background-color: #47b6b1;
+}
+
+.login .p-dropdown-trigger,
+.login .p-dropdown-trigger-icon {
   background-color: #1d3b47 !important;
   color: #47b6b1 !important;
 }
 .login .p-dropdown-label {
   color: #1d3b47 !important;
-  background-color: #2953641a !important;
+  background-color: #29536446 !important;
+}
+.login
+  .p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover,
+.p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item-group:not(.p-highlight):not(.p-disabled):hover {
+  background-color: #29536446;
 }
 .login .p-dropdown:not(.p-disabled).p-focus {
   box-shadow: none !important;

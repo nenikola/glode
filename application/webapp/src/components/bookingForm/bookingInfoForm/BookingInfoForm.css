@@ -1,15 +1,15 @@
 .booking-info-form-container {
   width: 90%;
   margin: 0 auto;
-  padding: 30px 0;
+  padding: 15px 0;
   display: flex;
   font-size: 16px;
   align-items: center;
   flex-wrap: wrap;
 }
 .booking-info-form-data {
-  margin: 15px 30px;
-  width: 40%;
+  margin: 15px 0;
+  width: 30%;
 }
 .booking-info-form-data input {
   font-size: 16;
@@ -18,10 +18,10 @@
   height: 30px;
   font-weight: bold;
   background-color: rgba(255, 255, 255, 0.705);
-  border-radius: 20px;
   border: 2px solid lightseagreen;
-  padding: 0 10px;
-  width: 80%;
+  border-radius: 3px;
+  padding: 0 5px;
+  width: 90%;
   outline: none;
 }
 .booking-info-form-data input:focus {

@@ -25,45 +25,22 @@
   box-shadow: 0 0 3px 2px lightseagreen !important;
   border-color: lightseagreen;
 }
-.dropdown-wrapper,
-.calendar-wrapper {
+.transfer-filters .calendar-wrapper {
   position: relative;
   width: 15%;
   font-size: 14px;
 }
-.dropdown-wrapper div,
-.calendar-wrapper div {
+.transfer-filters .calendar-wrapper div {
   color: dimgrey;
 }
-.dropdown-wrapper .p-dropdown {
-  text-align: center;
-  width: 100%;
-}
-.transfer-filters .dropdown-wrapper .p-dropdown .p-dropdown-label,
-.transfer-filters .dropdown-wrapper .p-dropdown .p-dropdown-panel {
-  background-color: white;
-}
-.dropdown-wrapper .p-dropdown .p-dropdown-trigger,
-.dropdown-wrapper .p-dropdown .p-dropdown-trigger-icon {
-  color: white;
-  background-color: lightseagreen !important;
-}
-.dropdown-wrapper .p-dropdown .p-dropdown-item {
-  text-align: center;
-}
-.calendar-wrapper .p-calendar .p-hightlight,
-.dropdown-wrapper .p-dropdown:not(.p-disabled).p-focus {
+.transfer-filters .calendar-wrapper .p-calendar .p-hightlight {
   border-color: lightseagreen !important;
 }
-.calendar-wrapper .p-datepicker table td > span.p-highlight,
-.dropdown-wrapper
-  .p-dropdown
-  .p-dropdown-panel
-  .p-dropdown-items
-  .p-dropdown-item.p-highlight {
+.transfer-filters .calendar-wrapper .p-datepicker table td > span.p-highlight {
   background-color: lightseagreen;
 }
-.calendar-wrapper
+.transfer-filters
+  .calendar-wrapper
   p-datepicker
   p-component
   p-input-overlay

@@ -1,0 +1,98 @@
+.equipment-event-form {
+  height: 90%;
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px 10px;
+}
+.equipment-event-form .form-field {
+  width: 100%;
+  display: flex;
+  margin: 20px 0;
+}
+.equipment-event-form .form-multiple {
+  width: 100%;
+  display: flex;
+}
+.equipment-event-form .form-submit {
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 0 5%;
+}
+.equipment-event-form .form-submit button {
+  width: 15%;
+}
+.equipment-event-form .form-multiple > div {
+  width: 50%;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid gray;
+}
+.equipment-event-form h4 {
+  min-width: 25%;
+  text-align: right;
+  padding: 0 20px;
+}
+.equipment-event-form h5 {
+  min-width: 50%;
+  text-align: right;
+  padding: 0 20px;
+}
+.equipment-event-form .form-field > input {
+  width: 50%;
+  border: 1px solid lightseagreen;
+  border-radius: 3px;
+  height: 24px;
+}
+.equipment-event-form .form-field .dropdown-wrapper {
+  width: 50%;
+}
+.equipment-event-form .form-field input.owner-name {
+  user-select: none;
+}
+.equipment-event-form .calendar-wrapper {
+  position: relative;
+  width: 50%;
+  font-size: 14px;
+}
+.equipment-event-form .calendar-wrapper div {
+  color: dimgrey;
+}
+.equipment-event-form .calendar-wrapper .p-calendar .p-hightlight {
+  border-color: lightseagreen !important;
+}
+.equipment-event-form
+  .calendar-wrapper
+  .p-datepicker
+  table
+  td
+  > span.p-highlight {
+  background-color: lightseagreen;
+}
+.equipment-event-form
+  .calendar-wrapper
+  p-datepicker
+  p-component
+  p-input-overlay
+  p-shadow
+  p-input-overlay-visible {
+  height: 274px;
+}
+.calendar-wrapper button.p-button {
+  background-color: lightseagreen;
+  border: none;
+  font-size: 14px;
+}
+.calendar-wrapper button.p-button * {
+  color: white;
+}
+.calendar-wrapper button.p-button:enabled:hover {
+  color: white;
+  border-color: lightseagreen;
+  background-color: lightseagreen;
+  opacity: 0.8;
+}
+.calendar-wrapper .p-inputtext:enabled:focus {
+  box-shadow: none !important;
+  border-color: lightseagreen;
+}
