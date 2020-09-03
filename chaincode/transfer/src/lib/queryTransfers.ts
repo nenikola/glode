@@ -1,15 +1,19 @@
 import { Context } from 'fabric-contract-api';
-import { BookingContract } from '..';
-import { Booking, Organization, Location } from 'app-shared-library';
-export class QueryBookings {
+import { TransferContract } from '..';
+import { Transfer } from 'app-shared-library';
+export class QueryTransfers {
   static async handler(
     ctx: Context,
-    bookingOrgID: string,
     transportServiceProviderID: string,
-    bookingStatus: string,
-    transferEquipmentType: string,
+    departureBefore: string,
+    arrivalBefore: string,
   ) {
-    const cliOrgID = BookingContract._getClientOrgId(ctx.clientIdentity);
+    const cliOrgID = TransferContract._getClientOrgId(ctx.clientIdentity);
+    console.info(`DEP STR:${departureBefore}`);
+    console.info(`ARR STR:${arrivalBefore}`);
+    const depDate = parseInt(departureBefore);
+    const arrDate = parseInt(arrivalBefore);
+
     try {
       const queryObj = {
         selector: {
@@ -22,13 +26,6 @@ export class QueryBookings {
           ],
         },
       };
-      if (bookingOrgID) {
-        queryObj.selector.$and.push({
-          bookingOrg: {
-            organizationID: bookingOrgID,
-          },
-        } as any);
-      }
       if (transportServiceProviderID) {
         queryObj.selector.$and.push({
           transportServiceProvider: {
@@ -36,29 +33,29 @@ export class QueryBookings {
           },
         } as any);
       }
-      if (bookingStatus) {
+      if (depDate) {
         queryObj.selector.$and.push({
-          bookingStatus: {
-            bookingStatusName: bookingStatus,
+          plannedDeparture: {
+            $lte: depDate,
           },
         } as any);
       }
-      if (transferEquipmentType) {
+      if (arrDate) {
         queryObj.selector.$and.push({
-          transferEquipmentType: {
-            teTypeName: transferEquipmentType,
+          plannedArrival: {
+            $lte: arrDate,
           },
         } as any);
       }
       const query = JSON.stringify(queryObj);
-      console.info('BOOKING QUERY', query);
+      console.info('QUERY:', query);
       let allResults = [];
       for await (const { value } of ctx.stub.getPrivateDataQueryResult(
-        BookingContract._getPrivateCollectionString(cliOrgID),
+        TransferContract._getPrivateCollectionString(cliOrgID.cliOrgID),
         query,
       )) {
         const strValue = Buffer.from(value).toString('utf8');
-        let record: Booking = JSON.parse(strValue);
+        let record: Transfer = JSON.parse(strValue);
         allResults.push(record);
       }
       return JSON.stringify(allResults, null, 2);

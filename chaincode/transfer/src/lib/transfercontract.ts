@@ -4,6 +4,7 @@ import { Contract, Context } from 'fabric-contract-api';
 import { ClientIdentity } from 'fabric-shim';
 import { Transfer } from 'app-shared-library';
 import { createHash } from 'crypto';
+import { QueryTransfers } from './queryTransfers';
 
 export class TransferContract extends Contract {
   async validateTransferParticipant(
@@ -139,7 +140,19 @@ export class TransferContract extends Contract {
       return JSON.stringify({ status: 404, message: error }, null, 2);
     }
   }
-
+  async queryTransfers(
+    ctx: Context,
+    transportServiceProviderID: string,
+    deparureBefore: string,
+    arrivalBefore: string,
+  ) {
+    return await QueryTransfers.handler(
+      ctx,
+      transportServiceProviderID,
+      deparureBefore,
+      arrivalBefore,
+    );
+  }
   async createTransfer(ctx: Context, transferString: string) {
     const { cliOrgID } = TransferContract._getClientOrgId(ctx.clientIdentity);
     const cliOrgPvtCollectionString = TransferContract._getPrivateCollectionString(
@@ -178,6 +191,8 @@ export class TransferContract extends Contract {
       );
     }
 
+    newTransfer.plannedDeparture = newTransfer.plannedDeparture.getTime() as any;
+    newTransfer.plannedArrival = newTransfer.plannedArrival.getTime() as any;
     try {
       await ctx.stub.putPrivateData(
         cliOrgPvtCollectionString,
