@@ -22,22 +22,23 @@ export default class Bookings extends Component {
   componentDidMount() {
     const bookings = JSON.parse(localStorage.getItem("bookings"));
     console.log(bookings);
-    if (!bookings) {
-      get("http://localhost:5000/bookings", {
-        headers: {
-          "Allow-Cross-Origin-Access": "*",
-          Authorization: "Bearer " + localStorage.getItem("auth"),
-        },
-      })
-        .then((res) => {
-          console.log("update");
-          localStorage.setItem("bookings", JSON.stringify(res.data.data));
-          this.setState({
-            bookings: res.data.data,
-          });
-        })
-        .catch((err) => console.log(err));
-    }
+    // if (!bookings) {
+    //   get("http://localhost:5000/bookings", {
+    //     headers: {
+    //       "Allow-Cross-Origin-Access": "*",
+    //       Authorization: "Bearer " + localStorage.getItem("auth"),
+    //     },
+    //   })
+    //     .then((res) => {
+    //       console.log("update");
+    //       localStorage.setItem("bookings", JSON.stringify(res.data.data));
+    //       this.setState({
+    //         bookings: res.data.data,
+    //       });
+    //     })
+    //     .catch((err) => console.log(err));
+    // }
+    this.queryBookings();
   }
   itemTemplate(booking, layout) {
     return <BookingCard booking={booking} />;
@@ -56,9 +57,14 @@ export default class Bookings extends Component {
     })
       .then((res) => {
         console.log("update", JSON.stringify(res.data.data, null, 2));
-        localStorage.setItem("bookings", JSON.stringify(res.data.data));
+        localStorage.setItem(
+          "bookings",
+          JSON.stringify(res.data.data.reverse())
+        );
+        console.log(res.data.data);
+        console.log("reverse", res.data.data.reverse());
         this.setState({
-          bookings: res.data.data,
+          bookings: res.data.data.reverse(),
         });
       })
       .catch((err) => console.log(err));

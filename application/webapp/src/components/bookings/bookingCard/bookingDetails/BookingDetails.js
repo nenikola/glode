@@ -84,6 +84,7 @@ const BookingDetails = (props) => (
     <BookingOptions
       active={props.active}
       booking={props.booking}
+      onUpdateStatus={props.onUpdateStatus}
     ></BookingOptions>
   </div>
 );

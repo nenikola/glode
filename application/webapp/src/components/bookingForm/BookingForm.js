@@ -8,11 +8,14 @@ import { TransferEquipmentTypes, BookingStatuses } from "app-shared-library";
 import { Dropdown } from "primereact/dropdown";
 import { get } from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { Dialog } from "primereact/dialog";
+import { Button } from "primereact/button";
 
 export default class BookingForm extends Component {
   constructor() {
     super();
     this.state = {
+      dialogContent: undefined,
       booking: {
         bookingID: "",
         bookingOrg: "",
@@ -82,6 +85,35 @@ export default class BookingForm extends Component {
         className="booking-form"
         style={{ display: "flex", flexDirection: "column", maxHeight: "100%" }}
       >
+        <Dialog
+          header={
+            this.state.dialogContent &&
+            (this.state.dialogContent.status === 201 ? "SUCCESS" : "FAILURE")
+          }
+          header={"SUCCESS"}
+          footer={
+            <div>
+              <Button
+                style={{
+                  color: "white",
+                  backgroundColor:
+                    this.state.dialogContent &&
+                    (this.state.dialogContent.status === 201
+                      ? "lightseagreen"
+                      : "red"),
+                }}
+                label="Ok"
+                onClick={() => this.setState({ dialogContent: undefined })}
+              />
+            </div>
+          }
+          visible={this.state.dialogContent}
+          style={{ width: "50vw" }}
+          modal
+          onHide={() => this.setState({ dialogContent: undefined })}
+        >
+          {this.state.dialogContent && this.state.dialogContent.message}
+        </Dialog>
         <BookingInfoForm
           ref="infoForm"
           bookingID={this.state.booking.associationID}
@@ -319,7 +351,7 @@ export default class BookingForm extends Component {
                       selectedTransfer: e.value,
                     });
                   }}
-                  placeholder="Select a TSP"
+                  placeholder="Select transfer to connect"
                 />
               </div>
             </div>
@@ -349,10 +381,22 @@ export default class BookingForm extends Component {
                 },
               })
                 .then((res) => {
-                  alert(JSON.stringify(res));
+                  this.setState({
+                    dialogContent: {
+                      status: res.status,
+                      message: "Booking successfully created!",
+                    },
+                  });
                   console.log(res);
                 })
-                .catch((err) => alert(JSON.stringify(err)));
+                .catch((err) =>
+                  this.setState({
+                    dialogContent: {
+                      status: err.status,
+                      message: "Booking could not be created!",
+                    },
+                  })
+                );
             }}
           >
             Submit

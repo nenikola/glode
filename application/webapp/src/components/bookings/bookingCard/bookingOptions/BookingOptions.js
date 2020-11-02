@@ -35,10 +35,18 @@ const BookingOptions = (props) => {
                 }
               )
                 .then((res) => {
-                  alert(res);
+                  props.onUpdateStatus({
+                    status: res.status,
+                    message: "Booking status successfully updated!",
+                  });
                   console.log(res);
                 })
-                .catch((err) => alert(err));
+                .catch((err) =>
+                  props.onUpdateStatus({
+                    status: err.status,
+                    message: "Booking status successfully updated!",
+                  })
+                );
             }}
           >
             Accept

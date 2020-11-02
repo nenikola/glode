@@ -15,7 +15,7 @@
 }
 
 li.navbar-listItem {
-  transform: rotate(-45deg);
+  /* transform: rotate(-45deg); */
   font-weight: bold;
   list-style: none;
   width: 100%;

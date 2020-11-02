@@ -64,7 +64,8 @@ export default class TransferFilters extends Component {
             onClick={(e) => {
               this.props.onQuery({
                 transportServiceProviderID: this.state.transportServiceProvider
-                  .organizationID,
+                  ? this.state.transportServiceProvider.organizationID
+                  : "",
                 departureBefore: this.state.departureBefore,
                 arrivalBefore: this.state.arrivalBefore,
               });

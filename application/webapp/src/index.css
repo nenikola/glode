@@ -23,6 +23,9 @@ code {
 button {
   border-radius: 3px !important;
 }
+.p-component-overlay {
+  background-color: transparent !important;
+}
 
 .dropdown-wrapper .p-dropdown {
   width: 100%;

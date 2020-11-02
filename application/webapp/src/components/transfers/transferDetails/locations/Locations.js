@@ -37,6 +37,7 @@ class Locations extends Component {
               te.events
                 .filter((event) => event.eventLocation.geoCoordinates)
                 .map((e) => {
+                  console.log(JSON.stringify(e));
                   const marker = new mapboxgl.Marker({
                     color:
                       JSON.stringify(te.currentLocation) ===
@@ -55,6 +56,11 @@ class Locations extends Component {
                                   <h4>Event:</h4>
                                   <p>id: ${e.eventID}</p>
                                   <h4>- Location:</h4>
+                                  <p>${
+                                    e.transferEquipmentEventType
+                                      ? e.transferEventType.teEventTypeName
+                                      : ""
+                                  }</p>
                                   <p>${
                                     e.eventLocation
                                       ? e.eventLocation.address
@@ -163,7 +169,7 @@ class Locations extends Component {
     destinationLocation
   ) => {
     map.on("load", () => {
-      var originLocationMarker = new mapboxgl.Marker({ color: "lightseagreen" })
+      var originLocationMarker = new mapboxgl.Marker({ color: "#167c76" })
         .setLngLat([
           originLocation.geoCoordinates.lon,
           originLocation.geoCoordinates.lat,
@@ -182,7 +188,7 @@ class Locations extends Component {
 
       if (destinationLocation.geoCoordinates) {
         var destinationLocationMarker = new mapboxgl.Marker({
-          color: "lightseagreen",
+          color: "#167c76",
         })
           .setLngLat([
             destinationLocation.geoCoordinates.lon,

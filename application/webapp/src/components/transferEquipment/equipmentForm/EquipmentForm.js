@@ -47,6 +47,7 @@ export default class EquipmentForm extends Component {
             this.state.dialogContent &&
             (this.state.dialogContent.status === 201 ? "SUCCESS" : "FAILURE")
           }
+          header={"SUCCESS"}
           footer={
             <div>
               <Button
@@ -94,7 +95,7 @@ export default class EquipmentForm extends Component {
             ></input>
           </div>
           <div className={"form-field"}>
-            <h4>Registration number: </h4>
+            <h4>Equipment type: </h4>
             <div className="dropdown-wrapper">
               <Dropdown
                 showClear={true}

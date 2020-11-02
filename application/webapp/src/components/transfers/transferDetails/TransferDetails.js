@@ -64,7 +64,10 @@ export default class TransferDetails extends Component {
                         : "red"),
                   }}
                   label="Ok"
-                  onClick={() => this.setState({ dialogContent: undefined })}
+                  onClick={() => {
+                    this.setState({ dialogContent: undefined });
+                    this.props.history.go(0);
+                  }}
                 />
               </div>
             }
@@ -144,14 +147,29 @@ export default class TransferDetails extends Component {
                             "Bearer " + localStorage.getItem("auth"),
                         },
                       }
-                    ).then((res) => {
-                      alert(JSON.stringify(res.data));
-                      this.toggleTeAssignment();
-                      this.setState({
-                        selectedTe: undefined,
+                    )
+                      .then((res) => {
+                        this.toggleTeAssignment();
+                        this.setState({
+                          selectedTe: undefined,
+                          dialogContent: {
+                            status: res.status,
+                            message:
+                              "Transfer Equipment successfully assigned to transfer!",
+                          },
+                        });
+                      })
+                      .catch((err) => {
+                        this.toggleTeAssignment();
+                        this.setState({
+                          selectedTe: undefined,
+                          dialogContent: {
+                            status: err.status,
+                            message:
+                              "Transfer Equipment could not be assigned to transfer!",
+                          },
+                        });
                       });
-                      this.props.history.go(0);
-                    });
                 }}
               >
                 Assign

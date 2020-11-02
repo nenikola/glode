@@ -45,12 +45,12 @@ export default class ApiService {
       console.log(JSON.stringify(response, null, 2));
       return {
         status: response.status,
-        message: "Transfer Equipment successfully created",
+        message: "Transfer Equipment Event successfully submitted",
       };
     } catch (error) {
       return {
         status: error.status,
-        message: "Transfer Equipment could not be created",
+        message: "Transfer Equipment Event could not be submitted",
       };
     }
   }
